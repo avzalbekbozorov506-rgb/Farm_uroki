@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#071a52"/>
+      <stop offset="40%" style="stop-color:#0f2d6e"/>
+      <stop offset="100%" style="stop-color:#1a56db"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#93c5fd"/>
+      <stop offset="100%" style="stop-color:#6ee7e7"/>
+    </linearGradient>
+    <linearGradient id="card1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:rgba(255,255,255,0.12)"/>
+      <stop offset="100%" style="stop-color:rgba(255,255,255,0.05)"/>
+    </linearGradient>
+    <filter id="blur">
+      <feGaussianBlur stdDeviation="40"/>
+    </filter>
+  </defs>
+
+  <!-- Фон -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Декоративные круги -->
+  <circle cx="950" cy="100" r="300" fill="#3b82f6" opacity="0.08" filter="url(#blur)"/>
+  <circle cx="150" cy="500" r="250" fill="#60a5fa" opacity="0.06" filter="url(#blur)"/>
+  <circle cx="1100" cy="550" r="200" fill="#2563eb" opacity="0.1" filter="url(#blur)"/>
+
+  <!-- Сетка точек -->
+  <g opacity="0.08">
+    <circle cx="80"  cy="80"  r="2" fill="white"/>
+    <circle cx="160" cy="80"  r="2" fill="white"/>
+    <circle cx="240" cy="80"  r="2" fill="white"/>
+    <circle cx="320" cy="80"  r="2" fill="white"/>
+    <circle cx="80"  cy="160" r="2" fill="white"/>
+    <circle cx="160" cy="160" r="2" fill="white"/>
+    <circle cx="240" cy="160" r="2" fill="white"/>
+    <circle cx="320" cy="160" r="2" fill="white"/>
+    <circle cx="80"  cy="240" r="2" fill="white"/>
+    <circle cx="160" cy="240" r="2" fill="white"/>
+    <circle cx="240" cy="240" r="2" fill="white"/>
+    <circle cx="80"  cy="320" r="2" fill="white"/>
+    <circle cx="160" cy="320" r="2" fill="white"/>
+  </g>
+
+  <!-- Левая панель — логотип и название -->
+  <g transform="translate(80, 200)">
+    <!-- Иконка -->
+    <rect x="0" y="0" width="72" height="72" rx="18" fill="#1a56db"/>
+    <rect x="2" y="2" width="68" height="68" rx="16" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+    <text x="36" y="50" font-size="38" text-anchor="middle" fill="white">⚗️</text>
+
+    <!-- Название -->
+    <text x="0" y="108" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="48" font-weight="900" fill="white" letter-spacing="-1">
+      Академия ТЛФ
+    </text>
+
+    <!-- Подзаголовок с градиентом -->
+    <text x="0" y="158" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="26" font-weight="400" fill="url(#accent)" letter-spacing="0.5">
+      Фармацевтическое образование
+    </text>
+
+    <!-- Описание -->
+    <text x="0" y="210" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="19" fill="rgba(255,255,255,0.75)" letter-spacing="0">
+      Курсы GMP · Гранулирование · Таблетирование
+    </text>
+    <text x="0" y="240" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="19" fill="rgba(255,255,255,0.75)">
+      Контроль качества · EU GMP · PIC/S · ГФ РФ 15
+    </text>
+  </g>
+
+  <!-- Правая панель — статистика -->
+  <g transform="translate(720, 160)">
+
+    <!-- Карточка 1 — Модули -->
+    <rect x="0" y="0" width="180" height="120" rx="16" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+    <text x="90" y="45" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="middle"
+          text-transform="uppercase" letter-spacing="1">МОДУЛЕЙ</text>
+    <text x="90" y="90" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="52" font-weight="900" fill="white" text-anchor="middle">11</text>
+
+    <!-- Карточка 2 — Уроки -->
+    <rect x="200" y="0" width="180" height="120" rx="16" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+    <text x="290" y="45" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="middle"
+          letter-spacing="1">УРОКОВ</text>
+    <text x="290" y="90" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="52" font-weight="900" fill="white" text-anchor="middle">25</text>
+
+    <!-- Карточка 3 — Часов -->
+    <rect x="0" y="140" width="180" height="120" rx="16" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+    <text x="90" y="185" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="14" font-weight="700" fill="rgba(255,255,255,0.6)" text-anchor="middle"
+          letter-spacing="1">ЧАСОВ</text>
+    <text x="90" y="230" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="52" font-weight="900" fill="white" text-anchor="middle">9+</text>
+
+    <!-- Карточка 4 — Бесплатно -->
+    <rect x="200" y="140" width="180" height="120" rx="16" fill="rgba(34,197,94,0.2)" stroke="rgba(34,197,94,0.5)" stroke-width="1.5"/>
+    <text x="290" y="185" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="14" font-weight="700" fill="rgba(134,239,172,0.9)" text-anchor="middle"
+          letter-spacing="1">СТОИМОСТЬ</text>
+    <text x="290" y="235" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+          font-size="30" font-weight="900" fill="#86efac" text-anchor="middle">БЕСПЛАТНО</text>
+
+  </g>
+
+  <!-- Нижняя полоса -->
+  <rect x="0" y="590" width="1200" height="40" fill="rgba(0,0,0,0.2)"/>
+  <text x="80" y="614" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+        font-size="15" fill="rgba(255,255,255,0.5)">
+    avzalbekbozorov506-rgb.github.io/Farm_uroki
+  </text>
+  <text x="1120" y="614" font-family="-apple-system, BlinkMacSystemFont, Arial, sans-serif"
+        font-size="15" fill="rgba(255,255,255,0.5)" text-anchor="end">
+    © 2026 Бозоров А.С.
+  </text>
+
+  <!-- Декоративная линия слева -->
+  <rect x="0" y="0" width="5" height="630" fill="url(#accent)"/>
+</svg>
