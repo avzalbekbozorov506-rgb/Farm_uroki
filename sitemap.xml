@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Главная страница -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ru"
+      href="https://avzalbekbozorov506-rgb.github.io/Farm_uroki/"/>
+  </url>
+
+  <!--
+    ПРИМЕЧАНИЕ: Сайт использует SPA (Single Page Application).
+    Все страницы доступны по одному URL с хэш-навигацией.
+    Ниже перечислены логические разделы сайта.
+  -->
+
+  <!-- Модуль 1: Основы GMP -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/#gmp-osnovy</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Модуль 2: Сырьё и материалы -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/#syre-materialy</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Модуль 3: Гранулирование -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/#granulirovanie</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Модуль 4: Сушка -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/#sushka</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Модуль 5: Просеивание и смешивание -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/#proseivaniye-smeshivanie</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Модуль 6: Таблетирование -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/#tabletirovanie</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Модуль 7: Нанесение покрытий -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/#pokrytie-obolochkami</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Модуль 8: Упаковка -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/#upakovka</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Модуль 9: Контроль качества -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/#kontrol-kachestva</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Модуль 10: Контаминация -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/#kontaminaciya</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Модуль 11: Гранулирование расширенный -->
+  <url>
+    <loc>https://avzalbekbozorov506-rgb.github.io/Farm_uroki/#granulirovanie-rasshirennyj</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
