@@ -18,5 +18,7 @@
 | `index.html`, `*.html`, `assets/`, `uroki/`, `granulyaciya/` | Готовый сайт для GitHub Pages (генерируется, не править вручную) |
 | `DEPLOY.md` | Публикация, Яндекс.Вебмастер, Google Search Console |
 | `LEGAL_CHECK.md` | Самопроверка на соответствие законодательству РФ |
+| `SEARCH_SETUP.md` | Подключение к Google Search Console и Яндекс.Вебмастеру, проверка индексации |
+| `.github/workflows/indexnow.yml` | После публикации отправляет адреса из sitemap.xml в Яндекс (IndexNow) |
 
 Сайт: https://avzalbekbozorov506-rgb.github.io/Farm_uroki/
