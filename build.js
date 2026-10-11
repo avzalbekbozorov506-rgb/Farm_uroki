@@ -2,8 +2,8 @@
 /* Сборка сайта «Оператор ТЛФ».
    Исходники: site/ (data.js, data-gran.js, app.js, style.css, fonts/, favicon.svg, og.png, index.html).
    Результат:
-     docs/                 — многостраничный статический сайт для GitHub Pages (папка /docs);
-     docs/all-in-one.html  — вся работа одним файлом (офлайн, CSS/JS/шрифты внутри);
+     корень репозитория    — многостраничный статический сайт для GitHub Pages (ветка main, папка /);
+     all-in-one.html       — вся работа одним файлом (офлайн, CSS/JS/шрифты внутри);
      dist/artifact.html    — тот же файл без <html>/<head>/<body> для публикации как Artifact.
    Запуск: node build.js */
 "use strict";
@@ -12,7 +12,7 @@ const path = require("path");
 
 const ROOT_DIR = __dirname;
 const SRC = path.join(ROOT_DIR, "site");
-const OUT = path.join(ROOT_DIR, "docs");
+const OUT = ROOT_DIR; // GitHub Pages публикует ветку main из корня репозитория
 const DIST = path.join(ROOT_DIR, "dist");
 const TODAY = new Date().toISOString().slice(0, 10);
 
@@ -173,7 +173,7 @@ function allInOne() {
   html = html
     .replace('<link rel="stylesheet" href="fonts/fonts.css">', "")
     .replace('<link rel="stylesheet" href="style.css">',
-      () => '<link rel="canonical" href="' + SITE + '">\n<meta name="robots" content="noindex">\n<link rel="icon" href="data:image/svg+xml;base64,' + Buffer.from(read("favicon.svg")).toString("base64") + '">\n<style>\n' + fcss + "\n" + css + "</style>")
+      () => '<link rel="canonical" href="' + SITE + '">\n<link rel="icon" href="data:image/svg+xml;base64,' + Buffer.from(read("favicon.svg")).toString("base64") + '">\n<style>\n' + fcss + "\n" + css + "</style>")
     .replace('<script src="data.js"></script>', () => "<script>\n" + js[0] + "</script>")
     .replace('<script src="data-gran.js"></script>', () => "<script>\n" + js[1] + "</script>")
     .replace('<script src="app.js"></script>', () => "<script>\n" + js[2] + "</script>");
@@ -188,7 +188,8 @@ function artifactVersion(html) {
 }
 
 // --- сборка ---
-rm(OUT);
+// чистим только то, что генерирует сборка (исходники и документы не трогаем)
+for (const d of ["assets", "uroki", "granulyaciya"]) rm(path.join(OUT, d));
 const routes = APP.routes();
 for (const r of routes) {
   const p = APP.pathFor(r).replace(/#.*$/, "");
@@ -204,7 +205,7 @@ fs.mkdirSync(path.join(OUT, "assets/fonts"), { recursive: true });
 for (const f of fs.readdirSync(path.join(SRC, "fonts"))) if (/\.(woff2|txt)$/.test(f)) fs.copyFileSync(path.join(SRC, "fonts", f), path.join(OUT, "assets/fonts", f));
 
 // robots, sitemap, служебное
-write(path.join(OUT, "robots.txt"), "User-agent: *\nAllow: /\nDisallow: /all-in-one.html\n\nSitemap: " + SITE + "sitemap.xml\n");
+write(path.join(OUT, "robots.txt"), "User-agent: *\nAllow: /\nDisallow: /all-in-one.html\nDisallow: /site/\n\nSitemap: " + SITE + "sitemap.xml\n");
 const sm = routes.map(r => {
   const pri = r === "home" ? "1.0" : (r === "lessons" || r === "gran") ? "0.9" : r.indexOf("lesson-") === 0 ? "0.8" : "0.6";
   return `  <url>\n    <loc>${APP.publicUrl(r)}</loc>\n    <lastmod>${TODAY}</lastmod>\n    <priority>${pri}</priority>\n  </url>`;

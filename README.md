@@ -14,8 +14,9 @@
 | Путь | Что это |
 |---|---|
 | `site/` | Исходники: `data.js` (основные уроки), `data-gran.js` (модуль грануляции), `app.js`, `style.css`, `fonts/` |
-| `build.js` | Сборка: `node build.js` → `docs/` и `docs/all-in-one.html` |
-| `docs/` | Готовый многостраничный сайт для GitHub Pages (не править вручную) |
+| `build.js` | Сборка: `node build.js` → страницы в корне и `all-in-one.html` |
+| `index.html`, `*.html`, `assets/`, `uroki/`, `granulyaciya/` | Готовый сайт для GitHub Pages (генерируется, не править вручную) |
 | `DEPLOY.md` | Публикация, Яндекс.Вебмастер, Google Search Console |
 | `LEGAL_CHECK.md` | Самопроверка на соответствие законодательству РФ |
-| `index.html` (в корне) | Прежняя версия сайта, в новую сборку не входит |
+
+Сайт: https://avzalbekbozorov506-rgb.github.io/Farm_uroki/
