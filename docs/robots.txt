@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /all-in-one.html
+
+Sitemap: https://avzalbekbozorov506-rgb.github.io/Farm_uroki/sitemap.xml

@@ -4,43 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Оператор ТЛФ</title>
-<meta name="description" content="Учебный курс для операторов производства твёрдых лекарственных форм: уроки, тесты, карточки, глоссарий, шпаргалка.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<meta name="description" content="Информационно-справочный материал для самоподготовки операторов производства твёрдых лекарственных форм: уроки, тесты, карточки, глоссарий, шпаргалка.">
+<link rel="stylesheet" href="fonts/fonts.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<a class="skip" href="#view">К содержанию</a>
-<header class="top">
-  <a class="brand" href="#home" aria-label="Оператор ТЛФ, на главную">
-    <span class="brand-mark" aria-hidden="true"></span>
-    <span class="brand-text"><b>Оператор ТЛФ</b><small>таблетки · капсулы · гранулы · порошки</small></span>
-  </a>
-  <button class="icon-btn" id="themeBtn" type="button" aria-label="Переключить тему" title="Светлая / тёмная тема">
-    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
-  </button>
-</header>
-
+<div id="shellTop"></div>
 <div class="shell">
-  <nav class="nav" aria-label="Разделы">
-    <a href="#home" data-nav="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg><span>Главная</span></a>
-    <a href="#lessons" data-nav="lessons"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10l4 4v12H5zM14 4v5h5M8 13h8M8 17h6"/></svg><span>Уроки</span></a>
-    <a href="#tests" data-nav="tests"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5h10M9 12h10M9 19h10M4 5l1 1 2-2M4 12l1 1 2-2M4 19l1 1 2-2"/></svg><span>Тесты</span></a>
-    <a href="#cards" data-nav="cards"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h12v12H7zM5 17V5h12"/></svg><span>Карточки</span></a>
-    <a href="#glossary" data-nav="glossary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14zM16 16l4 4"/></svg><span>Глоссарий</span></a>
-    <a href="#sheet" data-nav="sheet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18H6zM9 8h6M9 12h6M9 16h3"/></svg><span>Шпаргалка</span></a>
-  </nav>
-
+  <div id="shellNav"></div>
   <main id="view" tabindex="-1"></main>
 </div>
-
-<footer class="foot">
-  <p><strong>Учебный материал для самоподготовки, не заменяет СОП предприятия и инструктаж.</strong></p>
-  <p>Нормативная база: Правила надлежащей производственной практики ЕАЭС (Решение Совета ЕЭК № 77), Государственная фармакопея РФ. Прогресс хранится только в этом браузере.</p>
-</footer>
-
+<div id="shellFoot"></div>
 <script src="data.js"></script>
+<script src="data-gran.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
