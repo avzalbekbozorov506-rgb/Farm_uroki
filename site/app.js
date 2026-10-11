@@ -280,9 +280,9 @@
     h += '<div class="stat"><b>' + w + "</b><span>" + plural(w, "вопрос", "вопроса", "вопросов") + " в работе над ошибками</span></div>";
     h += "</section>";
 
-    h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Углублённый модуль</span><b>' + G.title + "</b><span>" + esc(G.short) + "</span></a>";
+    h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Углублённый модуль</span><b>' + G.title + ": влажная и сухая грануляция</b><span>" + esc(G.short) + "</span></a>";
 
-    h += '<section class="stack"><div class="row" style="justify-content:space-between"><h2>Основные уроки</h2><a href="' + link("lessons") + '">Все уроки</a></div>';
+    h += '<section class="stack"><div class="row" style="justify-content:space-between"><h2>Основные уроки</h2><a href="' + link("lessons") + '">Все основные уроки</a></div>';
     h += modulesHTML(BASE) + "</section>";
     h += '<p class="note">' + DISCLAIMER + "</p>";
     h += '<p class="note med">' + MEDICAL + "</p>";
@@ -308,12 +308,17 @@
 
   function viewGran() {
     var h = '<div class="view-inner">' + crumbs([["home", "Главная"], ["gran", G.title]]);
-    h += '<section class="hero"><span class="eyebrow">Углублённый модуль</span><h1>' + G.title + "</h1>";
-    h += '<p class="lead">' + esc(G.short) + " Отмечено " + doneIn(GRAN) + " из " + GRAN.length + ". Конкретные режимы (температуры, время, давление, влажность, пределы) задаёт регламент: см. СОП и Государственную фармакопею РФ.</p></section>";
-    h += modulesHTML(GRAN);
+    h += '<section class="hero"><span class="eyebrow">Углублённый модуль · ' + GRAN.length + " уроков</span><h1>" + esc(G.h1) + "</h1>";
+    h += '<div class="prose intro">' + G.intro.map(function (p) { return '<p class="lead">' + esc(p) + "</p>"; }).join("") + "</div></section>";
+    h += '<section class="stack" aria-labelledby="granLessons"><div class="row" style="justify-content:space-between"><h2 id="granLessons">Уроки модуля</h2><span class="muted num">Отмечено ' + doneIn(GRAN) + " из " + GRAN.length + "</span></div>";
+    h += modulesHTML(GRAN) + "</section>";
     var r = S.tests["gran-final"];
-    h += '<section class="panel stack"><div class="row" style="justify-content:space-between"><div class="stack" style="gap:4px"><h2>Итоговый тест модуля</h2><p class="muted">' + G.finalSize + " случайных вопросов из " + BANK_GRAN.length + " по всем урокам модуля.</p></div>" + scoreChip("gran-final") + "</div>";
-    h += '<div class="row"><a class="btn primary" href="' + link("test-gran-final") + '">' + (r ? "Пройти ещё раз" : "Начать итоговый тест") + '</a><a class="btn" href="' + link("glossary") + '">Термины модуля в глоссарии</a></div></section>';
+    h += '<section class="panel stack"><div class="row" style="justify-content:space-between"><div class="stack" style="gap:4px"><h2>Итоговый тест по грануляции ТЛФ</h2><p class="muted">' + G.finalSize + " случайных вопросов из " + BANK_GRAN.length + " по всем урокам модуля.</p></div>" + scoreChip("gran-final") + "</div>";
+    h += '<div class="row"><a class="btn primary" href="' + link("test-gran-final") + '">' + (r ? "Пройти итоговый тест ещё раз" : "Начать итоговый тест") + '</a><a class="btn" href="' + link("glossary") + '">Глоссарий терминов грануляции</a></div></section>';
+    h += '<section class="panel faq" aria-labelledby="granFaq"><h2 id="granFaq">Частые вопросы о грануляции ТЛФ</h2>';
+    G.faq.forEach(function (f) { h += "<h3>" + esc(f.q) + "</h3><p>" + esc(f.a) + "</p>"; });
+    h += "</section>";
+    h += '<p class="note">' + DISCLAIMER + "</p>";
     return h + "</div>";
   }
 
@@ -381,11 +386,25 @@
     h += '<button type="button" class="btn ' + (S.done[id] ? "" : "primary") + '" data-act="toggle-done" data-id="' + id + '">' + (S.done[id] ? "Снять отметку" : "Отметить урок пройденным") + "</button></div>";
     h += '<div class="row"><a class="btn small" href="' + link("test-" + id) + '">Тест по уроку (' + qWord(l.qs.length) + ")</a></div></section>";
 
+    h += relatedHTML(l, prev, next);
     h += '<nav class="lesson-nav" aria-label="Соседние уроки">';
     h += prev ? '<a class="btn ghost" rel="prev" href="' + link("lesson-" + prev.id) + '">← ' + esc(prev.title) + "</a>" : "<span></span>";
     if (next) h += '<a class="btn ghost" rel="next" href="' + link("lesson-" + next.id) + '">' + esc(next.title) + " →</a>";
     else h += l.module === "gran" ? '<a class="btn ghost" href="' + link("test-gran-final") + '">Итоговый тест модуля →</a>' : '<a class="btn ghost" href="' + link("gran") + '">Модуль «' + G.title + '» →</a>';
     return h + "</nav></article>";
+  }
+
+  function relatedHTML(l, prev, next) {
+    var gran = l.module === "gran";
+    var items = [];
+    items.push([gran ? "gran" : "lessons", gran ? "Все уроки модуля «" + G.title + "»" : "Все основные уроки"]);
+    if (prev) items.push(["lesson-" + prev.id, "Предыдущий урок: " + prev.title]);
+    if (next) items.push(["lesson-" + next.id, "Следующий урок: " + next.title]);
+    else if (gran) items.push(["test-gran-final", "Итоговый тест по грануляции ТЛФ"]);
+    items.push(["glossary", gran ? "Глоссарий: термины грануляции и GMP" : "Глоссарий терминов GMP и ТЛФ"]);
+    if (!gran && l.id !== "granulation") items.push(["gran", "Углублённый модуль «" + G.title + "»"]);
+    return '<nav class="panel related" aria-label="Связанные материалы"><h2>Связанные материалы</h2><ul>' +
+      items.map(function (it) { return '<li><a href="' + link(it[0]) + '">' + esc(it[1]) + "</a></li>"; }).join("") + "</ul></nav>";
   }
 
   /* ---------- Тесты ---------- */
@@ -398,7 +417,7 @@
   }
   function testCard(id, title, desc, feature, eyebrow) {
     return '<div class="test-card' + (feature ? " feature" : "") + '"><div class="stack" style="gap:6px">' + (eyebrow ? '<span class="eyebrow">' + eyebrow + "</span>" : "") + "<h3>" + esc(title) + "</h3>" + (desc ? "<p>" + esc(desc) + "</p>" : "") + "</div>" +
-      '<div class="row">' + (id === "mistakes" ? '<span class="chip bad">Ошибки</span>' : scoreChip(id)) + '<a class="btn small ' + (feature ? "primary" : "") + '" href="' + link("test-" + id) + '">Начать</a></div></div>';
+      '<div class="row">' + (id === "mistakes" ? '<span class="chip bad">Ошибки</span>' : scoreChip(id)) + '<a class="btn small ' + (feature ? "primary" : "") + '" href="' + link("test-" + id) + '">Пройти тест</a></div></div>';
   }
   function viewTests() {
     var h = '<div class="view-inner">' + crumbs([["home", "Главная"], ["tests", "Тесты"]]);
@@ -657,28 +676,26 @@
     LESSONS.forEach(function (l) { r.push("lesson-" + l.id); });
     return r;
   }
+  var BRAND = " | Оператор ТЛФ";
+  function withBrand(t) { return (t + BRAND).length <= 60 ? t + BRAND : t; }
   function meta(r) {
     var l = r.indexOf("lesson-") === 0 ? LMAP[r.slice(7)] : null;
-    if (l) return {
-      title: l.title + (l.module === "gran" ? " — Грануляция ТЛФ" : "") + " | Оператор ТЛФ",
-      h1: l.title,
-      description: l.short + " Урок для самоподготовки оператора производства твёрдых лекарственных форм: " + (l.goals ? "цели, тезисы" : "теория, правила") + ", типичные ошибки, вопросы с объяснениями.",
-      article: true, lesson: l
-    };
+    if (l && l.module === "gran") return { title: withBrand(l.seoTitle), description: l.seoDesc, article: true, lesson: l };
+    if (l) return { title: withBrand(l.title), description: l.short + " Материалы для самоподготовки оператора ТЛФ.", article: true, lesson: l };
+    if (r === "gran") return { title: G.seo.title, description: G.seo.desc, article: true, headline: G.h1, faq: G.faq };
+    if (r === "test-gran-final") return { title: G.seo.finalTitle, description: G.seo.finalDesc };
     var M = {
-      home: ["Оператор ТЛФ — производство таблеток, капсул, гранул и порошков", "Информационно-справочный материал для самоподготовки операторов производства твёрдых лекарственных форм: GMP, грануляция, таблетирование, упаковка, тесты и глоссарий."],
-      lessons: ["Основные уроки | Оператор ТЛФ", "Уроки для оператора производства твёрдых лекарственных форм: GMP, гигиена, документация, взвешивание, смешивание, таблетирование, покрытие, упаковка, контроль, отклонения, охрана труда."],
-      gran: ["Грануляция ТЛФ — углублённый модуль | Оператор ТЛФ", "Углублённый модуль о грануляции твёрдых лекарственных форм: влажная и сухая грануляция, оборудование, контроль процесса, свойства гранулята, дефекты, расчёт выхода, GMP и безопасность."],
-      tests: ["Тесты для самопроверки | Оператор ТЛФ", "Тесты по урокам и итоговые тесты для операторов производства твёрдых лекарственных форм с объяснением каждого ответа и повтором ошибок."],
-      cards: ["Флеш-карточки терминов | Оператор ТЛФ", "Флеш-карточки «термин — определение» по GMP и технологии твёрдых лекарственных форм с режимом «знаю / не знаю»."],
-      glossary: ["Глоссарий GMP и ТЛФ | Оператор ТЛФ", "Глоссарий терминов GMP и производства твёрдых лекарственных форм с поиском: ALCOA+, CAPA, OOS, line clearance, карантин, валидация, грануляция."],
-      sheet: ["Шпаргалка оператора на смену | Оператор ТЛФ", "Чек-лист оператора производства твёрдых лекарственных форм на одну страницу для печати: перед сменой, записи, контроль, отклонения, безопасность."],
-      author: ["Об авторе | Оператор ТЛФ", "Об авторе информационно-справочного материала для операторов производства твёрдых лекарственных форм."],
-      privacy: ["Конфиденциальность | Оператор ТЛФ", "Сайт не собирает персональные данные. Прогресс хранится только на устройстве пользователя; как его очистить."],
-      "test-gran-final": ["Итоговый тест: грануляция ТЛФ | Оператор ТЛФ", "Итоговый тест углублённого модуля «Грануляция ТЛФ»: " + G.finalSize + " случайных вопросов с объяснениями."]
+      home: ["Оператор ТЛФ: таблетки, капсулы, грануляция", "Материалы для самоподготовки операторов производства твёрдых лекарственных форм: GMP, грануляция ТЛФ, таблетирование, упаковка, тесты."],
+      lessons: ["Основные уроки для оператора ТЛФ", "14 уроков для оператора производства ТЛФ: GMP, гигиена, документация, взвешивание, смешивание, таблетирование, упаковка, отклонения."],
+      tests: ["Тесты для самопроверки оператора ТЛФ", "Тесты по урокам и итоговые тесты для операторов производства твёрдых лекарственных форм, включая грануляцию ТЛФ, с объяснением ответов."],
+      cards: ["Флеш-карточки терминов GMP и ТЛФ", "Флеш-карточки «термин — определение» по GMP, грануляции ТЛФ и технологии твёрдых лекарственных форм с режимом «знаю / не знаю»."],
+      glossary: ["Глоссарий GMP и грануляции ТЛФ", "Термины GMP и производства твёрдых лекарственных форм с поиском: ALCOA+, CAPA, line clearance, импеллер, чоппер, грануляция ТЛФ."],
+      sheet: ["Шпаргалка оператора ТЛФ на смену", "Чек-лист оператора производства твёрдых лекарственных форм на одну страницу для печати: записи, контроль, отклонения, безопасность."],
+      author: ["Об авторе" + BRAND, "Об авторе материалов для самоподготовки операторов производства твёрдых лекарственных форм."],
+      privacy: ["Конфиденциальность" + BRAND, "Сайт не собирает персональные данные. Прогресс хранится только на устройстве пользователя; как его очистить."]
     };
     var m = M[r] || ["Оператор ТЛФ", ""];
-    return { title: m[0], description: m[1], article: r === "gran" };
+    return { title: m[0], description: m[1] };
   }
 
   /* ---------- Экспорт для сборки ---------- */

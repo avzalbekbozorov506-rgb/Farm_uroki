@@ -16,6 +16,9 @@ const OUT = ROOT_DIR; // GitHub Pages публикует ветку main из к
 const DIST = path.join(ROOT_DIR, "dist");
 const TODAY = new Date().toISOString().slice(0, 10);
 
+// Ключ IndexNow (публичный по устройству протокола, не секрет). Файл <ключ>.txt кладётся в корень сайта.
+const INDEXNOW_KEY = "a1fbe23784c51ce37b5823264bd25739";
+
 // Коды подтверждения прав (бесплатно). Вставьте значение content из мета-тега и пересоберите: node build.js
 const VERIFICATION = {
   yandex: "", // Яндекс.Вебмастер: <meta name="yandex-verification" content="ВОТ_ЭТО">
@@ -56,8 +59,12 @@ function jsonLd(route, m, url) {
     description: "Информационно-справочный материал для самоподготовки операторов производства твёрдых лекарственных форм.", author: person() };
   const graph = [website];
   if (m.article) {
-    graph.push({ "@type": "Article", headline: m.lesson ? m.lesson.title : m.title.split(" | ")[0], description: m.description, inLanguage: "ru",
+    graph.push({ "@type": "Article", headline: m.headline || (m.lesson ? m.lesson.title : m.title.split(" | ")[0]), description: m.description, inLanguage: "ru",
       url, mainEntityOfPage: url, author: person(), isPartOf: { "@id": SITE + "#website" }, dateModified: TODAY, image: SITE + "assets/og.png" });
+  }
+  if (m.faq) {
+    graph.push({ "@type": "FAQPage", url, inLanguage: "ru",
+      mainEntity: m.faq.map(f => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) });
   }
   return '<script type="application/ld+json">' + JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c") + "</script>";
 }
@@ -212,6 +219,7 @@ const sm = routes.map(r => {
 }).join("\n");
 write(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sm}\n</urlset>\n`);
 write(path.join(OUT, ".nojekyll"), "");
+write(path.join(OUT, INDEXNOW_KEY + ".txt"), INDEXNOW_KEY);
 
 const aio = allInOne();
 write(path.join(OUT, "all-in-one.html"), aio);

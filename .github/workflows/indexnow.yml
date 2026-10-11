@@ -1,0 +1,60 @@
+# Уведомляет Яндекс (протокол IndexNow) об адресах сайта после каждой публикации GitHub Pages.
+# Бесплатно. Ключ IndexNow публичный (лежит в корне сайта), секреты не нужны.
+name: IndexNow
+
+on:
+  workflow_run:
+    workflows: ["pages build and deployment"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: true
+
+jobs:
+  submit:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SITE: https://avzalbekbozorov506-rgb.github.io/Farm_uroki/
+      HOST: avzalbekbozorov506-rgb.github.io
+      KEY: a1fbe23784c51ce37b5823264bd25739
+    steps:
+      - name: Дождаться обновления сайта и проверить файл ключа
+        run: |
+          for i in $(seq 1 20); do
+            body=$(curl -fsSL "${SITE}${KEY}.txt" || true)
+            if [ "$body" = "$KEY" ]; then echo "Файл ключа доступен"; exit 0; fi
+            echo "Файл ключа пока недоступен, жду..."; sleep 15
+          done
+          echo "Файл ключа ${SITE}${KEY}.txt недоступен"; exit 1
+
+      - name: Отправить URL из sitemap.xml в IndexNow (Яндекс)
+        run: |
+          curl -fsSL "${SITE}sitemap.xml" -o sitemap.xml
+          python3 - <<'PY'
+          import json, os, re
+          urls = re.findall(r"<loc>\s*(.*?)\s*</loc>", open("sitemap.xml", encoding="utf-8").read())
+          site = os.environ["SITE"]
+          urls = [u for u in urls if u.startswith(site)]
+          payload = {
+              "host": os.environ["HOST"],
+              "key": os.environ["KEY"],
+              "keyLocation": site + os.environ["KEY"] + ".txt",
+              "urlList": urls,
+          }
+          json.dump(payload, open("payload.json", "w", encoding="utf-8"), ensure_ascii=False)
+          print(f"Адресов к отправке: {len(urls)}")
+          PY
+          code=$(curl -sS -o response.txt -w "%{http_code}" -X POST "https://yandex.com/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" --data-binary @payload.json)
+          echo "Ответ IndexNow: HTTP $code"; cat response.txt || true; echo
+          case "$code" in
+            200|202) echo "Адреса приняты" ;;
+            *) echo "IndexNow вернул ошибку $code"; exit 1 ;;
+          esac
