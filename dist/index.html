@@ -1,0 +1,1821 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Оператор ТЛФ</title>
+<meta name="description" content="Учебный курс для операторов производства твёрдых лекарственных форм: уроки, тесты, карточки, глоссарий, шпаргалка.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: top bar + left rail (desktop) / bottom tab bar (phone); status chips borrow the look of material status labels. */
+:root {
+  --bg: #edf1f0;
+  --surface: #ffffff;
+  --surface-2: #e2e9e7;
+  --line: #c9d3d1;
+  --fg: #142220;
+  --muted: #55625f;
+  --accent: #0e6a5d;
+  --accent-ink: #ffffff;
+  --accent-soft: #d3eae4;
+  --ok: #1d7a3b;
+  --ok-soft: #dcf0e1;
+  --warn: #8a5d00;
+  --warn-soft: #f7e8b5;
+  --bad: #b3261e;
+  --bad-soft: #f8dcd9;
+  --shadow: 0 1px 2px rgba(20, 34, 32, .06), 0 6px 20px rgba(20, 34, 32, .06);
+
+  --f-display: "Unbounded", "Golos Text", system-ui, sans-serif;
+  --f-body: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+  --r: 10px;
+  --nav-h: 64px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1514; --surface: #162120; --surface-2: #1d2a28; --line: #2b3a38;
+    --fg: #e3ebe9; --muted: #98a7a4; --accent: #5cc4b1; --accent-ink: #052019; --accent-soft: #15362f;
+    --ok: #74d18f; --ok-soft: #173322; --warn: #e6c15a; --warn-soft: #3a3011; --bad: #f28b80; --bad-soft: #3d1c19;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .25);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1514; --surface: #162120; --surface-2: #1d2a28; --line: #2b3a38;
+  --fg: #e3ebe9; --muted: #98a7a4; --accent: #5cc4b1; --accent-ink: #052019; --accent-soft: #15362f;
+  --ok: #74d18f; --ok-soft: #173322; --warn: #e6c15a; --warn-soft: #3a3011; --bad: #f28b80; --bad-soft: #3d1c19;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .25);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.55 var(--f-body);
+  min-height: 100vh;
+}
+[hidden] { display: none !important; }
+a { color: var(--accent); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font: 700 clamp(1.5rem, 1.1rem + 1.8vw, 2.2rem)/1.15 var(--f-display); letter-spacing: -.01em; }
+h2 { font: 600 1.3rem/1.25 var(--f-body); }
+h3 { font: 600 1.05rem/1.3 var(--f-body); }
+p { margin: 0; }
+
+.skip { position: absolute; left: -999px; top: 8px; background: var(--surface); padding: 8px 12px; z-index: 50; }
+.skip:focus { left: 16px; }
+
+/* Top bar */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--fg); min-width: 0; }
+.brand-mark {
+  width: 34px; height: 34px; flex: none; border-radius: 50%;
+  background:
+    linear-gradient(90deg, transparent 47%, var(--accent-ink) 47% 53%, transparent 53%),
+    var(--accent);
+  box-shadow: inset 0 -3px 0 rgba(0,0,0,.18);
+}
+.brand-text { display: flex; flex-direction: column; min-width: 0; }
+.brand-text b { font: 700 .95rem/1.1 var(--f-display); }
+@media (max-width: 420px) { .brand-text small { display: none; } }
+.brand-text small { font: 400 .72rem/1.3 var(--f-mono); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.icon-btn {
+  display: inline-grid; place-items: center; width: 40px; height: 40px; flex: none;
+  border: 1px solid var(--line); border-radius: 50%; background: var(--surface); cursor: pointer;
+}
+.icon-btn:hover { border-color: var(--accent); }
+
+/* Shell */
+.shell { display: grid; grid-template-columns: 1fr; }
+main { min-width: 0; padding: 20px 16px calc(var(--nav-h) + 28px + env(safe-area-inset-bottom, 0px)); outline: none; }
+.view-inner { max-width: 880px; margin: 0 auto; display: grid; gap: 22px; }
+
+.nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  background: var(--surface); border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.nav a {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  height: var(--nav-h); text-decoration: none; color: var(--muted);
+  font-size: .68rem; font-weight: 500; min-width: 0;
+}
+.nav a span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-inline: 2px; }
+.nav svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.nav a.active { color: var(--accent); }
+.nav a.active svg { stroke-width: 2.2; }
+
+.foot {
+  padding: 18px 16px calc(var(--nav-h) + 24px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem;
+  display: grid; gap: 6px;
+}
+.foot p { max-width: 880px; margin: 0 auto; width: 100%; }
+.foot strong { color: var(--fg); font-weight: 600; }
+
+@media (min-width: 960px) {
+  .shell { grid-template-columns: 232px 1fr; }
+  .nav {
+    position: sticky; top: 61px; align-self: start; height: calc(100vh - 61px);
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 18px 12px; border-top: 0; border-right: 1px solid var(--line); background: transparent;
+  }
+  .nav a {
+    flex-direction: row; justify-content: flex-start; gap: 12px; height: auto;
+    padding: 10px 12px; border-radius: 8px; font-size: .95rem; color: var(--fg);
+  }
+  .nav a:hover { background: var(--surface-2); }
+  .nav a.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  main { padding: 32px 32px 48px; }
+  .foot { padding: 20px 32px 28px 264px; }
+}
+
+/* Generic pieces */
+.eyebrow { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lead { color: var(--muted); font-size: 1.02rem; max-width: 62ch; }
+.muted { color: var(--muted); }
+.stack { display: grid; gap: 12px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; }
+.panel.lifted { box-shadow: var(--shadow); }
+.num { font-variant-numeric: tabular-nums; font-family: var(--f-mono); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 10px 18px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+  font-weight: 600; text-decoration: none; cursor: pointer; transition: border-color .15s, background .15s;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.07); }
+.btn.ghost { background: transparent; }
+.btn.small { min-height: 36px; padding: 6px 12px; font-size: .9rem; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+
+/* Status chip — styled like a GMP material label */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 600 .68rem/1 var(--f-mono); letter-spacing: .07em; text-transform: uppercase;
+  padding: 5px 8px; border-radius: 4px; border: 1px solid currentColor; white-space: nowrap;
+}
+.chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.chip.ok { color: var(--ok); background: var(--ok-soft); }
+.chip.warn { color: var(--warn); background: var(--warn-soft); }
+.chip.bad { color: var(--bad); background: var(--bad-soft); }
+.chip.idle { color: var(--muted); background: var(--surface-2); border-color: var(--line); }
+
+.bar { height: 10px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--accent); border-radius: inherit; transition: width .4s ease; }
+
+.note {
+  border: 1px dashed var(--warn); background: var(--warn-soft); color: var(--fg);
+  border-radius: 8px; padding: 12px 14px; font-size: .92rem;
+}
+
+/* Home */
+.hero { display: grid; gap: 12px; padding-top: 4px; }
+.progress-card { display: grid; gap: 16px; }
+.progress-top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.big { font: 700 clamp(2.4rem, 2rem + 2vw, 3.4rem)/1 var(--f-display); letter-spacing: -.02em; }
+.big small { font-size: .4em; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: 4px; }
+.cta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.cta .btn { width: 100%; }
+@media (max-width: 560px) { .cta { grid-template-columns: 1fr; } }
+
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.stat { padding: 14px 16px; border-radius: var(--r); background: var(--surface-2); display: grid; gap: 4px; min-width: 0; }
+.stat b { font: 600 1.4rem/1.1 var(--f-mono); font-variant-numeric: tabular-nums; }
+.stat span { font-size: .82rem; color: var(--muted); }
+@media (max-width: 480px) { .stats { grid-template-columns: 1fr; } .stat { grid-template-columns: auto 1fr; align-items: baseline; gap: 12px; } }
+
+/* Module list */
+.modules { display: grid; gap: 0; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); overflow: hidden; }
+.module {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 14px; align-items: center;
+  padding: 14px 16px; text-decoration: none; color: var(--fg); border-top: 1px solid var(--line);
+}
+.module:first-child { border-top: 0; }
+.module:hover { background: var(--surface-2); }
+.module .idx { font: 600 .9rem/1 var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.module .t { display: grid; gap: 2px; min-width: 0; }
+.module .t b { font-weight: 600; }
+.module .t span { font-size: .86rem; color: var(--muted); }
+@media (max-width: 560px) {
+  .module { grid-template-columns: 32px minmax(0, 1fr); }
+  .module .chip { grid-column: 2; justify-self: start; }
+}
+
+/* Lesson */
+.lesson-head { display: grid; gap: 10px; }
+.crumbs { font-size: .88rem; }
+.crumbs a { text-decoration: none; }
+.prose { display: grid; gap: 14px; max-width: 68ch; }
+.prose p { font-size: 1.02rem; }
+.section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.section-title .tag { font: 600 .7rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; padding: 5px 7px; border-radius: 4px; }
+.tag.rules { background: var(--ok-soft); color: var(--ok); }
+.tag.errs { background: var(--bad-soft); color: var(--bad); }
+.tag.theory { background: var(--accent-soft); color: var(--accent); }
+.tag.check { background: var(--warn-soft); color: var(--warn); }
+.checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.checklist li { position: relative; padding-left: 28px; }
+.checklist li::before {
+  content: ""; position: absolute; left: 0; top: .28em; width: 16px; height: 16px;
+  border: 2px solid var(--ok); border-radius: 3px;
+}
+.checklist li::after {
+  content: ""; position: absolute; left: 5px; top: calc(.28em + 2px); width: 5px; height: 9px;
+  border: solid var(--ok); border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+.errlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.errlist li { position: relative; padding-left: 28px; }
+.errlist li::before, .errlist li::after {
+  content: ""; position: absolute; left: 1px; top: calc(.28em + 7px); width: 14px; height: 2px; background: var(--bad); transform: rotate(45deg);
+}
+.errlist li::after { transform: rotate(-45deg); }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+.lesson-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; }
+
+/* Questions */
+.q { display: grid; gap: 12px; }
+.q + .q { border-top: 1px solid var(--line); padding-top: 18px; }
+.q-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.q-type { font: 600 .7rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.q-text { font-weight: 600; font-size: 1.05rem; }
+.opts { display: grid; gap: 8px; }
+.opt {
+  display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; align-items: start; text-align: left;
+  width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface);
+  cursor: pointer; line-height: 1.4;
+}
+.opt:hover:not([disabled]) { border-color: var(--accent); }
+.opt .mk { width: 20px; height: 20px; margin-top: 1px; border: 2px solid var(--line); border-radius: 50%; display: grid; place-items: center; }
+.opt.multi .mk { border-radius: 4px; }
+.opt.sel { border-color: var(--accent); background: var(--accent-soft); }
+.opt.sel .mk { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 3px var(--accent-soft); }
+.opt.multi.sel .mk { box-shadow: none; }
+.opt.multi.sel .mk::after { content: ""; width: 5px; height: 9px; border: solid var(--accent-ink); border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); }
+.opt.right .mk { border-color: var(--ok); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.opt.wrong .mk { border-color: var(--bad); background: var(--bad); box-shadow: none; }
+.opt[disabled] { cursor: default; }
+.explain { border-radius: 8px; padding: 12px 14px; font-size: .95rem; display: grid; gap: 4px; }
+.explain.ok { background: var(--ok-soft); }
+.explain.bad { background: var(--bad-soft); }
+.explain b { font-family: var(--f-mono); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; }
+.explain.ok b { color: var(--ok); }
+.explain.bad b { color: var(--bad); }
+
+/* Tests */
+.test-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.test-card { display: grid; gap: 10px; align-content: space-between; padding: 16px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); min-width: 0; }
+.test-card.feature { border-color: var(--accent); }
+.test-card p { font-size: .88rem; color: var(--muted); }
+.test-card .row { justify-content: space-between; }
+.runner-head { display: grid; gap: 10px; }
+.runner-head .row { justify-content: space-between; }
+.result-score { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+.ring { width: 112px; height: 112px; flex: none; }
+.ring circle { fill: none; stroke-width: 10; }
+.ring .bg { stroke: var(--surface-2); }
+.ring .fg { stroke: var(--accent); stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; }
+.ring text { fill: var(--fg); font: 700 22px var(--f-mono); }
+.mistake { display: grid; gap: 8px; padding: 14px 0; border-top: 1px solid var(--line); }
+.mistake:first-child { border-top: 0; padding-top: 0; }
+.mistake .lbl { font: 600 .7rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; }
+.mistake .yours { color: var(--bad); }
+.mistake .right { color: var(--ok); }
+.mistake ul { margin: 4px 0 0; padding-left: 18px; }
+
+/* Flashcards */
+.fc-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.seg { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); max-width: 100%; }
+.seg button { border: 0; background: transparent; padding: 8px 12px; cursor: pointer; font-size: .88rem; font-weight: 500; min-height: 38px; line-height: 1.25; }
+@media (max-width: 560px) { .seg { width: 100%; } .seg button { padding: 8px 6px; font-size: .82rem; } }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.card-stage { perspective: 1200px; }
+.flash {
+  position: relative; display: grid; width: 100%; min-height: 260px; border: 0; padding: 0; background: none; cursor: pointer; text-align: center;
+  transform-style: preserve-3d; transition: transform .45s cubic-bezier(.2,.7,.2,1);
+}
+.flash.flipped { transform: rotateY(180deg); }
+.face {
+  grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  display: grid; align-content: center; justify-items: center; gap: 12px; text-align: center;
+  padding: 28px 24px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow);
+}
+.face.back { transform: rotateY(180deg); background: var(--accent-soft); border-color: var(--accent); }
+.face .term { font: 700 clamp(1.4rem, 1.1rem + 1.5vw, 2rem)/1.2 var(--f-display); overflow-wrap: anywhere; }
+.face .def { display: block; font-size: 1.05rem; max-width: 52ch; }
+.face .hint { font: 500 .72rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.fc-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fc-actions .no { border-color: var(--bad); color: var(--bad); }
+.fc-actions .yes { border-color: var(--ok); color: var(--ok); }
+.star {
+  border: 1px solid var(--line); background: var(--surface); border-radius: 8px; min-height: 36px; padding: 6px 10px;
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: .88rem;
+}
+.star svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.star[aria-pressed="true"] { color: var(--warn); border-color: var(--warn); background: var(--warn-soft); }
+.star[aria-pressed="true"] svg { fill: currentColor; }
+@media (prefers-reduced-motion: reduce) { .flash, .bar > i { transition: none; } }
+
+/* Glossary */
+.search { position: relative; }
+.search input {
+  width: 100%; min-height: 48px; padding: 12px 14px 12px 42px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: inherit;
+}
+.search input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+.search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: var(--muted); stroke-width: 2; }
+.gl { display: grid; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); overflow: hidden; }
+.gl-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 14px; padding: 14px 16px; border-top: 1px solid var(--line); }
+.gl-item:first-child { border-top: 0; }
+.gl-item dt { font-weight: 700; }
+.gl-item dd { margin: 0; grid-column: 1; color: var(--fg); font-size: .95rem; }
+.gl-item .star { grid-row: 1 / span 2; grid-column: 2; align-self: start; }
+mark { background: var(--warn-soft); color: inherit; border-radius: 2px; padding: 0 1px; }
+.empty { padding: 28px 16px; text-align: center; color: var(--muted); }
+
+/* Cheat sheet */
+.sheet-head { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-end; }
+.sheet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 680px) { .sheet { grid-template-columns: 1fr; } }
+.sheet section { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 14px 16px; break-inside: avoid; }
+.sheet h3 { font: 600 .78rem/1.2 var(--f-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.sheet ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; font-size: .92rem; }
+.sheet li { display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 8px; }
+.sheet li::before { content: ""; width: 11px; height: 11px; margin-top: .3em; border: 1.5px solid var(--muted); border-radius: 2px; }
+.sheet-foot { font-size: .85rem; color: var(--muted); }
+.print-only { display: none; }
+
+@media print {
+  @page { size: A4; margin: 10mm; }
+  :root, :root[data-theme="dark"] {
+    --bg: #fff; --surface: #fff; --surface-2: #f1f1f1; --line: #999; --fg: #000; --muted: #333; --accent: #000; --accent-soft: #fff;
+    color-scheme: light;
+  }
+  body { background: #fff; color: #000; font-size: 10pt; line-height: 1.35; }
+  .top, .nav, .foot, .skip, .no-print { display: none !important; }
+  .shell { display: block; }
+  main { padding: 0 !important; }
+  .view-inner { max-width: none; gap: 8px; }
+  .print-only { display: block; }
+  .sheet { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .sheet section { padding: 6px 8px; border-radius: 0; }
+  .sheet h3 { font-size: 8.5pt; margin-bottom: 3px; }
+  .sheet ul { font-size: 8.6pt; gap: 2px; }
+  h1 { font-size: 15pt; }
+  .lead { font-size: 9pt; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#view">К содержанию</a>
+<header class="top">
+  <a class="brand" href="#home" aria-label="Оператор ТЛФ, на главную">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-text"><b>Оператор ТЛФ</b><small>таблетки · капсулы · гранулы · порошки</small></span>
+  </a>
+  <button class="icon-btn" id="themeBtn" type="button" aria-label="Переключить тему" title="Светлая / тёмная тема">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+  </button>
+</header>
+
+<div class="shell">
+  <nav class="nav" aria-label="Разделы">
+    <a href="#home" data-nav="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z"/></svg><span>Главная</span></a>
+    <a href="#lessons" data-nav="lessons"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10l4 4v12H5zM14 4v5h5M8 13h8M8 17h6"/></svg><span>Уроки</span></a>
+    <a href="#tests" data-nav="tests"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5h10M9 12h10M9 19h10M4 5l1 1 2-2M4 12l1 1 2-2M4 19l1 1 2-2"/></svg><span>Тесты</span></a>
+    <a href="#cards" data-nav="cards"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h12v12H7zM5 17V5h12"/></svg><span>Карточки</span></a>
+    <a href="#glossary" data-nav="glossary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14zM16 16l4 4"/></svg><span>Глоссарий</span></a>
+    <a href="#sheet" data-nav="sheet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18H6zM9 8h6M9 12h6M9 16h3"/></svg><span>Шпаргалка</span></a>
+  </nav>
+
+  <main id="view" tabindex="-1"></main>
+</div>
+
+<footer class="foot">
+  <p><strong>Учебный материал для самоподготовки, не заменяет СОП предприятия и инструктаж.</strong></p>
+  <p>Нормативная база: Правила надлежащей производственной практики ЕАЭС (Решение Совета ЕЭК № 77), Государственная фармакопея РФ. Прогресс хранится только в этом браузере.</p>
+</footer>
+
+<script>
+/* Контент курса «Оператор ТЛФ»: уроки, вопросы, глоссарий, шпаргалка.
+   Числовые нормативы намеренно не приводятся: их берут из СОП и ГФ РФ. */
+window.TLF_DATA = {
+  norms: "Значения берите из СОП и Государственной фармакопеи РФ.",
+
+  lessons: [
+    {
+      id: "gmp",
+      title: "Основы GMP и роль оператора",
+      short: "Правила ЕАЭС, зачем нужна система качества и за что отвечает оператор.",
+      theory: [
+        "GMP (Good Manufacturing Practice, надлежащая производственная практика) — часть системы обеспечения качества, которая гарантирует, что лекарственные средства постоянно производятся и контролируются по стандартам, соответствующим их назначению и регистрационному досье. В Евразийском экономическом союзе действуют Правила надлежащей производственной практики ЕАЭС, утверждённые Решением Совета Евразийской экономической комиссии от 3 ноября 2016 г. № 77. Документ состоит из основной части и приложений и по структуре близок к руководствам GMP ЕС и PIC/S.",
+        "Главная идея GMP: качество нельзя «проверить» в готовом продукте, его нужно встроить в процесс. Лаборатория испытывает лишь выборку таблеток из серии. Качество каждой упаковки обеспечивается тем, что процесс выполнен строго по утверждённой инструкции, оборудование квалифицировано, процесс валидирован, персонал обучен, а каждое действие записано.",
+        "Правила направлены прежде всего против перепутывания (mix-up), перекрёстной контаминации, загрязнения посторонними частицами и микроорганизмами, ошибок дозирования и маркировки. Большинство этих рисков возникает не в лаборатории, а на рабочем месте оператора.",
+        "Оператор выполняет операции строго по СОП и производственной инструкции (регламенту, мастер-записи серии), ведёт записи в момент выполнения, проверяет статус помещения, оборудования и материалов, немедленно сообщает об отклонениях и не вносит самовольных изменений. Решения о качестве продукции принимает не оператор: это зона службы качества, а выпуск серии в обращение подтверждает уполномоченное лицо.",
+        "К самостоятельной работе допускают только после обучения и проверки знаний. Обучение документируют, повторяют периодически и проводят заново при изменении СОП. Если инструкция непонятна или ситуация в ней не описана, правильное действие — остановиться и спросить мастера."
+      ],
+      rules: [
+        "Работайте только по действующей версии СОП и инструкции на серию.",
+        "Не записано — значит не сделано.",
+        "Не уверены — остановитесь и спросите мастера.",
+        "О любом отклонении сообщайте сразу, даже если оно кажется мелким.",
+        "Никаких самовольных изменений рецептуры, параметров или последовательности операций.",
+        "Используйте только помещения, оборудование и материалы с надлежащим статусом."
+      ],
+      errors: [
+        "«Сделаю сейчас, а запишу потом».",
+        "Работа по старой распечатке СОП, которая лежит на участке «на всякий случай».",
+        "Подстройка параметра «на глаз» без разрешённого диапазона и записи.",
+        "Умалчивание о небольшой ошибке, чтобы «не поднимать шум».",
+        "Подпись за коллегу или отметка операции, которую выполнял не ты."
+      ],
+      questions: [
+        { type: "single", q: "Каким документом утверждены Правила надлежащей производственной практики ЕАЭС?",
+          options: ["Решением Совета ЕЭК № 77", "Стандартом ISO 9001", "Правилами внутреннего трудового распорядка", "Инструкцией по охране труда"],
+          answer: 0, explain: "Правила GMP ЕАЭС утверждены Решением Совета Евразийской экономической комиссии от 3 ноября 2016 г. № 77." },
+        { type: "tf", q: "Качество таблеток можно гарантировать только за счёт контроля готовой продукции.",
+          answer: false, explain: "Испытывается выборка. Качество встраивается в процесс: обученный персонал, квалифицированное оборудование, валидированный процесс, точные записи." },
+        { type: "multi", q: "Какие риски GMP прямо направлены предотвращать?",
+          options: ["Перепутывание материалов и продукции", "Перекрёстную контаминацию", "Ошибки маркировки", "Рост себестоимости"],
+          answer: [0, 1, 2], explain: "Перепутывание, перекрёстная контаминация и ошибки маркировки — ключевые риски GMP. Себестоимость к задачам GMP не относится." },
+        { type: "single", q: "Кто подтверждает выпуск серии в обращение?",
+          options: ["Оператор, который её произвёл", "Мастер смены", "Уполномоченное лицо", "Кладовщик готовой продукции"],
+          answer: 2, explain: "Выпуск серии подтверждает уполномоченное лицо после оценки протокола серии и результатов контроля." },
+        { type: "single", q: "Параметр процесса вышел за пределы, указанные в инструкции. Как поступить?",
+          options: ["Продолжить работу и записать всё в конце смены", "Самостоятельно вернуть параметр и никому не говорить", "Действовать по СОП (при необходимости остановить процесс) и сразу сообщить мастеру", "Выбросить продукцию, полученную за смену"],
+          answer: 2, explain: "Выход за пределы — отклонение. Его фиксируют и сообщают немедленно; решение о продукции принимают руководитель и служба качества." }
+      ]
+    },
+
+    {
+      id: "personnel",
+      title: "Персонал, гигиена и чистые помещения",
+      short: "Санитарная одежда, вход через шлюзы, перепады давления, классы чистоты.",
+      theory: [
+        "Человек — главный источник загрязнений в производстве: частички кожи, волосы, микроорганизмы, капли при разговоре и кашле. Поэтому требования к персоналу в GMP подробны. Работник обязан сообщать руководителю о заболеваниях, открытых ранах, кожных поражениях; решение о допуске к работе с открытым продуктом принимается по СОП предприятия.",
+        "В производственных зонах запрещены еда, напитки, курение, жевательная резинка, хранение личных лекарств. Украшения, часы, косметика, накладные ногти, телефоны запрещены или ограничены по СОП. Руки моют и обрабатывают в установленном порядке при входе и после загрязнения.",
+        "Санитарная одежда подбирается по классу зоны: она закрывает волосы (а при наличии — бороду), используется специальная обувь или бахилы, перчатки — когда это предусмотрено СОП. Одеваются строго в последовательности, указанной в СОП и на схеме в гардеробе или шлюзе. Испачканную или повреждённую одежду меняют.",
+        "Вход в чистые зоны — через шлюзы. Двери шлюза не открывают одновременно: это нарушает разделение зон и перепады давления. Направление перепадов задаётся проектом. В производстве твёрдых форм помещения с пылящими операциями нередко держат при пониженном давлении относительно коридора, чтобы пыль не выходила наружу. Если СОП требует проверять показания индикаторов давления перед входом, выход за пределы — повод сообщить мастеру.",
+        "Классы чистоты A, B, C и D описаны в Приложении 1 Правил GMP ЕАЭС, которое относится к производству стерильных лекарственных средств. Для нестерильных твёрдых лекарственных форм требования к помещениям устанавливает предприятие на основе оценки риска; часто используются зоны, соответствующие классу D, или контролируемые зоны. Какой класс у вашего участка и какие там пределы — смотрите в СОП."
+      ],
+      rules: [
+        "Сообщайте о болезни, ранах и кожных проблемах до начала смены.",
+        "Переодевайтесь строго по схеме, не пропуская шагов.",
+        "Не открывайте обе двери шлюза одновременно.",
+        "Не выносите санитарную одежду чистой зоны за её пределы.",
+        "Не трогайте лицо, волосы, маску руками в перчатках во время работы с продуктом.",
+        "Двигайтесь спокойно: резкие движения поднимают пыль и частицы."
+      ],
+      errors: [
+        "Вход в зону «на минутку» без полного переодевания.",
+        "Часы или кольцо под перчаткой.",
+        "Работа с открытым продуктом при насморке, о котором никто не знает.",
+        "Подпирание двери шлюза тележкой.",
+        "Повторное использование одноразовой одежды."
+      ],
+      questions: [
+        { type: "tf", q: "Работник с открытой раной на руке может работать с открытым продуктом без уведомления мастера, если наденет перчатки.",
+          answer: false, explain: "О ране нужно сообщить. Решение о допуске принимается по СОП; самостоятельно «закрыть вопрос» перчаткой нельзя." },
+        { type: "multi", q: "Что запрещено в производственной зоне?",
+          options: ["Приём пищи и напитков", "Ношение украшений", "Хранение личных лекарств", "Обработка рук по СОП"],
+          answer: [0, 1, 2], explain: "Еда, украшения и личные лекарства — источники загрязнения и перепутывания. Обработка рук, наоборот, обязательна." },
+        { type: "single", q: "Почему нельзя одновременно открывать обе двери шлюза?",
+          options: ["Нарушается разделение зон и перепад давления, загрязнение может перейти в другую зону", "Это требование только пожарной безопасности", "Двери быстро изнашиваются", "Это экономит электроэнергию"],
+          answer: 0, explain: "Шлюз разделяет зоны с разной чистотой. Открытые одновременно двери выравнивают давление и дают путь пыли и частицам." },
+        { type: "single", q: "Где описаны классы чистоты A, B, C, D?",
+          options: ["В Приложении 1 Правил GMP ЕАЭС (стерильные лекарственные средства)", "В паспорте таблеточного пресса", "В инструкции к весам", "В ГОСТ на упаковочную плёнку"],
+          answer: 0, explain: "Классы A–D определены в Приложении 1. Для нестерильных форм требования к зонам устанавливает предприятие." },
+        { type: "single", q: "Откуда брать порядок надевания санитарной одежды?",
+          options: ["Из СОП и схемы в гардеробе или шлюзе", "Как удобнее самому", "Как делают опытные коллеги", "Из любой инструкции в интернете"],
+          answer: 0, explain: "Последовательность переодевания утверждена СОП конкретного предприятия и зоны." }
+      ]
+    },
+
+    {
+      id: "docs",
+      title: "Документация и ALCOA+",
+      short: "Протокол серии, журналы, правила записей и исправлений.",
+      theory: [
+        "Документация — основа GMP. Основные документы оператора: СОП (стандартные операционные процедуры), производственный регламент и мастер-запись серии, протокол (запись) серии, журналы использования и уборки оборудования, статусные этикетки, бланки внутрипроцессного контроля. По протоколу серии должна восстанавливаться вся её история: кто, когда, на каком оборудовании, с какими материалами и параметрами её делал.",
+        "Требования к целостности данных описывают аббревиатурой ALCOA+. A — Attributable (атрибутируемость: видно, кто сделал запись); L — Legible (разборчивость, читаемость весь срок хранения); C — Contemporaneous (своевременность: запись в момент действия); O — Original (оригинальность: первичная запись, а не копия с черновика); A — Accurate (точность). «Плюс» добавляет: Complete (полнота), Consistent (последовательность, логичный порядок дат и времени), Enduring (долговечность), Available (доступность в течение срока хранения).",
+        "Записи вносят сразу после выполнения действия, ручкой, разрешённой СОП (не карандашом), разборчиво, с датой и подписью. Черновики, стикеры, записи на перчатке или ладони запрещены: первичная запись должна сразу попадать в утверждённый документ. Пустые поля, не требующие заполнения, оформляют так, как предписывает СОП (например, прочерком), чтобы туда нельзя было что-то дописать позже.",
+        "Ошибку исправляют так: зачёркивают одной линией, чтобы исходное значение читалось, рядом пишут верное значение, ставят подпись и дату, а если СОП требует — причину исправления. Корректор, заклеивание, затирание, перезапись поверх цифры недопустимы.",
+        "В электронных системах (весы с принтером, панели оборудования, MES) у каждого пользователя своя учётная запись. Пароль никому не передают, под чужим логином не работают. Система ведёт контрольный журнал (audit trail), где видны все изменения данных."
+      ],
+      rules: [
+        "Пишите в момент выполнения действия, не «по памяти».",
+        "Исправление: одна черта, исходное читается, верное значение, подпись, дата, причина по СОП.",
+        "Никаких черновиков и записей на посторонних носителях.",
+        "Распечатки с весов и приборов — первичные данные: их прикладывают к протоколу по СОП.",
+        "Свой логин и пароль — только для себя.",
+        "Подписывайте только то, что сделали или проверили лично."
+      ],
+      errors: [
+        "Заполнение протокола в конце смены «одним махом».",
+        "Корректор или перезапись цифры поверх старой.",
+        "Запись массы на перчатке, чтобы потом перенести.",
+        "Работа под учётной записью коллеги, «потому что он уже вошёл».",
+        "Подпись «проверил» без фактической проверки."
+      ],
+      questions: [
+        { type: "multi", q: "Что входит в базовую часть ALCOA?",
+          options: ["Attributable — атрибутируемость", "Legible — разборчивость", "Contemporaneous — своевременность", "Optional — необязательность"],
+          answer: [0, 1, 2], explain: "ALCOA: Attributable, Legible, Contemporaneous, Original, Accurate. «Optional» в принципах нет." },
+        { type: "single", q: "Как правильно исправить ошибочную запись в протоколе серии?",
+          options: ["Зачеркнуть одной линией так, чтобы исходное читалось, написать верное значение, подпись, дату и причину по СОП", "Замазать корректором и написать сверху", "Заклеить и переписать", "Переписать страницу протокола начисто"],
+          answer: 0, explain: "Исходная запись должна оставаться читаемой, а исправление — атрибутируемым и датированным." },
+        { type: "tf", q: "Результаты взвешивания можно записать на черновик, а в протокол перенести в конце смены.",
+          answer: false, explain: "Это нарушает принципы Contemporaneous и Original. Запись делают сразу в утверждённый документ." },
+        { type: "single", q: "Что означает принцип Contemporaneous?",
+          options: ["Запись делается в момент выполнения действия", "Запись сделана оригинальным бланком", "Запись разборчива", "Запись полная"],
+          answer: 0, explain: "Contemporaneous — своевременность: данные фиксируются тогда, когда действие выполнено." },
+        { type: "single", q: "Коллега просит поработать на весах под его учётной записью, пока он отошёл. Что верно?",
+          options: ["Отказаться: учётная запись персональна, иначе нарушается атрибутируемость", "Можно, если он вернётся быстро", "Можно, если мастер устно разрешил", "Можно, если потом сделать отметку в журнале"],
+          answer: 0, explain: "Каждое действие в системе должно быть привязано к тому, кто его выполнил. Работа под чужим логином — нарушение целостности данных." }
+      ]
+    },
+
+    {
+      id: "weighing",
+      title: "Получение и взвешивание сырья",
+      short: "Идентификация, статусы материалов, весовая, перекрёстная контаминация.",
+      theory: [
+        "При поступлении на склад проверяют целостность упаковки и пломб, этикетки поставщика, соответствие документам. Материалу присваивают внутренний номер и статус «Карантин». До решения службы контроля качества материал хранят отдельно (физически или с блокировкой в учётной системе). Повреждённую тару не используют, изолируют и сообщают о ней по СОП.",
+        "Основные статусы: «Карантин» — материал ожидает решения, использовать нельзя; «Разрешено» (одобрено к использованию) — можно выдавать в производство; «Забраковано» (отклонено) — использовать нельзя, материал изолируют до возврата или уничтожения. Цвет и вид статусных этикеток задаёт СОП предприятия. На производство выдают только разрешённые материалы в пределах срока годности или даты переконтроля.",
+        "Взвешивание проводят в отдельной весовой или кабине с местной вытяжкой (например, с нисходящим потоком воздуха). Перед началом проверяют чистоту и статус помещения, статус калибровки весов и выполняют проверку весов перед использованием в порядке, установленном СОП. Диапазон весов должен подходить к взвешиваемой массе.",
+        "Как правило, в кабине одновременно работают с одним материалом: открыли, взвесили, закрыли, промаркировали, убрали — и только затем следующий. Для каждого материала — чистый инструмент. Каждую навеску маркируют: наименование и номер партии материала, масса (брутто, тара, нетто), продукт и номер серии, дата, подписи. Правильность материала и массы подтверждает второй человек или электронная система, как установлено СОП.",
+        "Перекрёстную контаминацию предотвращают совокупностью мер: одна серия и один продукт в помещении одновременно, проверка чистоты линии перед началом, закрытая тара, местная вытяжка, перепады давления, смена санитарной одежды при необходимости, валидированная уборка, выделенный инструмент."
+      ],
+      rules: [
+        "В производство — только материалы со статусом «Разрешено» и действующим сроком.",
+        "Сверяйте наименование, код и номер партии с требованием на серию.",
+        "Проверка весов перед работой — по СОП, результат записан.",
+        "Один материал открыт — один материал взвешивается.",
+        "Каждая навеска промаркирована сразу, а не «потом».",
+        "Остатки возвращают в закрытой маркированной таре по СОП."
+      ],
+      errors: [
+        "Взвешивание из тары со статусом «Карантин», «потому что анализ точно будет хороший».",
+        "Один совок на несколько веществ.",
+        "Весы без действующей калибровки или с пропущенной ежедневной проверкой.",
+        "Неподписанные пакеты с навесками на одной тележке.",
+        "Пересыпание сырья из повреждённого мешка без уведомления мастера."
+      ],
+      questions: [
+        { type: "single", q: "С каким статусом сырьё можно выдавать на взвешивание для производства?",
+          options: ["Разрешено", "Карантин", "Забраковано", "Любой, если серия срочная"],
+          answer: 0, explain: "В производство выдают только материалы, разрешённые службой качества." },
+        { type: "multi", q: "Что проверить перед взвешиванием?",
+          options: ["Статус и срок годности (переконтроля) материала", "Статус калибровки весов и проверку перед использованием", "Соответствие наименования и номера партии требованию на серию", "Цвет халата коллеги"],
+          answer: [0, 1, 2], explain: "Материал, весы и документы проверяют до начала работы." },
+        { type: "tf", q: "В весовой кабине допустимо одновременно держать открытыми два разных вещества, если они для одной серии.",
+          answer: false, explain: "По общему правилу открыт один материал: так снижается риск перепутывания и перекрёстного загрязнения." },
+        { type: "single", q: "Зачем второй человек или электронная система подтверждает взвешивание?",
+          options: ["Чтобы исключить ошибку в идентификации материала и массе", "Чтобы ускорить работу", "Это формальность без смысла", "Чтобы распределить ответственность за опоздание"],
+          answer: 0, explain: "Ошибка дозирования критична для качества, поэтому идентичность и массу подтверждают независимо." },
+        { type: "single", q: "При получении обнаружен повреждённый мешок с сырьём. Что делать?",
+          options: ["Не использовать, изолировать и сообщить по СОП", "Пересыпать в чистый мешок", "Использовать верхнюю часть, она не пострадала", "Выбросить, никому не сообщая"],
+          answer: 0, explain: "Повреждение тары — риск загрязнения. Решение о материале принимает служба качества." }
+      ]
+    },
+
+    {
+      id: "mixing",
+      title: "Просеивание и смешивание",
+      short: "Сита, однородность смеси, расслоение, смазывающие вещества.",
+      theory: [
+        "Просеивание разрушает комки (агломераты), выравнивает размер частиц и задерживает посторонние включения. Размер ячеек сита указан в регламенте. Целостность сита проверяют до и после просеивания и записывают результат: порванное сито означает, что часть материала прошла без калибровки, а фрагменты сетки могли попасть в продукт.",
+        "Цель смешивания — однородность: в каждой таблетке должно оказаться одинаковое количество действующего вещества. Используют V-образные, кубические, бин-смесители (смешивание в контейнере), а также смесители-грануляторы. Порядок загрузки, степень заполнения смесителя, скорость и время смешивания указаны в регламенте и подтверждены валидацией. Менять их самостоятельно нельзя.",
+        "Хорошо перемешанная смесь может снова расслоиться (сегрегация): при вибрации во время транспортировки, при выгрузке с большой высоты, при сильных различиях частиц по размеру и плотности. Поэтому важны бережная выгрузка, короткие пути транспортировки и соблюдение способа перегрузки.",
+        "Смазывающие вещества (например, магния стеарат) обычно добавляют на последнем этапе и смешивают короткое время. Избыточное смешивание с ними может снижать прочность таблеток и замедлять распадаемость и растворение. Пробы для оценки однородности отбирают пробоотборником в точках, указанных в плане отбора."
+      ],
+      rules: [
+        "Сито нужного размера по регламенту; целостность — до и после, с записью.",
+        "Порядок загрузки — строго по регламенту.",
+        "Скорость и время смешивания — только из регламента, без «добавить пару минут».",
+        "Выгружайте бережно, избегайте вибрации и больших перепадов высоты.",
+        "Смазывающее вещество — на своём этапе и своё время.",
+        "Пробы — в указанных точках, указанным пробоотборником."
+      ],
+      errors: [
+        "Просеивание без проверки сита после окончания работы.",
+        "«Домешать подольше для надёжности».",
+        "Загрузка всех компонентов разом вместо указанной последовательности.",
+        "Долгая перевозка смеси по неровному полу.",
+        "Отбор проб совком с поверхности."
+      ],
+      questions: [
+        { type: "single", q: "Зачем проверяют целостность сита до и после просеивания?",
+          options: ["Чтобы убедиться, что весь материал прошёл через нужное сито и в продукт не попали фрагменты сетки", "Только ради чистоты участка", "Чтобы ускорить просеивание", "Этого делать не нужно"],
+          answer: 0, explain: "Порванное сито — риск посторонних частиц и неоткалиброванного материала. Результат проверки записывают." },
+        { type: "tf", q: "Увеличение времени смешивания с магния стеаратом всегда улучшает качество таблеток.",
+          answer: false, explain: "Избыточное смешивание со смазывающим веществом может снизить прочность и замедлить распадаемость и растворение." },
+        { type: "multi", q: "Что может вызвать расслоение (сегрегацию) готовой смеси?",
+          options: ["Вибрация при транспортировке", "Большая высота падения при выгрузке", "Сильное различие частиц по размеру и плотности", "Соблюдение способа перегрузки по регламенту"],
+          answer: [0, 1, 2], explain: "Вибрация, падение с высоты и различия частиц приводят к сегрегации. Соблюдение регламента её предотвращает." },
+        { type: "single", q: "Откуда берут время и скорость смешивания?",
+          options: ["Из регламента и мастер-записи серии", "По личному опыту", "Как у предыдущей серии другого продукта", "На усмотрение мастера в каждой смене"],
+          answer: 0, explain: "Параметры смешивания утверждены и подтверждены валидацией." },
+        { type: "single", q: "Почему важен порядок загрузки компонентов в смеситель?",
+          options: ["Он влияет на однородность смеси и утверждён регламентом", "Он ни на что не влияет", "Лубрикант всегда загружают первым", "Чтобы быстрее загрузить смеситель"],
+          answer: 0, explain: "Последовательность загрузки — часть валидированного процесса и влияет на распределение компонентов." }
+      ]
+    },
+
+    {
+      id: "granulation",
+      title: "Гранулирование и сушка",
+      short: "Влажное и сухое гранулирование, псевдоожиженный слой, конечная точка сушки.",
+      theory: [
+        "Гранулирование превращает порошковую смесь в гранулы. Это улучшает сыпучесть и прессуемость, предотвращает расслоение смеси, уменьшает пыление и помогает точнее дозировать массу при таблетировании и инкапсулировании.",
+        "Влажное гранулирование: сухое перемешивание компонентов, добавление раствора связующего с заданной скоростью, влажное перемешивание (массирование), влажное измельчение, сушка, сухая калибровка гранул и опудривание (смешивание с вспомогательными веществами и смазывающим). В смесителе-грануляторе с высоким усилием сдвига конечную точку гранулирования определяют способом, установленным регламентом (например, по времени, потребляемой мощности или крутящему моменту).",
+        "Сушат в сушилке с псевдоожиженным слоем или в полочной сушилке. Конечную точку сушки подтверждают определением влажности (потери в массе при высушивании) по методике и пределам регламента. Пересушивание делает гранулы хрупкими, даёт мелкую фракцию и статическое электричество; недосушивание приводит к налипанию на пуансоны, проблемам стабильности и микробиологическим рискам. Переувлажнение при грануляции даёт слишком плотные гранулы и может изменить распадаемость.",
+        "Сухое гранулирование (компактирование валками или брикетирование) применяют, когда действующее вещество чувствительно к влаге или нагреву. Порошок спрессовывают между валками в пластины, затем измельчают до гранул. Параметры — давление валков, зазор, скорость валков и подающего шнека — задаёт регламент.",
+        "Перед работой с сушилкой псевдоожиженного слоя проверяют целостность и правильную установку фильтров, заземление, состояние уплотнений. Мелкодисперсная пыль горюча, а органические растворители повышают риск взрыва, поэтому соблюдают меры взрывобезопасности."
+      ],
+      rules: [
+        "Скорость подачи связующего и время грануляции — только по регламенту.",
+        "Конечную точку сушки подтверждают измерением, а не «на ощупь».",
+        "Перед запуском сушилки: фильтры целы, заземление подключено.",
+        "Сито калибровочной машины — указанного размера, проверено до и после.",
+        "Гранулят хранят в закрытой маркированной таре не дольше разрешённого времени."
+      ],
+      errors: [
+        "Добавление «немного воды», потому что масса показалась сухой.",
+        "Сушка по таймеру без контроля влажности.",
+        "Запуск сушилки с порванным фильтровальным рукавом.",
+        "Пересушивание «с запасом», чтобы точно не налипало.",
+        "Открытая тара с гранулятом на ночь."
+      ],
+      questions: [
+        { type: "multi", q: "Каковы цели гранулирования?",
+          options: ["Улучшить сыпучесть", "Предотвратить расслоение смеси", "Уменьшить пыление", "Увеличить срок годности упаковочной плёнки"],
+          answer: [0, 1, 2], explain: "Гранулы лучше текут, не расслаиваются и меньше пылят. К упаковочной плёнке это отношения не имеет." },
+        { type: "single", q: "Когда обычно выбирают сухое гранулирование (компактирование)?",
+          options: ["Когда действующее вещество чувствительно к влаге или нагреву", "Всегда, это универсальный способ", "Когда нет связующего раствора на складе", "Чтобы таблетки были блестящими"],
+          answer: 0, explain: "Сухое гранулирование обходится без жидкости и сушки, поэтому подходит для чувствительных к влаге и теплу веществ." },
+        { type: "single", q: "Как обычно подтверждают окончание сушки гранулята?",
+          options: ["Определением влажности (потери в массе при высушивании) по регламенту", "На ощупь", "По запаху", "По окончанию смены"],
+          answer: 0, explain: "Конечную точку сушки подтверждают измерением по утверждённой методике и пределам." },
+        { type: "tf", q: "Перед запуском сушилки с псевдоожиженным слоем проверяют целостность фильтров и заземление.",
+          answer: true, explain: "Порванный фильтр — потеря продукта и загрязнение, отсутствие заземления — риск искры и взрыва пыли." },
+        { type: "single", q: "К чему может привести переувлажнение массы при влажном гранулировании?",
+          options: ["К слишком плотным гранулам, проблемам сушки и изменению распадаемости", "Ни к чему, лишняя влага испарится", "К улучшению прессуемости в любом случае", "К снижению влажности готового гранулята"],
+          answer: 0, explain: "Избыток связующего даёт плотные, трудно высушиваемые гранулы и влияет на свойства таблеток." }
+      ]
+    },
+
+    {
+      id: "tableting",
+      title: "Таблетирование",
+      short: "Роторный пресс, параметры, настройка, дефекты таблеток и их причины.",
+      theory: [
+        "Роторный таблеточный пресс состоит из бункера, питателя (гравитационного или принудительного), ротора с матрицами, верхних и нижних пуансонов, направляющих (кулачков), роликов предварительного и основного прессования, узла выталкивания и съёмника. После пресса таблетки обычно проходят обеспыливатель и металлодетектор.",
+        "Цикл одной таблетки: заполнение матрицы, дозирование (лишнее снимается), предварительное прессование (удаление воздуха), основное прессование, выталкивание. Масса таблетки в первую очередь задаётся глубиной заполнения матрицы. Прочность и толщина зависят от усилия прессования: при прочих равных большее усилие даёт более прочную и тонкую таблетку. Также важны скорость ротора и скорость питателя.",
+        "Перед работой осматривают пресс-инструмент (пуансоны и матрицы): маркировка, износ, сколы, царапины. При запуске первые таблетки проверяют по СОП и только после положительного результата начинают выпуск. Таблетки, полученные при настройке, собирают в отдельную промаркированную тару и учитывают. Настраивают параметры только в пределах, разрешённых регламентом, и каждое изменение записывают.",
+        "Типичные дефекты. Капинг — отделение верхней (реже нижней) части таблетки в виде «шапочки». Ламинирование (расслоение, расслаивание) — разделение таблетки на горизонтальные слои. У обоих дефектов похожие причины: защемлённый воздух, избыток мелкой фракции, пересушенный гранулят, слишком высокая скорость или усилие, недостаточное предварительное прессование, изношенный инструмент. Прилипание — налипание массы на поверхность пуансонов; выщипывание — вырывание частиц из рельефа надписи. Причины: повышенная влажность, недостаток смазывающего вещества, шероховатые или повреждённые пуансоны. Сколы и крошение — недостаточная прочность или жёсткий съём.",
+        "Вариации массы возникают из-за плохой сыпучести, расслоения смеси, колебаний уровня продукта в бункере и питателе, неравномерного заполнения матриц, износа или загрязнения пуансонов, слишком высокой скорости ротора. Действия оператора при дефекте: проверить по СОП, сообщить мастеру, при выходе за пределы — остановить пресс и изолировать продукцию с момента последней удовлетворительной проверки."
+      ],
+      rules: [
+        "Пресс-инструмент осмотрен и соответствует продукту до начала работы.",
+        "Выпуск — только после проверки первых таблеток по СОП.",
+        "Изменения параметров — в разрешённом диапазоне и с записью.",
+        "Таблетки при настройке — в отдельной маркированной таре, учитываются в балансе.",
+        "Следите за уровнем продукта в бункере: он влияет на заполнение матриц.",
+        "Дефект за пределами нормы — остановка, изоляция продукции, сообщение мастеру."
+      ],
+      errors: [
+        "Подъём усилия прессования, чтобы «вылечить» капинг, без согласования.",
+        "Возврат таблеток из настройки в общий поток.",
+        "Работа с пуансоном со сколом «до конца серии».",
+        "Пустеющий бункер, пока оператор занят записями.",
+        "Отсутствие записи о корректировке глубины заполнения."
+      ],
+      questions: [
+        { type: "single", q: "Что такое капинг?",
+          options: ["Отделение верхней или нижней части таблетки в виде «шапочки»", "Налипание массы на пуансон", "Разброс массы таблеток", "Изменение цвета таблетки"],
+          answer: 0, explain: "Капинг — отделение «шапочки». Налипание — это прилипание, разброс массы — вариация массы." },
+        { type: "multi", q: "Возможные причины прилипания массы к пуансонам:",
+          options: ["Повышенная влажность гранулята", "Недостаток смазывающего вещества", "Шероховатая или повреждённая поверхность пуансонов", "Исправный, правильно настроенный инструмент"],
+          answer: [0, 1, 2], explain: "Влага, недостаток лубриканта и дефекты поверхности пуансонов — типичные причины прилипания." },
+        { type: "single", q: "Чем в первую очередь регулируется масса таблетки на роторном прессе?",
+          options: ["Глубиной заполнения матрицы", "Усилием основного прессования", "Скоростью вытяжного вентилятора", "Температурой в помещении"],
+          answer: 0, explain: "Объём матрицы при заполнении определяет массу. Усилие прессования влияет на прочность и толщину." },
+        { type: "multi", q: "Что может вызвать вариацию массы таблеток?",
+          options: ["Плохая сыпучесть гранулята", "Расслоение смеси", "Колебания уровня продукта в бункере и питателе", "Стабильная работа питателя"],
+          answer: [0, 1, 2], explain: "Масса зависит от равномерного заполнения матриц, а его нарушают плохая сыпучесть, сегрегация и колебания уровня." },
+        { type: "tf", q: "Ламинирование (расслоение) — это разделение таблетки на горизонтальные слои.",
+          answer: true, explain: "Да. В отличие от капинга, отделяется не одна «шапочка», а таблетка расслаивается на несколько слоёв." }
+      ]
+    },
+
+    {
+      id: "coating",
+      title: "Нанесение оболочки",
+      short: "Цели покрытия, барабан, параметры процесса, дефекты оболочки.",
+      theory: [
+        "Оболочку наносят, чтобы защитить ядро от влаги, света и воздуха, замаскировать вкус и запах, облегчить проглатывание, сделать таблетку узнаваемой по цвету, а также для модифицированного высвобождения (кишечнорастворимые и пролонгированные покрытия). Наиболее распространено плёночное покрытие; традиционное дражирование сахарными сиропами применяется реже.",
+        "Типичное оборудование — перфорированный барабан для нанесения покрытий с распылительными форсунками и системой подачи и вытяжки воздуха. Этапы: загрузка и прогрев ядер, распыление раствора или суспензии, сушка, охлаждение, выгрузка. Суспензию готовят по регламенту, постоянно перемешивают и используют в пределах установленного срока.",
+        "Ключевые параметры: температура входящего и отходящего воздуха, температура слоя таблеток, расход воздуха, скорость подачи раствора, давление распыляющего воздуха, скорость вращения барабана, расстояние и угол форсунок. Их значения задаёт регламент. Толщину покрытия контролируют по приросту массы таблеток.",
+        "Дефекты покрытия: слипание таблеток («двойники») — обычно из-за переувлажнения слоя, когда подача раствора опережает сушку; «апельсиновая корка» (шероховатая поверхность) — из-за неоптимального распыления, слишком быстро высыхающих или крупных капель, высокой вязкости; заплывание надписи («мостик» над логотипом); неравномерность цвета; растрескивание оболочки; сколы и эрозия — если ядра недостаточно прочны или процесс слишком жёсткий.",
+        "Ядра поступают на покрытие только после положительного внутрипроцессного контроля: недостаточно прочные или сильно истирающиеся ядра в барабане крошатся и портят покрытие. Форсунки проверяют до запуска, засорение форсунки быстро даёт пятнистость и дефекты."
+      ],
+      rules: [
+        "Суспензию готовят по регламенту и перемешивают непрерывно.",
+        "Проверьте форсунки и распыл до подачи на ядра.",
+        "Параметры воздуха и подачи — по регламенту, изменения записываются.",
+        "Прирост массы контролируют с указанной частотой.",
+        "На покрытие — только ядра с положительным результатом IPC."
+      ],
+      errors: [
+        "Резкое увеличение подачи раствора, чтобы закончить быстрее.",
+        "Суспензия без перемешивания во время паузы.",
+        "Запуск распыла на холодные ядра без прогрева по регламенту.",
+        "Игнорирование частично засорённой форсунки.",
+        "Подача на покрытие ядер, по которым не завершён контроль."
+      ],
+      questions: [
+        { type: "multi", q: "Для чего наносят оболочку на таблетки?",
+          options: ["Защита от влаги и света", "Маскировка вкуса и запаха", "Модифицированное высвобождение", "Увеличение дозы действующего вещества"],
+          answer: [0, 1, 2], explain: "Оболочка защищает, маскирует вкус и может управлять высвобождением. Дозу действующего вещества она не увеличивает." },
+        { type: "single", q: "С чем обычно связана «апельсиновая корка» на плёночной оболочке?",
+          options: ["С неоптимальным распылением: крупные или слишком быстро высыхающие капли, высокая вязкость", "С неверной маркировкой серии", "С низкой массой ядер", "С длительным хранением блистеров"],
+          answer: 0, explain: "Шероховатость возникает, когда капли не успевают растечься по поверхности до высыхания." },
+        { type: "single", q: "Слипание таблеток («двойники») чаще всего вызвано:",
+          options: ["Переувлажнением слоя: подача раствора опережает сушку", "Слишком медленной подачей раствора", "Чрезмерно сухим воздухом при правильной подаче", "Правильно настроенным процессом"],
+          answer: 0, explain: "Влажные поверхности таблеток склеиваются. Баланс подачи и сушки задаёт регламент." },
+        { type: "tf", q: "Ядра для нанесения оболочки должны быть достаточно прочными, иначе возможны сколы и эрозия.",
+          answer: true, explain: "В барабане таблетки постоянно перекатываются, слабые ядра крошатся и портят покрытие." },
+        { type: "single", q: "Зачем контролируют прирост массы при нанесении оболочки?",
+          options: ["Чтобы получить нужное количество покрытия согласно регламенту", "Чтобы учесть отходы плёнки", "Чтобы ускорить сушку", "Это не контролируют"],
+          answer: 0, explain: "По приросту массы судят о количестве нанесённого покрытия, от которого зависят его защитные и функциональные свойства." }
+      ]
+    },
+
+    {
+      id: "capsules",
+      title: "Инкапсулирование",
+      short: "Твёрдые капсулы, работа машины, хранение капсул, дефекты.",
+      theory: [
+        "Твёрдая капсула состоит из корпуса и крышечки, оболочка обычно из желатина или гипромеллозы (ГПМЦ). Размер обозначают номерами; чем больше номер, тем меньше капсула. Наполняют порошком, гранулами, пеллетами, иногда мини-таблетками.",
+        "Основные операции капсулонаполнительной машины: подача и ориентация пустых капсул, разделение корпуса и крышечки (обычно вакуумом), наполнение корпуса, удаление неразделившихся капсул, смыкание, выталкивание. Дозирование выполняется дозаторами-трубками или дозирующим диском с уплотняющими штифтами. Масса содержимого зависит от настройки дозирования (толщина диска, глубина уплотнения, настройки дозатора) и свойств порошка: сыпучести и насыпной плотности.",
+        "Пустые капсулы хранят в условиях, указанных поставщиком и в СОП. Влажность критична: пересушенные желатиновые капсулы становятся хрупкими и трескаются, а при избыточной влажности размягчаются и деформируются. Перед использованием проверяют номер партии, размер и цвет капсул по протоколу серии.",
+        "Дефекты: неразделившиеся и пустые капсулы, телескопирование (корпус и крышечка смыкаются неправильно, одна вдавливается в другую), вмятины, трещины, раскрывшиеся капсулы, недостаточное смыкание (повышенная длина), просыпание порошка, загрязнение поверхности. После машины капсулы обычно обеспыливают и полируют, проводят контроль массы и металлодетекцию."
+      ],
+      rules: [
+        "Размер, цвет и партия капсул сверяются с протоколом серии.",
+        "Капсулы хранят и подают в условиях по СОП.",
+        "Контроль массы и внешнего вида — с частотой, указанной в регламенте.",
+        "Настройки дозирования меняют только в разрешённых пределах с записью.",
+        "Отбракованные капсулы учитывают в балансе серии."
+      ],
+      errors: [
+        "Коробка с капсулами оставлена открытой у тёплого оборудования.",
+        "Смешение остатков капсул разных партий в одном бункере.",
+        "Игнорирование роста числа неразделившихся капсул.",
+        "Удаление «немного кривых» капсул вручную без учёта.",
+        "Работа без проверки длины сомкнутой капсулы."
+      ],
+      questions: [
+        { type: "tf", q: "Чем больше номер размера твёрдой капсулы, тем она меньше.",
+          answer: true, explain: "Размеры нумеруются так, что большие номера соответствуют меньшим капсулам." },
+        { type: "single", q: "Что обычно происходит с пересушенными желатиновыми капсулами?",
+          options: ["Становятся хрупкими и трескаются", "Становятся липкими", "Увеличиваются в размере", "Ничего не меняется"],
+          answer: 0, explain: "Желатину нужна определённая влажность. При её потере оболочка становится ломкой." },
+        { type: "multi", q: "Какие дефекты характерны для капсул?",
+          options: ["Телескопирование", "Вмятины", "Трещины", "Капинг"],
+          answer: [0, 1, 2], explain: "Капинг — дефект таблеток. Для капсул типичны телескопирование, вмятины, трещины, пустые и раскрывшиеся капсулы." },
+        { type: "single", q: "Где хранят пустые капсулы?",
+          options: ["В условиях, указанных поставщиком и в СОП", "Там, где удобно оператору", "Рядом с сушилкой, чтобы были сухими", "На подоконнике"],
+          answer: 0, explain: "Условия хранения влияют на влажность и механические свойства оболочки." },
+        { type: "single", q: "От чего прежде всего зависит масса содержимого капсулы на машине с дозирующим диском?",
+          options: ["От настройки дозирования и свойств порошка (сыпучесть, насыпная плотность)", "От цвета капсулы", "От освещения в помещении", "От номера смены"],
+          answer: 0, explain: "Объём дозирования и уплотнение вместе со свойствами порошка определяют массу наполнения." }
+      ]
+    },
+
+    {
+      id: "packaging",
+      title: "Первичная упаковка и маркировка",
+      short: "Блистерная линия, банки, кодировка, баланс печатных материалов.",
+      theory: [
+        "Первичная упаковка непосредственно контактирует с продуктом и защищает его. На блистерной линии формующая плёнка (например, ПВХ, ПВХ/ПВДХ или алюминий для холодной формовки) формуется в ячейки, ячейки заполняются таблетками или капсулами, система технического зрения проверяет наличие и целостность продукта, затем ячейки запаиваются покровной фольгой. Далее наносится кодировка (номер серии, срок годности), перфорация и вырубка блистеров.",
+        "Качество запайки зависит от температуры, давления и времени запайки, состояния запаечных плит. Герметичность проверяют тестом по методике СОП (например, вакуумным тестом). Упаковка во флаконы и банки включает счёт таблеток, при необходимости — осушитель, укупорку, индукционную запайку, контроль момента закручивания.",
+        "Печатные упаковочные материалы (фольга с печатью, этикетки, инструкции, пачки) — главный источник ошибок маркировки. Их получают по счёту, проверяют соответствие продукту и версии макета, хранят под контролем. По окончании выполняют реконсиляцию: выданное количество сравнивают с использованным, испорченным и возвращённым. Расхождения выше допустимых расследуют до завершения серии. Остатки с напечатанным номером серии уничтожают с записью.",
+        "При запуске линии сверяют материалы с протоколом серии, проверяют правильность кодировки в начале, периодически и в конце работы, проверяют срабатывание систем контроля (камера пустых ячеек, металлодетектор, контрольные весы) на тестовых образцах по СОП. Перед началом обязательна проверка чистоты линии (line clearance)."
+      ],
+      rules: [
+        "Line clearance до появления на линии материалов новой серии.",
+        "Кодировка (серия, срок годности) проверяется и записывается в начале, по ходу и в конце.",
+        "Системы отбраковки проверяют тестовыми образцами по СОП.",
+        "Печатные материалы — по счёту, баланс в конце обязателен.",
+        "Кодированные остатки не возвращают на склад, а уничтожают с записью.",
+        "Отбракованные блистеры не возвращают в поток без разрешённой процедуры."
+      ],
+      errors: [
+        "Оставшийся рулон фольги предыдущей серии на стойке размотки.",
+        "Отключение камеры пустых ячеек из-за «ложных срабатываний».",
+        "Подгонка баланса этикеток «под ноль».",
+        "Ручная доукладка таблеток в блистеры без процедуры.",
+        "Проверка кодировки только в начале смены."
+      ],
+      questions: [
+        { type: "single", q: "Что означает реконсиляция печатных упаковочных материалов?",
+          options: ["Сверку выданного количества с использованным, испорченным и возвращённым", "Подсчёт таблеток в блистере", "Ремонт блистерной машины", "Уборку упаковочного участка"],
+          answer: 0, explain: "Баланс показывает, не ушли ли печатные материалы «в никуда». Необъяснённые расхождения расследуют." },
+        { type: "tf", q: "Остатки фольги с напечатанным номером серии можно вернуть на склад для следующей серии.",
+          answer: false, explain: "Кодированные материалы, относящиеся к конкретной серии, уничтожают с записью по СОП." },
+        { type: "multi", q: "Что проверяют при запуске блистерной линии?",
+          options: ["Соответствие плёнки и фольги протоколу серии", "Номер серии и срок годности в кодировке", "Срабатывание контроля пустых ячеек на тестовых образцах", "Меню столовой на неделю"],
+          answer: [0, 1, 2], explain: "Материалы, кодировка и системы отбраковки проверяются до начала выпуска." },
+        { type: "single", q: "Обнаружено расхождение в балансе этикеток. Что делать?",
+          options: ["Сообщить мастеру; серию не завершают до расследования по СОП", "Исправить цифру, чтобы сошлось", "Игнорировать, если расхождение небольшое", "Выбросить оставшиеся этикетки"],
+          answer: 0, explain: "Пропавшая этикетка может оказаться на чужой продукции. Расхождение расследуют." },
+        { type: "single", q: "Зачем проводят тест на герметичность блистеров?",
+          options: ["Чтобы подтвердить, что запайка надёжно защищает продукт", "Чтобы проверить цвет фольги", "Чтобы ускорить линию", "Чтобы пересчитать блистеры"],
+          answer: 0, explain: "Негерметичный блистер не защищает продукт от влаги и воздуха." }
+      ]
+    },
+
+    {
+      id: "ipc",
+      title: "Внутрипроцессный контроль",
+      short: "Средняя масса, однородность массы, прочность, истираемость, распадаемость, толщина.",
+      theory: [
+        "Внутрипроцессный контроль (IPC, ВПК) — проверки во время производства, чтобы видеть состояние процесса и вовремя его корректировать. Кто выполняет контроль, с какой частотой и на скольких образцах — указано в регламенте и СОП. Приборы должны быть откалиброваны и проверены перед использованием.",
+        "Основные показатели для таблеток. Средняя масса — масса определённого числа таблеток, делённая на их количество. Однородность массы (отклонение массы) — насколько отдельные таблетки отличаются от средней. Прочность на раздавливание — усилие, при котором таблетка разрушается в тестере прочности. Истираемость — потеря массы таблеток после обработки во вращающемся барабане, показывает устойчивость к механическому износу. Распадаемость — время, за которое таблетки распадаются в приборе с корзинками в указанной среде. Толщина (и диаметр) — измеряется толщиномером или микрометром. Также оценивают внешний вид.",
+        "Для гранулята часто контролируют влажность (потерю в массе при высушивании), гранулометрический состав, насыпную плотность; для капсул — массу содержимого и внешний вид; для покрытых таблеток — прирост массы. Методики испытаний описаны в общих фармакопейных статьях, а пределы для каждого продукта — в регламенте. Значения берите из СОП и Государственной фармакопеи РФ.",
+        "Как параметры связаны: при прочих равных увеличение усилия прессования повышает прочность, уменьшает толщину и истираемость и обычно увеличивает время распадаемости. Масса прежде всего зависит от заполнения матрицы.",
+        "Результат в пределах — работа продолжается. Тенденция к границе — корректировка в разрешённом диапазоне с записью. Результат вне пределов — действовать по СОП: остановить процесс, изолировать продукцию, выпущенную после последней удовлетворительной проверки, сообщить мастеру. Повторять испытание до «нужного» результата запрещено."
+      ],
+      rules: [
+        "Частота, объём выборки и пределы — из регламента, не по памяти.",
+        "Перед измерением: прибор откалиброван и проверен.",
+        "Записывайте фактические значения, а не «в норме».",
+        "Выход за пределы — остановка и сообщение, изоляция продукции.",
+        "Никаких повторных испытаний «пока не пройдёт».",
+        "Корректировки — только в разрешённом диапазоне и с записью."
+      ],
+      errors: [
+        "Пропуск плановой проверки при высокой загрузке.",
+        "Запись «соответствует» вместо цифр.",
+        "Перевзвешивание другой выборки, чтобы получить результат в пределах.",
+        "Измерение прочности на неисправном или не проверенном тестере.",
+        "Продолжение работы при тренде к границе без сообщения."
+      ],
+      questions: [
+        { type: "single", q: "Результат внутрипроцессного контроля вышел за установленные пределы. Что верно?",
+          options: ["Действовать по СОП: остановить процесс, изолировать продукцию с последней удовлетворительной проверки, сообщить", "Повторять испытание до получения результата в пределах", "Записать значение на границе нормы", "Продолжать, если отклонение небольшое"],
+          answer: 0, explain: "Результат вне пределов — отклонение. Повтор «до прохождения» — недопустимая подгонка результата." },
+        { type: "single", q: "Что обычно происходит при увеличении усилия прессования (при прочих равных)?",
+          options: ["Прочность растёт, толщина уменьшается", "Прочность падает, толщина растёт", "Ничего не меняется", "Растёт масса таблетки"],
+          answer: 0, explain: "Сильнее сжатая таблетка плотнее, прочнее и тоньше. Масса определяется заполнением матрицы." },
+        { type: "tf", q: "Нормы средней массы и распадаемости одинаковы для всех таблеток, их достаточно запомнить один раз.",
+          answer: false, explain: "Пределы зависят от продукта и указаны в регламенте и ГФ РФ. Значения берите из документов." },
+        { type: "multi", q: "Что относится к внутрипроцессному контролю при таблетировании?",
+          options: ["Средняя масса", "Прочность на раздавливание", "Толщина", "Инвентаризация склада"],
+          answer: [0, 1, 2], explain: "Масса, прочность, толщина, истираемость, распадаемость и внешний вид — показатели IPC. Инвентаризация к ним не относится." },
+        { type: "single", q: "Что показывает истираемость?",
+          options: ["Устойчивость таблеток к механическому износу (потерю массы во вращающемся барабане)", "Скорость растворения", "Содержание действующего вещества", "Цвет и блеск таблеток"],
+          answer: 0, explain: "Истираемость оценивает, насколько таблетки теряют массу при трении и ударах, например при покрытии и упаковке." }
+      ]
+    },
+
+    {
+      id: "cleaning",
+      title: "Уборка оборудования и смена серии",
+      short: "Валидированная мойка, статусы «чистое/грязное», сроки хранения, line clearance.",
+      theory: [
+        "Уборка нужна, чтобы исключить перекрёстную контаминацию, перепутывание и микробное загрязнение. Процедуры уборки валидированы: подтверждено, что именно эта последовательность, эти моющие средства и эти способы удаляют остатки продукта и моющего средства до допустимого уровня. Поэтому менять их самовольно нельзя: любое изменение проходит через контроль изменений.",
+        "Обычная последовательность: разборка по СОП, сухое удаление пыли (пылесосом с подходящим фильтром, а не сдуванием сжатым воздухом, которое разносит пыль), мойка указанными средствами, ополаскивание водой указанного качества, сушка, визуальный осмотр, сборка или защита от повторного загрязнения. Особое внимание — труднодоступным местам: уплотнениям, загрузочным воронкам, пуансонам и матрицам, форсункам.",
+        "Различают уборку между сериями одного продукта в кампании и полную уборку при смене продукта; объём каждой определён СОП. Оборудование и помещения маркируют статусными этикетками («Грязное», «Чистое» и т. п.) с указанием даты, ответственного и, как правило, последнего продукта. Для грязного и чистого состояния установлены сроки хранения: если срок чистого оборудования истёк, уборку повторяют по СОП.",
+        "Line clearance (проверка чистоты линии) выполняется перед началом каждой операции и при смене серии. Убеждаются, что в помещении и на оборудовании нет материалов, продукции, отходов, документов, этикеток и печатных материалов предыдущей серии. Проверяют скрытые места: под бункерами, в лотках и желобах, в коробах отбраковки, на конвейерах. Проверку выполняет оператор и подтверждает второй человек (мастер или представитель службы качества — по СОП), результат записывают в протокол серии."
+      ],
+      rules: [
+        "Уборка — строго по валидированному СОП: средство, концентрация, порядок.",
+        "Пыль — пылесосом или влажным способом, не сжатым воздухом.",
+        "Статусная этикетка — сразу после уборки, с датой и подписью.",
+        "Истёк срок «чистого» состояния — повторная уборка.",
+        "Line clearance — до начала операции, с подтверждением второго лица.",
+        "Проверяйте скрытые места: короба отбраковки, желоба, под оборудованием."
+      ],
+      errors: [
+        "Сдувание пыли сжатым воздухом «для скорости».",
+        "Замена моющего средства на «похожее, которое было под рукой».",
+        "Забытая таблетка предыдущей серии в лотке отбраковки.",
+        "Оборудование без статусной этикетки после уборки.",
+        "Подпись за проверку чистоты линии без фактического осмотра."
+      ],
+      questions: [
+        { type: "single", q: "Что такое line clearance?",
+          options: ["Проверка, что на линии и в помещении нет материалов, продукции, документов и маркировки предыдущей серии", "Плановое техническое обслуживание линии", "Инвентаризация упаковочных материалов", "Тест на герметичность блистеров"],
+          answer: 0, explain: "Line clearance предотвращает перепутывание при переходе к новой серии или продукту." },
+        { type: "tf", q: "Для ускорения уборки пыль с оборудования удобно сдувать сжатым воздухом.",
+          answer: false, explain: "Сжатый воздух разносит пыль по помещению и на чистые поверхности. Используют способы из СОП." },
+        { type: "multi", q: "Какие сведения обычно указывают на статусной этикетке «Чистое»?",
+          options: ["Оборудование или помещение", "Дату уборки", "Подпись выполнившего (и проверившего, если требует СОП)", "Прогноз погоды"],
+          answer: [0, 1, 2], explain: "Этикетка должна показывать, что, когда и кем убрано, чтобы можно было оценить статус и срок." },
+        { type: "single", q: "Срок хранения оборудования в чистом состоянии истёк. Что делать?",
+          options: ["Повторить уборку по СОП", "Использовать как есть, если выглядит чистым", "Самостоятельно продлить срок на этикетке", "Переклеить этикетку с новой датой"],
+          answer: 0, explain: "Сроки хранения установлены по результатам валидации; после их истечения статус «чистое» не подтверждён." },
+        { type: "single", q: "Почему нельзя по своему усмотрению менять моющее средство или порядок мойки?",
+          options: ["Процедура валидирована, изменения проводят только через контроль изменений", "Можно, если результат выглядит чистым", "Можно ради экономии", "Нельзя только в ночную смену"],
+          answer: 0, explain: "Эффективность уборки подтверждена для конкретной процедуры. Другое средство или порядок не подтверждены." }
+      ]
+    },
+
+    {
+      id: "deviations",
+      title: "Отклонения, несоответствия и CAPA",
+      short: "Что считать отклонением, кому и когда сообщать, расследование, CAPA, OOS.",
+      theory: [
+        "Отклонение — любое отступление от утверждённых инструкций, процедур или установленных требований. Примеры: параметр вне пределов, пропущенная проверка, неисправность оборудования во время серии, использование не того материала, ошибка в записи, сбой системы отбраковки, расхождение в балансе. Плановое отклонение согласуют заранее и оформляют до выполнения; незапланированное фиксируют, когда оно обнаружено.",
+        "Оператор обязан немедленно сообщить мастеру (руководителю смены), дальше информацию передают в службу качества в сроки, установленные СОП. Первые действия: обеспечить безопасность, при необходимости остановить процесс, изолировать и промаркировать затронутую продукцию, сохранить доказательства (распечатки, образцы, этикетки), записать факты. Нельзя скрывать отклонение, «исправлять» записи задним числом или самостоятельно решать судьбу продукции.",
+        "Расследование устанавливает факты, оценивает влияние на качество и определяет первопричину. Применяют метод «5 почему», диаграмму Исикавы (причинно-следственную диаграмму) с группировкой причин по 6М: человек, машина (оборудование), метод, материал, измерение, среда. «Ошибка оператора» сама по себе редко является первопричиной: важно понять, почему ошибка стала возможной (неясный СОП, неудобный интерфейс, нехватка обучения, усталость).",
+        "CAPA — корректирующие и предупреждающие действия. Корректирующее действие устраняет причину выявленного несоответствия, чтобы оно не повторилось. Предупреждающее действие устраняет причину потенциального несоответствия, чтобы оно не возникло (например, на другой линии с тем же риском). Эффективность CAPA проверяют.",
+        "OOS (out of specification) — результат испытания вне спецификации; OOT (out of trend) — результат в пределах, но выбивающийся из тренда. Оба требуют расследования по СОП. Любое изменение процесса, оборудования, материалов или документов вносится только через контроль изменений, а не явочным порядком."
+      ],
+      rules: [
+        "Сообщайте о любом отклонении сразу, не дожидаясь конца смены.",
+        "Изолируйте и промаркируйте затронутую продукцию.",
+        "Сохраняйте доказательства: распечатки, образцы, этикетки.",
+        "Записывайте факты: что, когда, где, кто обнаружил.",
+        "Ничего не исправляйте в записях задним числом.",
+        "Изменения — только через контроль изменений."
+      ],
+      errors: [
+        "«Сам исправил, значит, отклонения не было».",
+        "Сообщение через несколько дней, когда детали забыты.",
+        "Выброс бракованных таблеток до расследования.",
+        "Закрытие расследования формулировкой «человеческий фактор».",
+        "Опробование «улучшенного» режима без контроля изменений."
+      ],
+      questions: [
+        { type: "single", q: "Когда сообщать об отклонении?",
+          options: ["Немедленно мастеру, дальше — по СОП", "В конце месяца в отчёте", "Только если спросят", "Не сообщать, если удалось исправить"],
+          answer: 0, explain: "Чем раньше сообщено, тем лучше можно ограничить последствия и собрать факты." },
+        { type: "single", q: "На что направлено корректирующее действие?",
+          options: ["На устранение причины выявленного несоответствия, чтобы оно не повторилось", "На устранение причины потенциального несоответствия, которого ещё не было", "На наказание виновного", "На ускорение выпуска серии"],
+          answer: 0, explain: "Корректирующее действие — реакция на произошедшее. Действие против ещё не произошедшего — предупреждающее." },
+        { type: "tf", q: "Если установлено, что была «ошибка оператора», расследование можно закрывать.",
+          answer: false, explain: "Нужно выяснить, почему ошибка стала возможной, и устранить эти условия." },
+        { type: "multi", q: "Какие методы используют для поиска первопричины?",
+          options: ["«5 почему»", "Диаграмма Исикавы", "Анализ по 6М", "Жребий"],
+          answer: [0, 1, 2], explain: "«5 почему», диаграмма Исикавы и 6М — стандартные инструменты анализа причин." },
+        { type: "single", q: "Что такое OOS?",
+          options: ["Результат испытания вне спецификации", "Результат в пределах, но выбивающийся из тренда", "Неисправность оборудования", "Плановое отклонение"],
+          answer: 0, explain: "OOS — out of specification. Выбивающийся из тренда результат называют OOT." }
+      ]
+    },
+
+    {
+      id: "safety",
+      title: "Охрана труда и сильнодействующие вещества",
+      short: "Пыль, взрывобезопасность, СИЗ, контейнмент, блокировки, LOTO.",
+      theory: [
+        "Действующие вещества биологически активны, поэтому пыль на производстве твёрдых форм опасна для здоровья: вдыхание, попадание на кожу и слизистые, аллергические реакции и сенсибилизация. Для веществ устанавливают допустимые уровни воздействия (OEL) и категории опасности (OEB); по ним и по оценке риска выбирают меры защиты.",
+        "Иерархия защиты: сначала инженерные меры (закрытые системы перегрузки, изоляторы, разъёмные дисковые затворы, местная вытяжка, перепады давления), затем организационные (ограничение доступа, время работы, обучение) и только затем СИЗ. Тип респиратора, перчаток, комбинезона, очков и средств защиты слуха определяет оценка риска и инструкция по охране труда. Респиратор должен подходить по размеру и правильно сидеть. Надевают и снимают СИЗ в установленном порядке, чтобы не перенести пыль на себя и в чистые зоны.",
+        "Мелкодисперсная органическая пыль горюча и в смеси с воздухом может взрываться. Меры: заземление оборудования и тары, исключение источников искр, антистатическая одежда и обувь по СОП, поддержание чистоты без скоплений пыли, исправная вытяжка. Просыпанный порошок убирают способом из СОП (влажно или пылесосом с HEPA-фильтром), а не сухим подметанием.",
+        "Механические опасности: вращающиеся части, пресс, смесители, ножи блистерной машины. Защитные ограждения и блокировки нельзя отключать или обходить. Перед обслуживанием, мойкой или устранением застревания источники энергии отключают и блокируют с маркировкой (LOTO), чтобы исключить случайный запуск. Также учитывают шум, горячие поверхности, моющие химикаты, подъём тяжестей.",
+        "Для некоторых продуктов (например, отдельных высокосенсибилизирующих) правила GMP требуют выделенных помещений и оборудования. О травмах, плохом самочувствии, неисправности вытяжки и опасных ситуациях без последствий (почти-инцидентах) сообщают сразу."
+      ],
+      rules: [
+        "СИЗ — по оценке риска и инструкции, а не «по ощущениям».",
+        "Ограждения и блокировки не обходить ни на минуту.",
+        "Перед обслуживанием — отключение и LOTO.",
+        "Заземление тары и оборудования при работе с порошками.",
+        "Просыпи — влажно или HEPA-пылесосом, не веником.",
+        "Сообщайте о почти-инцидентах так же, как об инцидентах."
+      ],
+      errors: [
+        "Респиратор спущен на подбородок, «потому что жарко».",
+        "Рука в зоне ротора при открытом ограждении.",
+        "Пересыпание порошка между незаземлёнными ёмкостями.",
+        "Снятие загрязнённого комбинезона в чистом коридоре.",
+        "Устранение застревания без блокировки привода."
+      ],
+      questions: [
+        { type: "single", q: "Что определяет выбор респиратора и других СИЗ для работы с веществом?",
+          options: ["Оценка риска и инструкция по охране труда (СОП)", "Личное предпочтение работника", "Цвет порошка", "Что есть на складе в этот день"],
+          answer: 0, explain: "Тип защиты зависит от опасности вещества и условий работы, которые оцениваются заранее." },
+        { type: "tf", q: "Защитную блокировку пресса можно временно отключить, чтобы быстрее достать застрявшую таблетку.",
+          answer: false, explain: "Обход блокировок — частая причина тяжёлых травм. Остановка, отключение и LOTO — по инструкции." },
+        { type: "multi", q: "Какие меры снижают риск взрыва пыли?",
+          options: ["Заземление оборудования и тары", "Исключение источников искр", "Чистота без скоплений пыли", "Сухое подметание просыпей веником"],
+          answer: [0, 1, 2], explain: "Подметание поднимает пыль в воздух и увеличивает риск. Используют влажную уборку или HEPA-пылесос." },
+        { type: "single", q: "Как убирать просыпанное сильнодействующее вещество?",
+          options: ["По СОП, в СИЗ, влажным способом или пылесосом с HEPA-фильтром", "Веником и совком", "Сдуть сжатым воздухом в угол", "Оставить до конца смены"],
+          answer: 0, explain: "Задача — не поднять пыль и не допустить вдыхания и переноса вещества." },
+        { type: "single", q: "Зачем перед обслуживанием оборудования применяют блокировку и маркировку источников энергии (LOTO)?",
+          options: ["Чтобы исключить случайный запуск", "Чтобы ускорить обслуживание", "Только для отчётности", "Это нужно лишь для электриков"],
+          answer: 0, explain: "LOTO защищает человека, работающего в опасной зоне, от неожиданного включения." }
+      ]
+    }
+  ],
+
+  glossary: [
+    { term: "GMP", def: "Good Manufacturing Practice, надлежащая производственная практика: требования к производству и контролю, гарантирующие стабильное качество лекарственных средств. В ЕАЭС — Правила, утверждённые Решением Совета ЕЭК № 77." },
+    { term: "СОП", def: "Стандартная операционная процедура (SOP): утверждённая письменная инструкция, как выполнять конкретную операцию." },
+    { term: "ALCOA+", def: "Принципы целостности данных: атрибутируемость, разборчивость, своевременность, оригинальность, точность, плюс полнота, последовательность, долговечность и доступность." },
+    { term: "CAPA", def: "Корректирующие и предупреждающие действия: устранение причин выявленных и потенциальных несоответствий с проверкой эффективности." },
+    { term: "OOS", def: "Out of specification: результат испытания, выходящий за пределы спецификации. Требует расследования по СОП." },
+    { term: "OOT", def: "Out of trend: результат в пределах спецификации, но выбивающийся из ожидаемого тренда." },
+    { term: "IPC (ВПК)", def: "Внутрипроцессный контроль: проверки во время производства для наблюдения за процессом и его корректировки." },
+    { term: "Line clearance", def: "Проверка чистоты линии: подтверждение, что на линии и в помещении нет материалов, продукции, документов и маркировки предыдущей серии." },
+    { term: "Карантин", def: "Статус материала или продукции, которые изолированы и ожидают решения службы качества. Использовать нельзя." },
+    { term: "Разрешено", def: "Статус материала или продукции, одобренных службой качества к использованию или дальнейшей обработке." },
+    { term: "Забраковано", def: "Статус отклонённого материала или продукции: изолируют до возврата, переработки по решению службы качества или уничтожения." },
+    { term: "Валидация", def: "Документальное подтверждение того, что процесс, методика или процедура уборки стабильно дают ожидаемый результат." },
+    { term: "Квалификация", def: "Документальное подтверждение того, что оборудование и системы правильно спроектированы, установлены и работают (DQ, IQ, OQ, PQ)." },
+    { term: "IQ / OQ / PQ", def: "Этапы квалификации: монтажа (установлено правильно), функционирования (работает в заданных диапазонах), эксплуатационных характеристик (стабильно работает в реальных условиях)." },
+    { term: "СИЗ", def: "Средства индивидуальной защиты: респираторы, перчатки, очки, комбинезоны, средства защиты слуха и др." },
+    { term: "Серия", def: "Определённое количество продукции, произведённое за один цикл или серию циклов и однородное в установленных пределах." },
+    { term: "Протокол серии", def: "Запись на серию (batch record): документ, в котором фиксируется вся история производства конкретной серии." },
+    { term: "Производственный регламент", def: "Утверждённый документ с рецептурой, оборудованием, параметрами и порядком производства продукта." },
+    { term: "Уполномоченное лицо", def: "Специалист, который подтверждает соответствие серии требованиям перед её выпуском в обращение." },
+    { term: "Отклонение", def: "Отступление от утверждённых инструкций, процедур или установленных требований." },
+    { term: "Контроль изменений", def: "Процедура оценки, согласования и документирования любых изменений до их внедрения." },
+    { term: "Перекрёстная контаминация", def: "Загрязнение материала или продукта другим материалом или продуктом." },
+    { term: "Перепутывание", def: "Mix-up: ошибочное использование одного материала, продукта или печатного материала вместо другого." },
+    { term: "Чистое помещение", def: "Помещение с контролем содержания частиц и микроорганизмов в воздухе, построенное и эксплуатируемое так, чтобы минимизировать загрязнение." },
+    { term: "Класс чистоты", def: "Категория чистого помещения по допустимому содержанию частиц и микроорганизмов. Классы A–D описаны в Приложении 1 Правил GMP ЕАЭС." },
+    { term: "Шлюз", def: "Помещение с блокируемыми дверями между зонами разной чистоты, служащее для прохода людей или передачи материалов." },
+    { term: "Перепад давления", def: "Разница давления воздуха между соседними помещениями, задающая направление потока воздуха и препятствующая переносу загрязнений." },
+    { term: "ТЛФ", def: "Твёрдые лекарственные формы: таблетки, капсулы, гранулы, порошки." },
+    { term: "АФС", def: "Активная фармацевтическая субстанция: действующее вещество лекарственного препарата." },
+    { term: "Вспомогательное вещество", def: "Компонент лекарственной формы, не являющийся действующим веществом: наполнитель, связующее, разрыхлитель, лубрикант и др." },
+    { term: "Связующее вещество", def: "Вещество, которое скрепляет частицы порошка в гранулы и таблетки." },
+    { term: "Разрыхлитель", def: "Дезинтегрант: вспомогательное вещество, ускоряющее распадаемость таблетки в жидкости." },
+    { term: "Смазывающее вещество", def: "Лубрикант (например, магния стеарат): уменьшает трение и налипание при прессовании и выталкивании таблеток." },
+    { term: "Скользящее вещество", def: "Вещество, улучшающее сыпучесть порошка или гранулята." },
+    { term: "Гранулирование", def: "Укрупнение частиц порошка в гранулы для улучшения сыпучести, прессуемости и однородности дозирования." },
+    { term: "Псевдоожиженный слой", def: "Состояние слоя частиц, поддерживаемого восходящим потоком воздуха; используется в сушилках и грануляторах." },
+    { term: "Компактирование валками", def: "Способ сухого гранулирования: порошок спрессовывают между валками в пластины, затем измельчают." },
+    { term: "Потеря в массе при высушивании", def: "Показатель содержания летучих веществ (чаще всего влаги), определяемый по изменению массы при сушке." },
+    { term: "Сегрегация", def: "Расслоение смеси из-за различий частиц по размеру, форме и плотности." },
+    { term: "Однородность смеси", def: "Равномерность распределения действующего вещества в смеси." },
+    { term: "Капинг", def: "Дефект таблетки: отделение верхней или нижней части в виде «шапочки»." },
+    { term: "Ламинирование", def: "Дефект таблетки, также называемый расслоением: разделение таблетки на горизонтальные слои." },
+    { term: "Прилипание", def: "Налипание прессуемой массы на поверхность пуансонов." },
+    { term: "Матрица и пуансоны", def: "Пресс-инструмент: матрица формирует боковую поверхность таблетки, верхний и нижний пуансоны — её торцы." },
+    { term: "Средняя масса", def: "Масса определённого количества единиц, делённая на их число." },
+    { term: "Однородность массы", def: "Показатель отклонения массы отдельных единиц от средней массы. Пределы — в СОП и ГФ РФ." },
+    { term: "Прочность на раздавливание", def: "Усилие, при котором таблетка разрушается в тестере прочности." },
+    { term: "Истираемость", def: "Потеря массы таблеток при обработке во вращающемся барабане, показатель механической устойчивости." },
+    { term: "Распадаемость", def: "Способность таблетки или капсулы распадаться в жидкой среде в условиях испытания за установленное время." },
+    { term: "Плёночное покрытие", def: "Тонкая полимерная оболочка, наносимая распылением на таблетки в барабане." },
+    { term: "Твёрдая капсула", def: "Капсула из корпуса и крышечки (желатин или ГПМЦ), наполняемая порошком, гранулами или пеллетами." },
+    { term: "Телескопирование", def: "Дефект капсулы: неправильное смыкание, при котором одна часть вдавливается в другую." },
+    { term: "Блистер", def: "Контурная ячейковая упаковка: формованная плёнка с ячейками, запаянная покровной фольгой." },
+    { term: "Реконсиляция", def: "Сверка количества полученных, использованных, испорченных и возвращённых материалов или продукции (баланс)." },
+    { term: "Выход", def: "Отношение фактически полученного количества продукции к теоретическому; отклонения выхода оценивают по СОП." },
+    { term: "Статусная этикетка", def: "Этикетка, показывающая состояние материала, оборудования или помещения: карантин, разрешено, чистое, грязное и т. п." },
+    { term: "Срок хранения чистого оборудования", def: "Clean hold time: установленное время, в течение которого убранное оборудование считается чистым." },
+    { term: "Валидация очистки", def: "Подтверждение, что процедура уборки стабильно удаляет остатки продукта и моющих средств до допустимого уровня." },
+    { term: "Контрольный журнал", def: "Audit trail: защищённая запись электронной системы о том, кто, когда и что создал, изменил или удалил." },
+    { term: "Первопричина", def: "Исходная причина проблемы, устранение которой предотвращает её повторение." },
+    { term: "Диаграмма Исикавы", def: "Причинно-следственная диаграмма («рыбья кость»), группирующая возможные причины, например по 6М." },
+    { term: "5 почему", def: "Метод анализа причин: последовательно задают вопрос «почему?», пока не дойдут до первопричины." },
+    { term: "Управление рисками для качества", def: "Систематический процесс оценки, контроля, обмена информацией и пересмотра рисков для качества (руководство ICH Q9)." },
+    { term: "OEL", def: "Occupational Exposure Limit: допустимый уровень воздействия вещества на работника в воздухе рабочей зоны." },
+    { term: "Контейнмент", def: "Инженерная изоляция опасного вещества от работника и окружающей среды: изоляторы, закрытые перегрузки, затворы." },
+    { term: "HEPA-фильтр", def: "Высокоэффективный фильтр, задерживающий мелкие частицы; применяется в вентиляции и пылесосах." },
+    { term: "LOTO", def: "Lockout/Tagout: блокировка и маркировка источников энергии перед обслуживанием оборудования." },
+    { term: "Сильнодействующее вещество", def: "Вещество, оказывающее выраженное действие в малых дозах; требует усиленных мер защиты и предотвращения контаминации." }
+  ],
+
+  sheet: [
+    { title: "Перед сменой", items: [
+      "Здоров, о ранах и болезни сообщил мастеру.",
+      "Без украшений, часов, косметики; телефон — по СОП.",
+      "Переоделся строго по схеме шлюза.",
+      "Знаю задание смены и действующие версии СОП."
+    ]},
+    { title: "Перед началом операции", items: [
+      "Line clearance выполнен и подтверждён вторым лицом.",
+      "Статус помещения и оборудования: «Чистое», срок не истёк.",
+      "Приборы и весы откалиброваны, проверка перед работой записана.",
+      "Материалы: статус «Разрешено», срок годности, наименование и партия совпадают с протоколом."
+    ]},
+    { title: "Записи (ALCOA+)", items: [
+      "Пишу сразу, разборчиво, ручкой, с датой и подписью.",
+      "Без черновиков, стикеров, записей на перчатке.",
+      "Исправление: одна черта, старое читается, новое значение, подпись, дата, причина по СОП.",
+      "Свой логин; подписываю только то, что сделал или проверил сам."
+    ]},
+    { title: "Во время работы", items: [
+      "Параметры — только из регламента; изменения в разрешённых пределах и с записью.",
+      "IPC — с указанной частотой, записываю фактические значения.",
+      "Нормы и пределы беру из СОП и ГФ РФ, не по памяти.",
+      "Один материал открыт — один материал в работе."
+    ]},
+    { title: "Дефекты таблеток: где искать причину", items: [
+      "Капинг, расслоение: воздух, мелочь, пересушка, скорость, предпрессовка, износ инструмента.",
+      "Прилипание: влага, мало лубриканта, повреждённые пуансоны.",
+      "Вариация массы: сыпучесть, сегрегация, уровень в бункере, питатель.",
+      "Действие: проверить, сообщить мастеру, при выходе за пределы — стоп и изоляция."
+    ]},
+    { title: "Сразу сообщаю мастеру, если", items: [
+      "Результат IPC вне пределов или есть тренд к границе.",
+      "Неисправность, сбой системы отбраковки, порванное сито или фильтр.",
+      "Не тот материал, повреждённая тара, неверная маркировка.",
+      "Расхождение в балансе или ошибка в записи."
+    ]},
+    { title: "Завершение серии", items: [
+      "Баланс продукции и печатных материалов сведён, расхождения объяснены.",
+      "Кодированные остатки уничтожены с записью.",
+      "Оборудование: этикетка «Грязное», уборка по валидированному СОП.",
+      "Протокол серии заполнен полностью, пустые поля оформлены по СОП."
+    ]},
+    { title: "Безопасность", items: [
+      "СИЗ по инструкции; респиратор сидит плотно.",
+      "Блокировки и ограждения не обхожу; перед обслуживанием — LOTO.",
+      "Тара и оборудование заземлены при работе с порошками.",
+      "Просыпи — влажно или HEPA-пылесосом, не веником и не воздухом."
+    ]}
+  ]
+};
+</script>
+<script>
+(function () {
+  "use strict";
+
+  var D = window.TLF_DATA;
+  var KEY = "tlf-trainer-v1";
+  var DISCLAIMER = "Учебный материал для самоподготовки, не заменяет СОП предприятия и инструктаж.";
+  var PASS = 80; // учебный порог курса, не норматив
+
+  /* ---------- Хранилище ---------- */
+  function loadState() {
+    var base = { done: {}, opened: {}, tests: {}, fav: {}, known: {}, wrong: {}, last: null, theme: null };
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var o = JSON.parse(raw);
+        if (o && typeof o === "object") {
+          Object.keys(base).forEach(function (k) { if (o[k] !== undefined && o[k] !== null) base[k] = o[k]; });
+        }
+      }
+    } catch (e) { /* хранилище недоступно — работаем в памяти */ }
+    return base;
+  }
+  var S = loadState();
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* игнорируем */ }
+  }
+
+  /* ---------- Утилиты ---------- */
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function range(n) { var r = []; for (var i = 0; i < n; i++) r.push(i); return r; }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function plural(n, one, few, many) {
+    var m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return one;
+    if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+    return many;
+  }
+  function fmtDate(ts) {
+    try { return new Date(ts).toLocaleDateString("ru-RU", { day: "numeric", month: "short" }); } catch (e) { return ""; }
+  }
+  var $view = document.getElementById("view");
+
+  /* ---------- Банк вопросов ---------- */
+  var LESSONS = D.lessons;
+  var LMAP = {};
+  var BANK = [];
+  LESSONS.forEach(function (l, li) {
+    LMAP[l.id] = l;
+    l.num = li + 1;
+    l.qs = l.questions.map(function (q, qi) {
+      var n = {
+        id: l.id + "-" + (qi + 1), lesson: l.id, type: q.type, q: q.q, explain: q.explain
+      };
+      if (q.type === "tf") {
+        n.options = ["Верно", "Неверно"];
+        n.correct = [q.answer ? 0 : 1];
+      } else {
+        n.options = q.options;
+        n.correct = q.type === "multi" ? q.answer.slice() : [q.answer];
+      }
+      BANK.push(n);
+      return n;
+    });
+  });
+  var QMAP = {};
+  BANK.forEach(function (q) { QMAP[q.id] = q; });
+
+  var TYPE_LABEL = { single: "Один ответ", multi: "Несколько ответов", tf: "Верно / неверно" };
+
+  function isCorrect(q, sel) {
+    if (sel.length !== q.correct.length) return false;
+    for (var i = 0; i < sel.length; i++) if (q.correct.indexOf(sel[i]) === -1) return false;
+    return true;
+  }
+
+  /* Состояния отдельных вопросов (самопроверка и тест) */
+  var QS = {};
+  function makeQState(key, q) {
+    QS[key] = { key: key, q: q, order: q.type === "tf" ? [0, 1] : shuffle(range(q.options.length)), sel: [], checked: false, ok: null };
+    return QS[key];
+  }
+
+  function questionHTML(st, opts) {
+    opts = opts || {};
+    var q = st.q;
+    var h = '<div class="q" data-qkey="' + esc(st.key) + '">';
+    h += '<div class="q-meta"><span class="q-type">' + TYPE_LABEL[q.type] + "</span>";
+    if (opts.lessonTag) h += '<span class="chip idle">' + esc(LMAP[q.lesson].title) + "</span>";
+    h += "</div>";
+    h += '<p class="q-text">' + esc(q.q) + "</p>";
+    h += '<div class="opts" role="group" aria-label="Варианты ответа">';
+    st.order.forEach(function (oi) {
+      var cls = "opt" + (q.type === "multi" ? " multi" : "");
+      var sel = st.sel.indexOf(oi) !== -1;
+      if (st.checked) {
+        if (q.correct.indexOf(oi) !== -1) cls += " right";
+        else if (sel) cls += " wrong";
+      } else if (sel) cls += " sel";
+      h += '<button type="button" class="' + cls + '" data-act="opt" data-qkey="' + esc(st.key) + '" data-opt="' + oi + '" aria-pressed="' + sel + '"' + (st.checked ? " disabled" : "") + '><span class="mk" aria-hidden="true"></span><span>' + esc(q.options[oi]) + "</span></button>";
+    });
+    h += "</div>";
+    if (!st.checked) {
+      h += '<div class="row"><button type="button" class="btn primary small" data-act="check" data-qkey="' + esc(st.key) + '"' + (st.sel.length ? "" : " disabled") + ">Проверить</button></div>";
+    } else {
+      h += '<div class="explain ' + (st.ok ? "ok" : "bad") + '" role="status"><b>' + (st.ok ? "Верно" : "Неверно") + "</b><span>" + esc(q.explain) + "</span></div>";
+      if (opts.after) h += opts.after;
+    }
+    h += "</div>";
+    return h;
+  }
+
+  function selectOpt(st, oi) {
+    if (st.checked) return;
+    if (st.q.type === "multi") {
+      var i = st.sel.indexOf(oi);
+      if (i === -1) st.sel.push(oi); else st.sel.splice(i, 1);
+    } else {
+      st.sel = [oi];
+    }
+  }
+  function checkQ(st) {
+    if (st.checked || !st.sel.length) return;
+    st.checked = true;
+    st.ok = isCorrect(st.q, st.sel);
+    if (st.ok) delete S.wrong[st.q.id]; else S.wrong[st.q.id] = 1;
+    save();
+  }
+
+  /* ---------- Тема ---------- */
+  function applyTheme() {
+    if (S.theme === "dark" || S.theme === "light") document.documentElement.setAttribute("data-theme", S.theme);
+    else document.documentElement.removeAttribute("data-theme");
+  }
+  function currentTheme() {
+    if (S.theme) return S.theme;
+    try { return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } catch (e) { return "light"; }
+  }
+  document.getElementById("themeBtn").addEventListener("click", function () {
+    S.theme = currentTheme() === "dark" ? "light" : "dark";
+    applyTheme(); save();
+  });
+  applyTheme();
+
+  /* ---------- Прогресс ---------- */
+  function doneCount() { return LESSONS.filter(function (l) { return S.done[l.id]; }).length; }
+  function nextLesson() {
+    if (S.last && LMAP[S.last] && !S.done[S.last]) return LMAP[S.last];
+    for (var i = 0; i < LESSONS.length; i++) if (!S.done[LESSONS[i].id]) return LESSONS[i];
+    return null;
+  }
+  function lessonChip(l) {
+    if (S.done[l.id]) return '<span class="chip ok">Пройден</span>';
+    if (S.opened[l.id]) return '<span class="chip warn">В работе</span>';
+    return '<span class="chip idle">Не начат</span>';
+  }
+  function knownCount() {
+    return D.glossary.filter(function (g) { return S.known[g.term] === 1; }).length;
+  }
+  function wrongIds() { return Object.keys(S.wrong).filter(function (id) { return QMAP[id]; }); }
+
+  /* ---------- Экраны ---------- */
+  function viewHome() {
+    var dc = doneCount(), total = LESSONS.length, pct = Math.round(dc / total * 100);
+    var nl = nextLesson();
+    var exam = S.tests.exam;
+    var h = '<div class="view-inner">';
+    h += '<section class="hero"><span class="eyebrow">Курс самоподготовки · ' + total + " модулей</span>";
+    h += "<h1>Производство твёрдых лекарственных форм</h1>";
+    h += '<p class="lead">Уроки по GMP и технологическим операциям для операторов участков взвешивания, грануляции, таблетирования, покрытия, инкапсулирования и упаковки.</p></section>';
+
+    h += '<section class="panel lifted progress-card" aria-label="Прогресс по курсу">';
+    h += '<div class="progress-top"><div><span class="eyebrow">Прогресс по курсу</span><div class="big num">' + pct + "<small>%</small></div></div>";
+    h += '<p class="muted num">' + dc + " из " + total + " уроков пройдено</p></div>";
+    h += '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct + '%"></i></div>';
+    h += '<div class="cta">';
+    if (nl) h += '<a class="btn primary" href="#lesson-' + nl.id + '">Продолжить: урок ' + nl.num + "</a>";
+    else h += '<a class="btn primary" href="#test-exam">Курс пройден: экзамен</a>';
+    h += '<a class="btn" href="#tests">Тест</a><a class="btn" href="#cards">Карточки</a></div>';
+    if (nl) h += '<p class="muted">Следующий: ' + esc(nl.title) + "</p>";
+    h += "</section>";
+
+    h += '<section class="stats" aria-label="Статистика">';
+    h += '<div class="stat"><b>' + (exam ? exam.best + "%" : "—") + "</b><span>лучший результат экзамена</span></div>";
+    h += '<div class="stat"><b>' + knownCount() + "/" + D.glossary.length + "</b><span>терминов отмечено «знаю»</span></div>";
+    var w = wrongIds().length;
+    h += '<div class="stat"><b>' + w + "</b><span>" + plural(w, "вопрос", "вопроса", "вопросов") + " в работе над ошибками</span></div>";
+    h += "</section>";
+
+    h += '<section class="stack"><div class="row" style="justify-content:space-between"><h2>Модули</h2><a href="#lessons">Все уроки</a></div>';
+    h += modulesHTML();
+    h += "</section>";
+    h += '<p class="note">' + DISCLAIMER + "</p>";
+    h += "</div>";
+    return h;
+  }
+
+  function modulesHTML() {
+    var h = '<div class="modules">';
+    LESSONS.forEach(function (l) {
+      h += '<a class="module" href="#lesson-' + l.id + '"><span class="idx">' + pad(l.num) + '</span><span class="t"><b>' + esc(l.title) + "</b><span>" + esc(l.short) + "</span></span>" + lessonChip(l) + "</a>";
+    });
+    return h + "</div>";
+  }
+
+  function viewLessons() {
+    var dc = doneCount();
+    var h = '<div class="view-inner">';
+    h += '<section class="hero"><span class="eyebrow">Уроки</span><h1>Программа курса</h1>';
+    h += '<p class="lead">Модули идут в порядке технологического процесса: от правил и допуска в зону до упаковки, контроля и действий при отклонениях. Пройдено ' + dc + " из " + LESSONS.length + ".</p></section>";
+    h += modulesHTML();
+    h += "</div>";
+    return h;
+  }
+
+  function viewLesson(id) {
+    var l = LMAP[id];
+    if (!l) return viewNotFound();
+    if (!S.opened[id] || S.last !== id) { S.opened[id] = 1; S.last = id; save(); }
+    var prev = LESSONS[l.num - 2], next = LESSONS[l.num];
+    var h = '<div class="view-inner">';
+    h += '<div class="lesson-head"><nav class="crumbs" aria-label="Навигация"><a href="#lessons">Уроки</a> / Модуль ' + pad(l.num) + "</nav>";
+    h += '<div class="row">' + lessonChip(l) + '<span class="eyebrow">Модуль ' + pad(l.num) + " из " + LESSONS.length + "</span></div>";
+    h += "<h1>" + esc(l.title) + '</h1><p class="lead">' + esc(l.short) + "</p></div>";
+
+    h += '<section class="panel"><div class="section-title"><span class="tag theory">Теория</span></div><div class="prose">';
+    l.theory.forEach(function (p) { h += "<p>" + esc(p) + "</p>"; });
+    h += "</div></section>";
+
+    h += '<div class="two"><section class="panel"><div class="section-title"><span class="tag rules">Ключевые правила</span></div><ul class="checklist">';
+    l.rules.forEach(function (r) { h += "<li>" + esc(r) + "</li>"; });
+    h += '</ul></section><section class="panel"><div class="section-title"><span class="tag errs">Типичные ошибки</span></div><ul class="errlist">';
+    l.errors.forEach(function (r) { h += "<li>" + esc(r) + "</li>"; });
+    h += "</ul></section></div>";
+
+    h += '<section class="panel"><div class="section-title"><span class="tag check">Самопроверка</span><span class="muted">' + l.qs.length + " " + plural(l.qs.length, "вопрос", "вопроса", "вопросов") + "</span></div>";
+    l.qs.forEach(function (q) {
+      var key = "l-" + q.id;
+      var st = QS[key] || makeQState(key, q);
+      h += questionHTML(st);
+    });
+    h += "</section>";
+
+    h += '<section class="panel stack"><div class="row" style="justify-content:space-between">';
+    h += '<p>' + (S.done[id] ? "Урок отмечен как пройденный." : "Прочитали теорию и ответили на вопросы? Отметьте урок.") + "</p>";
+    h += '<button type="button" class="btn ' + (S.done[id] ? "" : "primary") + '" data-act="toggle-done" data-id="' + id + '">' + (S.done[id] ? "Снять отметку" : "Отметить урок пройденным") + "</button></div>";
+    h += '<div class="row"><a class="btn small" href="#test-' + id + '">Тест по модулю</a></div></section>';
+
+    h += '<nav class="lesson-nav" aria-label="Соседние уроки">';
+    h += prev ? '<a class="btn ghost" href="#lesson-' + prev.id + '">← ' + esc(prev.title) + "</a>" : "<span></span>";
+    h += next ? '<a class="btn ghost" href="#lesson-' + next.id + '">' + esc(next.title) + " →</a>" : '<a class="btn ghost" href="#test-exam">Итоговый экзамен →</a>';
+    h += "</nav></div>";
+    return h;
+  }
+
+  /* ---------- Тесты ---------- */
+  var T = null;
+  var EXAM_SIZE = 40;
+
+  function testDefs() {
+    var defs = [
+      { id: "exam", title: "Итоговый экзамен", desc: EXAM_SIZE + " случайных вопросов из всех модулей.", feature: true },
+      { id: "all", title: "Все вопросы курса", desc: BANK.length + " вопросов, полный прогон." }
+    ];
+    var w = wrongIds().length;
+    if (w) defs.push({ id: "mistakes", title: "Работа над ошибками", desc: w + " " + plural(w, "вопрос", "вопроса", "вопросов") + ", где был дан неверный ответ." });
+    return defs;
+  }
+
+  function scoreChip(id) {
+    var r = S.tests[id];
+    if (!r) return '<span class="chip idle">Не пройден</span>';
+    return '<span class="chip ' + (r.best >= PASS ? "ok" : "warn") + ' num">Лучший ' + r.best + "%</span>";
+  }
+
+  function viewTests() {
+    var h = '<div class="view-inner">';
+    h += '<section class="hero"><span class="eyebrow">Тесты</span><h1>Проверка знаний</h1>';
+    h += '<p class="lead">' + BANK.length + " вопросов: один ответ, несколько ответов, верно или неверно. Вопросы и варианты перемешиваются. После каждого ответа показывается объяснение. Учебный порог курса — " + PASS + "%.</p></section>";
+    h += '<div class="test-grid">';
+    testDefs().forEach(function (d) {
+      h += '<div class="test-card' + (d.feature ? " feature" : "") + '"><div class="stack" style="gap:6px"><h3>' + esc(d.title) + "</h3><p>" + esc(d.desc) + "</p></div>";
+      h += '<div class="row">' + (d.id === "mistakes" ? '<span class="chip bad">Ошибки</span>' : scoreChip(d.id)) + '<a class="btn small ' + (d.feature ? "primary" : "") + '" href="#test-' + d.id + '">Начать</a></div></div>';
+    });
+    h += "</div>";
+    h += '<h2>Тесты по модулям</h2><div class="test-grid">';
+    LESSONS.forEach(function (l) {
+      h += '<div class="test-card"><div class="stack" style="gap:6px"><span class="eyebrow">Модуль ' + pad(l.num) + "</span><h3>" + esc(l.title) + "</h3></div>";
+      h += '<div class="row">' + scoreChip(l.id) + '<a class="btn small" href="#test-' + l.id + '">Начать</a></div></div>';
+    });
+    h += "</div></div>";
+    return h;
+  }
+
+  function startTest(id, ids, title) {
+    var qs;
+    if (ids) qs = ids.map(function (x) { return QMAP[x]; }).filter(Boolean);
+    else if (id === "exam") qs = shuffle(BANK).slice(0, EXAM_SIZE);
+    else if (id === "all") qs = BANK.slice();
+    else if (id === "mistakes") qs = wrongIds().map(function (x) { return QMAP[x]; });
+    else if (LMAP[id]) qs = LMAP[id].qs.slice();
+    else return false;
+    if (!qs.length) return false;
+    qs = shuffle(qs);
+    if (!title) {
+      if (id === "exam") title = "Итоговый экзамен";
+      else if (id === "all") title = "Все вопросы курса";
+      else if (id === "mistakes") title = "Работа над ошибками";
+      else title = "Тест: " + LMAP[id].title;
+    }
+    T = {
+      id: id, title: title, i: 0, finished: false, saved: false,
+      items: qs.map(function (q, n) { return makeQState("t-" + n + "-" + q.id, q); })
+    };
+    return true;
+  }
+
+  function viewTest(id) {
+    if (!T || T.id !== id) {
+      if (!startTest(id)) {
+        return '<div class="view-inner"><h1>Тест недоступен</h1><p class="lead">Для этого теста нет вопросов. <a href="#tests">Вернуться к тестам</a></p></div>';
+      }
+    }
+    return T.finished ? resultsHTML() : runnerHTML();
+  }
+
+  function runnerHTML() {
+    var st = T.items[T.i], n = T.items.length;
+    var answered = T.items.filter(function (x) { return x.checked; }).length;
+    var correct = T.items.filter(function (x) { return x.ok; }).length;
+    var h = '<div class="view-inner">';
+    h += '<div class="runner-head"><nav class="crumbs"><a href="#tests">Тесты</a> / ' + esc(T.title) + "</nav>";
+    h += '<div class="row"><span class="eyebrow num">Вопрос ' + (T.i + 1) + " из " + n + '</span><span class="muted num">Верно: ' + correct + " из " + answered + "</span></div>";
+    h += '<div class="bar"><i style="width:' + Math.round(answered / n * 100) + '%"></i></div></div>';
+    var after = '<div class="row"><button type="button" class="btn primary" data-act="next">' + (T.i + 1 < n ? "Следующий вопрос" : "Показать итог") + "</button></div>";
+    h += '<section class="panel lifted">' + questionHTML(st, { lessonTag: T.id === "exam" || T.id === "all" || T.id === "mistakes", after: after }) + "</section>";
+    h += '<div class="row"><button type="button" class="btn ghost small" data-act="finish">Завершить досрочно</button></div>';
+    h += "</div>";
+    return h;
+  }
+
+  function finishTest() {
+    T.finished = true;
+    var answered = T.items.filter(function (x) { return x.checked; });
+    var right = answered.filter(function (x) { return x.ok; }).length;
+    var pct = Math.round(right / T.items.length * 100);
+    T.result = { right: right, total: T.items.length, pct: pct };
+    // сохраняем результат только для полноценных тестов
+    if (!T.saved && T.id !== "retry" && T.id !== "mistakes") {
+      var prev = S.tests[T.id];
+      S.tests[T.id] = { best: Math.max(pct, prev ? prev.best : 0), last: pct, date: Date.now() };
+      T.saved = true;
+      save();
+    }
+  }
+
+  function resultsHTML() {
+    var r = T.result;
+    var wrong = T.items.filter(function (x) { return !x.ok; });
+    var C = 2 * Math.PI * 46;
+    var h = '<div class="view-inner">';
+    h += '<nav class="crumbs"><a href="#tests">Тесты</a> / ' + esc(T.title) + "</nav>";
+    h += '<section class="panel lifted result-score">';
+    h += '<svg class="ring" viewBox="0 0 112 112" role="img" aria-label="Результат ' + r.pct + '%"><circle class="bg" cx="56" cy="56" r="46"/><circle class="fg" cx="56" cy="56" r="46" stroke-dasharray="' + (C * r.pct / 100).toFixed(1) + " " + C.toFixed(1) + '"/><text x="56" y="64" text-anchor="middle">' + r.pct + "%</text></svg>";
+    h += '<div class="stack" style="gap:6px;min-width:0"><span class="chip ' + (r.pct >= PASS ? "ok" : "warn") + '">' + (r.pct >= PASS ? "Учебный порог пройден" : "Нужно повторить") + "</span>";
+    h += "<h1>" + esc(T.title) + '</h1><p class="muted num">Верных ответов: ' + r.right + " из " + r.total + "</p></div></section>";
+    h += '<div class="row">';
+    if (wrong.length) h += '<button type="button" class="btn primary" data-act="retry-wrong">Повторить только ошибки (' + wrong.length + ")</button>";
+    h += '<button type="button" class="btn" data-act="restart">Пройти заново</button><a class="btn ghost" href="#tests">Все тесты</a></div>';
+
+    if (wrong.length) {
+      h += '<section class="panel"><h2 style="margin-bottom:14px">Разбор ошибок</h2>';
+      wrong.forEach(function (st) {
+        var q = st.q;
+        h += '<div class="mistake"><span class="muted" style="font-size:.85rem">' + esc(LMAP[q.lesson].title) + '</span><p class="q-text">' + esc(q.q) + "</p>";
+        if (st.checked) {
+          h += '<div><span class="lbl yours">Ваш ответ</span><ul>' + st.sel.map(function (i) { return "<li>" + esc(q.options[i]) + "</li>"; }).join("") + "</ul></div>";
+        } else {
+          h += '<div><span class="lbl yours">Без ответа</span></div>';
+        }
+        h += '<div><span class="lbl right">Правильно</span><ul>' + q.correct.map(function (i) { return "<li>" + esc(q.options[i]) + "</li>"; }).join("") + "</ul></div>";
+        h += "<p>" + esc(q.explain) + "</p></div>";
+      });
+      h += "</section>";
+    } else {
+      h += '<p class="note">Ошибок нет. Для закрепления попробуйте итоговый экзамен или карточки.</p>';
+    }
+    h += "</div>";
+    return h;
+  }
+
+  /* ---------- Карточки ---------- */
+  var FC = { mode: "all", dir: "term", deck: null, i: 0, flipped: false, stats: { yes: 0, no: 0 } };
+
+  function buildDeck() {
+    var list = D.glossary.filter(function (g) {
+      if (FC.mode === "fav") return S.fav[g.term];
+      if (FC.mode === "unknown") return S.known[g.term] !== 1;
+      return true;
+    });
+    FC.deck = shuffle(list);
+    FC.i = 0; FC.flipped = false; FC.stats = { yes: 0, no: 0 };
+  }
+
+  function starBtn(term, withLabel) {
+    var on = !!S.fav[term];
+    return '<button type="button" class="star" data-act="fav" data-term="' + esc(term) + '" aria-pressed="' + on + '" aria-label="' + (on ? "Убрать из избранного" : "В избранное") + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>' + (withLabel ? (on ? "В избранном" : "В избранное") : "") + "</button>";
+  }
+
+  function viewCards() {
+    if (!FC.deck) buildDeck();
+    var favN = D.glossary.filter(function (g) { return S.fav[g.term]; }).length;
+    var unkN = D.glossary.length - knownCount();
+    var h = '<div class="view-inner">';
+    h += '<section class="hero"><span class="eyebrow">Флеш-карточки</span><h1>Термины и определения</h1>';
+    h += '<p class="lead">Нажмите на карточку, чтобы перевернуть. Отметьте «Знаю» или «Не знаю»: незнакомые термины соберутся в отдельную колоду. Знаю: ' + knownCount() + " из " + D.glossary.length + ".</p></section>";
+
+    h += '<div class="fc-tools"><div class="seg" role="group" aria-label="Колода">';
+    [["all", "Все · " + D.glossary.length], ["unknown", "Не знаю · " + unkN], ["fav", "Избранные · " + favN]].forEach(function (m) {
+      h += '<button type="button" data-act="fc-mode" data-mode="' + m[0] + '" aria-pressed="' + (FC.mode === m[0]) + '">' + m[1] + "</button>";
+    });
+    h += '</div><div class="seg" role="group" aria-label="Сторона"><button type="button" data-act="fc-dir" data-dir="term" aria-pressed="' + (FC.dir === "term") + '">Термин → определение</button><button type="button" data-act="fc-dir" data-dir="def" aria-pressed="' + (FC.dir === "def") + '">Определение → термин</button></div></div>';
+
+    if (!FC.deck.length) {
+      h += '<div class="panel empty">' + (FC.mode === "fav" ? "В избранном пока пусто. Отмечайте термины звёздочкой в карточках или в глоссарии." : "Все термины отмечены как знакомые. Переключитесь на колоду «Все», чтобы повторить.") + "</div>";
+    } else if (FC.i >= FC.deck.length) {
+      h += '<section class="panel lifted stack"><span class="eyebrow">Колода пройдена</span><h2 class="num">Знаю: ' + FC.stats.yes + " · Не знаю: " + FC.stats.no + "</h2>";
+      h += '<div class="row"><button type="button" class="btn primary" data-act="fc-restart">Перемешать и начать заново</button>';
+      if (FC.mode !== "unknown") h += '<button type="button" class="btn" data-act="fc-mode" data-mode="unknown">Только «не знаю»</button>';
+      h += "</div></section>";
+    } else {
+      var g = FC.deck[FC.i];
+      var frontIsTerm = FC.dir === "term";
+      var termFace = '<span class="hint">Термин</span><span class="term">' + esc(g.term) + "</span>";
+      var defFace = '<span class="hint">Определение</span><span class="def">' + esc(g.def) + "</span>";
+      h += '<div class="row" style="justify-content:space-between"><span class="eyebrow num">Карточка ' + (FC.i + 1) + " из " + FC.deck.length + "</span>" + starBtn(g.term, true) + "</div>";
+      h += '<div class="card-stage"><button type="button" class="flash' + (FC.flipped ? " flipped" : "") + '" data-act="flip" aria-label="Перевернуть карточку">';
+      h += '<span class="face front">' + (frontIsTerm ? termFace : defFace) + '<span class="hint">нажмите, чтобы перевернуть</span></span>';
+      h += '<span class="face back">' + (frontIsTerm ? defFace : termFace) + "</span></button></div>";
+      h += '<div class="fc-actions"><button type="button" class="btn no" data-act="fc-no">Не знаю</button><button type="button" class="btn yes" data-act="fc-yes">Знаю</button></div>';
+    }
+    h += "</div>";
+    return h;
+  }
+
+  /* ---------- Глоссарий ---------- */
+  var GQ = "";
+  function hl(text, q) {
+    var t = esc(text);
+    if (!q) return t;
+    var qe = esc(q).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    try { return t.replace(new RegExp("(" + qe + ")", "gi"), "<mark>$1</mark>"); } catch (e) { return t; }
+  }
+  function glossaryListHTML() {
+    var q = GQ.trim().toLowerCase();
+    var items = D.glossary.slice().sort(function (a, b) { return a.term.localeCompare(b.term, "ru"); })
+      .filter(function (g) { return !q || g.term.toLowerCase().indexOf(q) !== -1 || g.def.toLowerCase().indexOf(q) !== -1; });
+    if (!items.length) return '<div class="gl"><p class="empty">Ничего не найдено по запросу «' + esc(GQ) + "». Попробуйте часть слова.</p></div>";
+    var h = '<dl class="gl">';
+    items.forEach(function (g) {
+      h += '<div class="gl-item"><dt>' + hl(g.term, q) + "</dt>" + starBtn(g.term, false) + "<dd>" + hl(g.def, q) + "</dd></div>";
+    });
+    return h + "</dl>";
+  }
+  function viewGlossary() {
+    var h = '<div class="view-inner">';
+    h += '<section class="hero"><span class="eyebrow">Глоссарий</span><h1>Термины производства</h1><p class="lead">' + D.glossary.length + " терминов GMP и технологии ТЛФ. Звёздочка добавляет термин в избранную колоду карточек.</p></section>";
+    h += '<div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14zM16 16l4 4"/></svg><input id="glSearch" type="search" placeholder="Поиск: CAPA, карантин, капинг…" autocomplete="off" aria-label="Поиск по глоссарию" value="' + esc(GQ) + '"></div>';
+    h += '<div id="glList">' + glossaryListHTML() + "</div></div>";
+    return h;
+  }
+
+  /* ---------- Шпаргалка ---------- */
+  function canPrint() {
+    try { return window.self === window.top; } catch (e) { return false; }
+  }
+  function viewSheet() {
+    var h = '<div class="view-inner">';
+    h += '<div class="sheet-head"><div class="stack" style="gap:8px"><span class="eyebrow">Шпаргалка на смену</span><h1>Чек-лист оператора ТЛФ</h1><p class="lead">Короткая памятка на одну страницу. ' + esc(D.norms) + "</p></div>";
+    if (canPrint()) h += '<button type="button" class="btn primary no-print" data-act="print">Печать</button>';
+    h += "</div>";
+    if (!canPrint()) h += '<p class="muted no-print">Для печати откройте файл index.html в браузере и используйте кнопку «Печать» или меню браузера: страница свёрстана под лист A4.</p>';
+    h += '<div class="sheet">';
+    D.sheet.forEach(function (s) {
+      h += "<section><h3>" + esc(s.title) + "</h3><ul>" + s.items.map(function (i) { return "<li><span>" + esc(i) + "</span></li>"; }).join("") + "</ul></section>";
+    });
+    h += "</div>";
+    h += '<p class="sheet-foot">' + DISCLAIMER + "</p></div>";
+    return h;
+  }
+
+  function viewNotFound() {
+    return '<div class="view-inner"><h1>Раздел не найден</h1><p class="lead"><a href="#home">Вернуться на главную</a></p></div>';
+  }
+
+  /* ---------- Роутер ---------- */
+  var lastRoute = "";
+  function route() {
+    var r = (location.hash || "#home").slice(1) || "home";
+    var section = r;
+    var html;
+    if (r === "home") html = viewHome();
+    else if (r === "lessons") html = viewLessons();
+    else if (r.indexOf("lesson-") === 0) { section = "lessons"; html = viewLesson(r.slice(7)); }
+    else if (r === "tests") html = viewTests();
+    else if (r.indexOf("test-") === 0) {
+      section = "tests";
+      var tid = r.slice(5);
+      // новый заход на тест (не из «повторить ошибки») — начинаем заново
+      if (r !== lastRoute && !(T && T.keep && T.id === tid)) T = null;
+      if (T) T.keep = false;
+      html = viewTest(tid);
+    }
+    else if (r === "cards") html = viewCards();
+    else if (r === "glossary") html = viewGlossary();
+    else if (r === "sheet") html = viewSheet();
+    else { section = ""; html = viewNotFound(); }
+
+    $view.innerHTML = html;
+    document.querySelectorAll(".nav a").forEach(function (a) {
+      var on = a.getAttribute("data-nav") === section;
+      a.classList.toggle("active", on);
+      if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+    });
+    if (r !== lastRoute) {
+      window.scrollTo(0, 0);
+      try { $view.focus({ preventScroll: true }); } catch (e) { /* старые браузеры */ }
+    }
+    lastRoute = r;
+  }
+  function rerender() { var y = window.scrollY; route(); window.scrollTo(0, y); }
+
+  /* ---------- События ---------- */
+  function replaceQ(st, opts) {
+    var el = $view.querySelector('.q[data-qkey="' + (window.CSS && CSS.escape ? CSS.escape(st.key) : st.key) + '"]');
+    if (!el) return rerender();
+    var tmp = document.createElement("div");
+    tmp.innerHTML = questionHTML(st, opts);
+    el.replaceWith(tmp.firstChild);
+  }
+
+  $view.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]");
+    if (!b || !$view.contains(b)) return;
+    var act = b.getAttribute("data-act");
+    var st;
+    switch (act) {
+      case "opt":
+        st = QS[b.getAttribute("data-qkey")];
+        if (!st) return;
+        selectOpt(st, +b.getAttribute("data-opt"));
+        if (T && T.items.indexOf(st) !== -1) rerender(); else replaceQ(st);
+        break;
+      case "check":
+        st = QS[b.getAttribute("data-qkey")];
+        if (!st) return;
+        checkQ(st);
+        if (T && T.items.indexOf(st) !== -1) rerender(); else replaceQ(st);
+        break;
+      case "next":
+        if (!T) return;
+        if (T.i + 1 < T.items.length) T.i++; else finishTest();
+        route(); window.scrollTo(0, 0);
+        break;
+      case "finish":
+        if (T) { finishTest(); route(); window.scrollTo(0, 0); }
+        break;
+      case "restart":
+        if (!T) return;
+        var tid = T.id, ids = tid === "retry" ? T.items.map(function (x) { return x.q.id; }) : null, title = tid === "retry" ? T.title : null;
+        startTest(tid, ids, title);
+        route(); window.scrollTo(0, 0);
+        break;
+      case "retry-wrong":
+        if (!T) return;
+        var wids = T.items.filter(function (x) { return !x.ok; }).map(function (x) { return x.q.id; });
+        var baseTitle = T.title.replace(/^Повтор ошибок: /, "");
+        startTest("retry", wids, "Повтор ошибок: " + baseTitle);
+        T.keep = true;
+        if (location.hash === "#test-retry") { route(); window.scrollTo(0, 0); }
+        else location.hash = "#test-retry";
+        break;
+      case "toggle-done":
+        var id = b.getAttribute("data-id");
+        if (S.done[id]) delete S.done[id]; else S.done[id] = 1;
+        save(); rerender();
+        break;
+      case "fav":
+        var term = b.getAttribute("data-term");
+        if (S.fav[term]) delete S.fav[term]; else S.fav[term] = 1;
+        save();
+        if (location.hash === "#glossary") {
+          var on = !!S.fav[term];
+          b.setAttribute("aria-pressed", on);
+          b.setAttribute("aria-label", on ? "Убрать из избранного" : "В избранное");
+        } else rerender();
+        break;
+      case "flip":
+        FC.flipped = !FC.flipped;
+        b.classList.toggle("flipped", FC.flipped);
+        break;
+      case "fc-yes":
+      case "fc-no":
+        var g = FC.deck[FC.i];
+        if (!g) return;
+        S.known[g.term] = act === "fc-yes" ? 1 : 0;
+        FC.stats[act === "fc-yes" ? "yes" : "no"]++;
+        save();
+        FC.i++; FC.flipped = false;
+        rerender();
+        break;
+      case "fc-mode":
+        FC.mode = b.getAttribute("data-mode"); buildDeck(); rerender();
+        break;
+      case "fc-dir":
+        FC.dir = b.getAttribute("data-dir"); FC.flipped = false; rerender();
+        break;
+      case "fc-restart":
+        buildDeck(); rerender();
+        break;
+      case "print":
+        try { window.print(); } catch (err) { /* печать недоступна */ }
+        break;
+    }
+  });
+
+  $view.addEventListener("input", function (e) {
+    if (e.target.id === "glSearch") {
+      GQ = e.target.value;
+      var list = document.getElementById("glList");
+      if (list) list.innerHTML = glossaryListHTML();
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (location.hash !== "#cards" || e.target.tagName === "INPUT") return;
+    if (e.key === "ArrowRight" && FC.flipped) { var y = $view.querySelector('[data-act="fc-yes"]'); if (y) y.click(); }
+    if (e.key === "ArrowLeft" && FC.flipped) { var n = $view.querySelector('[data-act="fc-no"]'); if (n) n.click(); }
+  });
+
+  window.addEventListener("hashchange", route);
+  route();
+})();
+</script>
+</body>
+</html>
