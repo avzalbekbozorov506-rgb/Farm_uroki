@@ -65,15 +65,21 @@ jobs:
           json.dump(payload, open("payload.json", "w", encoding="utf-8"), ensure_ascii=False)
           print(f"Адресов к отправке: {len(urls)}")
           PY
-          code=000
-          for attempt in 1 2 3 4; do
-            code=$(curl -sS --http1.1 --max-time 60 -o response.txt -w "%{http_code}" -X POST "https://yandex.com/indexnow" \
-              -H "Content-Type: application/json; charset=utf-8" --data-binary @payload.json) || code=000
-            case "$code" in 200|202|4??) break ;; esac
-            echo "Попытка $attempt: HTTP $code, повтор через $((attempt * 15)) с"; sleep $((attempt * 15))
+          # Сначала Яндекс напрямую, при сбое соединения — общий узел IndexNow,
+          # который по протоколу пересылает адреса всем участникам, включая Яндекс.
+          UA="Farm_uroki-IndexNow/1.0 (+${SITE})"
+          ok=""
+          for endpoint in "https://yandex.com/indexnow" "https://api.indexnow.org/indexnow"; do
+            for attempt in 1 2 3; do
+              rm -f response.txt
+              code=$(curl -sS --http1.1 --max-time 60 -A "$UA" -o response.txt -w "%{http_code}" -X POST "$endpoint" \
+                -H "Content-Type: application/json; charset=utf-8" --data-binary @payload.json) || code=000
+              echo "$endpoint, попытка $attempt: HTTP $code"; [ -f response.txt ] && cat response.txt && echo
+              case "$code" in
+                200|202) ok="$endpoint"; break 2 ;;
+                4??) echo "Запрос отклонён (HTTP $code), проверьте ключ и адреса"; exit 1 ;;
+              esac
+              sleep $((attempt * 15))
+            done
           done
-          echo "Ответ IndexNow: HTTP $code"; cat response.txt || true; echo
-          case "$code" in
-            200|202) echo "Адреса приняты" ;;
-            *) echo "IndexNow вернул ошибку $code"; exit 1 ;;
-          esac
+          if [ -n "$ok" ]; then echo "Адреса приняты: $ok"; else echo "Ни один узел IndexNow не ответил"; exit 1; fi
