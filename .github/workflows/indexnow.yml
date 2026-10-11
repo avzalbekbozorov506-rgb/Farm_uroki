@@ -3,13 +3,14 @@
 name: IndexNow
 
 on:
-  workflow_run:
-    workflows: ["pages build and deployment"]
-    types: [completed]
+  push:
+    branches: [main]
+    paths: ["sitemap.xml", "**.html"]
   workflow_dispatch:
 
 permissions:
   contents: read
+  pages: read
 
 concurrency:
   group: indexnow
@@ -17,15 +18,28 @@ concurrency:
 
 jobs:
   submit:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       SITE: https://avzalbekbozorov506-rgb.github.io/Farm_uroki/
       HOST: avzalbekbozorov506-rgb.github.io
       KEY: a1fbe23784c51ce37b5823264bd25739
     steps:
-      - name: Дождаться обновления сайта и проверить файл ключа
+      - name: Дождаться публикации этого коммита на GitHub Pages
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 40); do
+            info=$(gh api "repos/${{ github.repository }}/pages/builds/latest" --jq '.commit + " " + .status' 2>/dev/null || echo "")
+            echo "Последняя сборка Pages: ${info:-нет данных}"
+            if [ "$info" = "${GITHUB_SHA} built" ]; then echo "Сайт опубликован"; exit 0; fi
+            case "$info" in *errored*) echo "Сборка Pages завершилась ошибкой"; exit 1 ;; esac
+            sleep 15
+          done
+          echo "Не дождались статуса сборки, продолжаем после паузы"; sleep 60
+
+      - name: Проверить файл ключа на сайте
         run: |
           for i in $(seq 1 20); do
             body=$(curl -fsSL "${SITE}${KEY}.txt" || true)
@@ -51,8 +65,13 @@ jobs:
           json.dump(payload, open("payload.json", "w", encoding="utf-8"), ensure_ascii=False)
           print(f"Адресов к отправке: {len(urls)}")
           PY
-          code=$(curl -sS -o response.txt -w "%{http_code}" -X POST "https://yandex.com/indexnow" \
-            -H "Content-Type: application/json; charset=utf-8" --data-binary @payload.json)
+          code=000
+          for attempt in 1 2 3 4; do
+            code=$(curl -sS --http1.1 --max-time 60 -o response.txt -w "%{http_code}" -X POST "https://yandex.com/indexnow" \
+              -H "Content-Type: application/json; charset=utf-8" --data-binary @payload.json) || code=000
+            case "$code" in 200|202|4??) break ;; esac
+            echo "Попытка $attempt: HTTP $code, повтор через $((attempt * 15)) с"; sleep $((attempt * 15))
+          done
           echo "Ответ IndexNow: HTTP $code"; cat response.txt || true; echo
           case "$code" in
             200|202) echo "Адреса приняты" ;;
