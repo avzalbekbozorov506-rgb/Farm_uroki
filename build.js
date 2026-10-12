@@ -31,7 +31,7 @@ const vm = require("vm");
 const ctx = { console };
 ctx.globalThis = ctx;
 vm.createContext(ctx);
-for (const f of ["data.js", "data-gran.js", "app.js"]) {
+for (const f of ["data.js", "data-gran.js", "schemes.js", "app.js"]) {
   const code = fs.readFileSync(path.join(SRC, f), "utf8").replace(/\bwindow\.TLF_/g, "globalThis.TLF_");
   vm.runInContext(code, ctx, { filename: f });
 }
@@ -50,7 +50,7 @@ const css = read("style.css");
 const fontFiles = fs.readdirSync(path.join(SRC, "fonts")).filter(f => f.endsWith(".woff2"));
 
 function themeInit() {
-  return '<script>try{var t=JSON.parse(localStorage.getItem("tlf-trainer-v1")||"{}").theme;if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>';
+  return '<script>document.documentElement.className+=" js";try{var t=JSON.parse(localStorage.getItem("tlf-trainer-v1")||"{}").theme;if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>';
 }
 
 function person() { return { "@type": "Person", name: APP.AUTHOR_NAME, jobTitle: APP.AUTHOR_JOB }; }
@@ -94,7 +94,8 @@ function pageHtml(route) {
 <link rel="canonical" href="${url}">
 <meta name="robots" content="index, follow">
 <meta name="author" content="${esc(APP.AUTHOR_NAME)}">
-<meta name="theme-color" content="#0e6a5d">
+<meta name="theme-color" content="#f4f7f6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a1113" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="${m.article ? "article" : "website"}">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="Оператор ТЛФ">
@@ -110,6 +111,8 @@ function pageHtml(route) {
 <meta name="twitter:description" content="${esc(m.description)}">
 <meta name="twitter:image" content="${SITE}assets/og.png">
 <link rel="icon" href="${rootRel}assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="${rootRel}assets/fonts/golos-text-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="${rootRel}assets/fonts/unbounded-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${rootRel}assets/style.css">
 ${themeInit()}
 ${jsonLd(route, m, url)}${verify}${verifyTags}
@@ -123,6 +126,7 @@ ${parts.nav}
 ${parts.footer}
 <script src="${rootRel}assets/data.js" defer></script>
 <script src="${rootRel}assets/data-gran.js" defer></script>
+<script src="${rootRel}assets/schemes.js" defer></script>
 <script src="${rootRel}assets/app.js" defer></script>
 </body>
 </html>
@@ -172,7 +176,7 @@ function allInOne() {
   let fcss = fontsCss.replace(/url\(([^)]+\.woff2)\)/g, (_, f) =>
     "url(data:font/woff2;base64," + fs.readFileSync(path.join(SRC, "fonts", f)).toString("base64") + ")");
   let html = read("index.html");
-  const js = ["data.js", "data-gran.js", "app.js"].map(f => {
+  const js = ["data.js", "data-gran.js", "schemes.js", "app.js"].map(f => {
     const c = read(f);
     if (/<\/script/i.test(c)) throw new Error(f + " содержит </script>");
     return c;
@@ -183,7 +187,8 @@ function allInOne() {
       () => '<link rel="canonical" href="' + SITE + '">\n<link rel="icon" href="data:image/svg+xml;base64,' + Buffer.from(read("favicon.svg")).toString("base64") + '">\n<style>\n' + fcss + "\n" + css + "</style>")
     .replace('<script src="data.js"></script>', () => "<script>\n" + js[0] + "</script>")
     .replace('<script src="data-gran.js"></script>', () => "<script>\n" + js[1] + "</script>")
-    .replace('<script src="app.js"></script>', () => "<script>\n" + js[2] + "</script>");
+    .replace('<script src="schemes.js"></script>', () => "<script>\n" + js[2] + "</script>")
+    .replace('<script src="app.js"></script>', () => "<script>\n" + js[3] + "</script>");
   if (/(href|src)="(?!https?:|#|data:)[^"]+"/.test(html.replace(/<script>[\s\S]*?<\/script>/g, ""))) throw new Error("all-in-one: остались ссылки на внешние файлы");
   return html;
 }
@@ -206,7 +211,7 @@ write(path.join(OUT, "404.html"), page404());
 
 // ассеты
 write(path.join(OUT, "assets/style.css"), fontsCss.replace(/url\(([^)]+\.woff2)\)/g, "url(fonts/$1)") + "\n" + css);
-for (const f of ["data.js", "data-gran.js", "app.js", "favicon.svg"]) fs.copyFileSync(path.join(SRC, f), path.join(OUT, "assets", f));
+for (const f of ["data.js", "data-gran.js", "schemes.js", "app.js", "favicon.svg"]) fs.copyFileSync(path.join(SRC, f), path.join(OUT, "assets", f));
 fs.copyFileSync(path.join(SRC, "og.png"), path.join(OUT, "assets/og.png"));
 fs.mkdirSync(path.join(OUT, "assets/fonts"), { recursive: true });
 for (const f of fs.readdirSync(path.join(SRC, "fonts"))) if (/\.(woff2|txt)$/.test(f)) fs.copyFileSync(path.join(SRC, "fonts", f), path.join(OUT, "assets/fonts", f));

@@ -210,29 +210,32 @@
   };
   var NAV = [["home", "Главная"], ["lessons", "Уроки"], ["gran", "Грануляция"], ["tests", "Тесты"], ["cards", "Карточки"], ["glossary", "Глоссарий"], ["sheet", "Шпаргалка"]];
 
+  var BRAND_SVG = '<svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" class="bm-a"/><path d="M8.5 27.5 27.5 8.5" class="bm-b"/><circle cx="20" cy="20" r="17" class="bm-c"/></svg>';
   function headerHTML() {
     return '<a class="skip" href="#view">К содержанию</a><header class="top">' +
-      '<a class="brand" href="' + link("home") + '" aria-label="Оператор ТЛФ, на главную"><span class="brand-mark" aria-hidden="true"></span>' +
+      '<a class="brand" href="' + link("home") + '" aria-label="Оператор ТЛФ, на главную">' + BRAND_SVG +
       '<span class="brand-text"><b>Оператор ТЛФ</b><small>таблетки · капсулы · гранулы · порошки</small></span></a>' +
       '<div class="top-actions"><button class="icon-btn" type="button" data-act="share" aria-label="Поделиться ссылкой" title="Поделиться">' +
       '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7 8l5-5 5 5M5 13v6h14v-6"/></svg></button>' +
-      '<button class="icon-btn" type="button" data-act="theme" aria-label="Переключить тему" title="Светлая / тёмная тема">' +
-      '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg></button></div></header>';
+      '<button class="icon-btn theme-btn" type="button" data-act="theme" aria-label="Переключить тему" title="Светлая / тёмная тема">' +
+      '<svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>' +
+      '<svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></svg></button></div>' +
+      '<div class="read-progress" aria-hidden="true"><i></i></div></header>';
   }
   function navHTML(section) {
     var h = '<nav class="nav" aria-label="Разделы">';
     NAV.forEach(function (n) {
       var on = n[0] === section;
       h += '<a href="' + link(n[0]) + '" data-nav="' + n[0] + '"' + (n[0] === "sheet" ? ' class="nav-extra' + (on ? " active" : "") + '"' : (on ? ' class="active"' : "")) + (on ? ' aria-current="page"' : "") +
-        '><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS[n[0]] + "</svg><span>" + n[1] + "</span></a>";
+        '><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS[n[0]] + "</svg></span><span class=\"nav-t\">" + n[1] + "</span></a>";
     });
     return h + "</nav>";
   }
   function footerHTML() {
     return '<footer class="foot"><div class="foot-in">' +
-      "<p><strong>" + DISCLAIMER + "</strong></p>" +
+      '<div class="foot-brand">' + BRAND_SVG + "<div><p><strong>" + DISCLAIMER + "</strong></p>" +
       "<p>" + MEDICAL + "</p>" +
-      '<p>Автор: ' + AUTHOR_NAME + ", " + AUTHOR_JOB + ".</p>" +
+      '<p>Автор: ' + AUTHOR_NAME + ", " + AUTHOR_JOB + ".</p></div></div>" +
       '<nav class="foot-links" aria-label="Служебные страницы"><a href="' + link("author") + '">Об авторе</a><a href="' + link("privacy") + '">Конфиденциальность</a><a href="' + link("glossary") + '">Глоссарий</a><a href="' + link("sheet") + '">Шпаргалка</a>' +
       (MODE === "spa" ? "" : '<a href="' + ROOT + 'all-in-one.html">Офлайн-версия одним файлом</a>') + "</nav>" +
       '<p class="foot-src">Источники: Решение Совета ЕЭК от 03.11.2016 № 77 (Правила надлежащей производственной практики ЕАЭС); Федеральный закон от 12.04.2010 № 61-ФЗ «Об обращении лекарственных средств»; Государственная фармакопея Российской Федерации. Текст изложен своими словами и не является официальным изданием этих документов.</p>' +
@@ -249,81 +252,120 @@
   /* ---------- Экраны ---------- */
   function progressBlock(title, list, route) {
     var dc = doneIn(list), pct = Math.round(dc / list.length * 100);
-    return '<div class="pmini"><div class="row" style="justify-content:space-between"><a href="' + link(route) + '"><b>' + title + '</b></a><span class="muted num">' + dc + " / " + list.length + "</span></div>" +
+    return '<div class="pmini"><div class="pmini-top"><a href="' + link(route) + '"><b>' + title + '</b></a><span class="muted num">' + dc + " / " + list.length + "</span></div>" +
       '<div class="bar" role="progressbar" aria-label="' + esc(title) + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct + '%"></i></div></div>';
+  }
+  function ringSVG(pct, label) {
+    var C = 2 * Math.PI * 42;
+    return '<svg class="ring" viewBox="0 0 100 100" role="img" aria-label="' + esc(label) + '"><circle class="bg" cx="50" cy="50" r="42"/><circle class="fg" cx="50" cy="50" r="42" style="--c:' + C.toFixed(1) + '" stroke-dasharray="' + (C * pct / 100).toFixed(1) + " " + C.toFixed(1) + '"/></svg>';
+  }
+  function icon(name) { return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + ICONS[name] + "</svg>"; }
+  var ARROW = '<svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>';
+
+  function heroArt() {
+    return '<svg class="hero-art" viewBox="0 0 400 320" aria-hidden="true" focusable="false">' +
+      '<circle class="ha-halo" cx="232" cy="160" r="132"/><circle class="ha-orbit" cx="232" cy="160" r="152"/>' +
+      '<g class="ha-in ha-d1"><ellipse class="ha-shadow" cx="252" cy="222" rx="74" ry="14"/><circle class="ha-tab-side" cx="250" cy="150" r="72"/><circle class="ha-tab" cx="250" cy="142" r="72"/><circle class="ha-tab-in" cx="250" cy="142" r="58"/><path class="ha-score" d="M250 88v108"/></g>' +
+      '<g class="ha-in ha-d2"><g transform="rotate(-32 120 236)"><rect class="ha-cap-a" x="62" y="214" width="62" height="44" rx="22"/><rect class="ha-cap-b" x="112" y="214" width="66" height="44" rx="22"/><path class="ha-cap-l" d="M118 214v44"/></g></g>' +
+      '<g class="ha-in ha-d3"><circle class="ha-g1" cx="338" cy="250" r="16"/><circle class="ha-g2" cx="362" cy="226" r="10"/><circle class="ha-g1" cx="356" cy="270" r="9"/><circle class="ha-g2" cx="318" cy="276" r="7"/></g>' +
+      '<g class="ha-in ha-d3"><circle class="ha-g2" cx="104" cy="82" r="12"/><circle class="ha-g1" cx="84" cy="104" r="8"/><circle class="ha-g1" cx="126" cy="104" r="6"/></g>' +
+      '<g class="ha-in ha-d4"><rect class="ha-pill" x="20" y="146" width="64" height="28" rx="14"/><text class="ha-pill-t" x="52" y="165" text-anchor="middle">GMP</text>' +
+      '<rect class="ha-pill" x="300" y="44" width="84" height="28" rx="14"/><text class="ha-pill-t" x="342" y="63" text-anchor="middle">ALCOA+</text></g>' +
+      "</svg>";
   }
 
   function viewHome() {
     var dc = doneIn(LESSONS), total = LESSONS.length, pct = Math.round(dc / total * 100);
     var nl = nextLesson();
     var exam = S.tests.exam;
-    var h = '<div class="view-inner">';
-    h += '<section class="hero"><span class="eyebrow">Информационно-справочный материал для самоподготовки</span>';
+    var h = '<div class="view-inner wide">';
+    h += '<section class="hero hero-home"><div class="hero-copy"><span class="eyebrow">Информационно-справочный материал для самоподготовки</span>';
     h += "<h1>Производство твёрдых лекарственных форм</h1>";
-    h += '<p class="lead">Уроки по GMP и технологическим операциям для операторов участков взвешивания, грануляции, таблетирования, покрытия, инкапсулирования и упаковки. ' + BASE.length + " основных уроков и углублённый модуль «" + G.title + "» из " + GRAN.length + " уроков.</p></section>";
+    h += '<p class="lead">Уроки по GMP и технологическим операциям для операторов участков взвешивания, грануляции, таблетирования, покрытия, инкапсулирования и упаковки. ' + BASE.length + " основных уроков и углублённый модуль «" + G.title + "» из " + GRAN.length + " уроков.</p>";
+    h += '<div class="row hero-cta">' + (nl ? '<a class="btn primary lg" href="' + link("lesson-" + nl.id) + '">Продолжить' + ARROW + "</a>" : '<a class="btn primary lg" href="' + link("test-exam") + '">Итоговый тест' + ARROW + "</a>") +
+      '<a class="btn lg" href="' + link("lessons") + '">Все основные уроки</a></div></div>' + heroArt() + "</section>";
 
-    h += '<section class="panel lifted progress-card" aria-label="Ваш прогресс">';
-    h += '<div class="progress-top"><div><span class="eyebrow">Ваш прогресс</span><div class="big num">' + pct + "<small>%</small></div></div>";
-    h += '<p class="muted num">' + dc + " из " + total + " уроков отмечено</p></div>";
+    h += '<div class="bento">';
+    h += '<section class="tile tile-progress" aria-label="Ваш прогресс">';
+    h += '<div class="progress-top">' + ringSVG(pct, "Пройдено " + pct + "%") + '<div><span class="eyebrow">Ваш прогресс</span><div class="big num">' + pct + "<small>%</small></div>";
+    h += '<p class="muted num">' + dc + " из " + total + " уроков отмечено</p></div></div>";
     h += progressBlock("Основные уроки", BASE, "lessons") + progressBlock("Грануляция ТЛФ", GRAN, "gran");
-    h += '<div class="cta">';
-    if (nl) h += '<a class="btn primary" href="' + link("lesson-" + nl.id) + '">Продолжить</a>';
-    else h += '<a class="btn primary" href="' + link("test-exam") + '">Итоговый тест</a>';
-    h += '<a class="btn" href="' + link("tests") + '">Тест</a><a class="btn" href="' + link("cards") + '">Карточки</a></div>';
-    if (nl) h += '<p class="muted">Следующий: ' + moduleLabel(nl) + " — " + esc(nl.title) + "</p>";
-    h += "</section>";
-
-    h += '<section class="stats" aria-label="Статистика">';
+    if (nl) h += '<a class="next-up" href="' + link("lesson-" + nl.id) + '"><span class="eyebrow">Следующий</span><span>' + moduleLabel(nl) + " — " + esc(nl.title) + "</span>" + ARROW + "</a>";
+    h += '<div class="stats" aria-label="Статистика">';
     h += '<div class="stat"><b>' + (exam ? exam.best + "%" : "—") + "</b><span>лучший результат итогового теста</span></div>";
     h += '<div class="stat"><b>' + knownCount() + "/" + GLOSSARY.length + "</b><span>терминов отмечено «знаю»</span></div>";
     var w = wrongIds().length;
     h += '<div class="stat"><b>' + w + "</b><span>" + plural(w, "вопрос", "вопроса", "вопросов") + " в работе над ошибками</span></div>";
-    h += "</section>";
+    h += "</div></section>";
 
-    h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Углублённый модуль</span><b>' + G.title + ": влажная и сухая грануляция</b><span>" + esc(G.short) + "</span></a>";
+    h += '<a class="tile tile-gran" href="' + link("gran") + '"><span class="eyebrow">Углублённый модуль</span><b class="tile-h">' + G.title + ": влажная и сухая грануляция</b><span class=\"tile-p\">" + esc(G.short) + '</span><span class="tile-meta num">' + GRAN.length + " уроков · итоговый тест" + ARROW + "</span>" + granArt() + "</a>";
+    h += tile("tests", "Тесты", BANK.length + " вопросов с объяснением ответов");
+    h += tile("cards", "Карточки", GLOSSARY.length + " терминов: «знаю / не знаю»");
+    h += tile("glossary", "Глоссарий", "Термины GMP и ТЛФ с поиском");
+    h += tile("sheet", "Шпаргалка", "Чек-лист на смену для печати");
+    h += "</div>";
 
-    h += '<section class="stack"><div class="row" style="justify-content:space-between"><h2>Основные уроки</h2><a href="' + link("lessons") + '">Все основные уроки</a></div>';
+    h += '<section class="stack"><div class="sec-head"><h2>Основные уроки</h2><a class="link-arrow" href="' + link("lessons") + '">Все основные уроки' + ARROW + "</a></div>";
     h += modulesHTML(BASE) + "</section>";
     h += '<p class="note">' + DISCLAIMER + "</p>";
     h += '<p class="note med">' + MEDICAL + "</p>";
     return h + "</div>";
   }
+  function tile(route, title, sub) {
+    return '<a class="tile tile-sm" href="' + link(route) + '"><span class="tile-ico">' + icon(route) + '</span><b class="tile-h">' + title + '</b><span class="tile-p">' + sub + "</span>" + ARROW + "</a>";
+  }
+  function granArt() {
+    return '<svg class="gran-art" viewBox="0 0 200 140" aria-hidden="true" focusable="false"><circle class="ga-1" cx="120" cy="70" r="34"/><circle class="ga-2" cx="168" cy="40" r="18"/><circle class="ga-2" cx="164" cy="104" r="22"/><circle class="ga-1" cx="70" cy="110" r="14"/><circle class="ga-3" cx="78" cy="44" r="10"/><circle class="ga-3" cx="196" cy="76" r="9"/><circle class="ga-dot" cx="110" cy="62" r="5"/><circle class="ga-dot" cx="130" cy="80" r="4"/><circle class="ga-dot" cx="160" cy="100" r="4"/></svg>';
+  }
 
   function modulesHTML(list) {
-    var h = '<div class="modules">';
+    var h = '<ol class="lesson-grid">';
     list.forEach(function (l) {
-      h += '<a class="module" href="' + link("lesson-" + l.id) + '"><span class="idx">' + pad(l.num) + '</span><span class="t"><b>' + esc(l.title) + "</b><span>" + esc(l.short) + "</span></span>" + lessonChip(l) + "</a>";
+      var sc = W.TLF_SCHEMES && W.TLF_SCHEMES.forLesson(l.id);
+      h += '<li><a class="lcard' + (S.done[l.id] ? " is-done" : "") + '" href="' + link("lesson-" + l.id) + '"><span class="lc-num num">' + pad(l.num) + '</span><span class="lc-body"><b>' + esc(l.title) + "</b><span>" + esc(l.short) + '</span></span><span class="lc-foot">' + lessonChip(l) + (sc ? '<span class="chip scheme-chip">Схема</span>' : "") + ARROW + "</span></a></li>";
     });
-    return h + "</div>";
+    return h + "</ol>";
   }
 
   function viewLessons() {
-    var h = '<div class="view-inner">' + crumbs([["home", "Главная"], ["lessons", "Уроки"]]);
+    var h = '<div class="view-inner wide">' + crumbs([["home", "Главная"], ["lessons", "Уроки"]]);
     h += '<section class="hero"><span class="eyebrow">Уроки</span><h1>Основные уроки</h1>';
     h += '<p class="lead">Уроки идут в порядке технологического процесса: от правил и допуска в зону до упаковки, контроля и действий при отклонениях. Отмечено ' + doneIn(BASE) + " из " + BASE.length + ".</p></section>";
     h += modulesHTML(BASE);
-    h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Дальше</span><b>Углублённый модуль «' + G.title + "»</b><span>" + GRAN.length + " уроков и итоговый тест модуля.</span></a>";
+    h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Дальше</span><b>Углублённый модуль «' + G.title + "»</b><span>" + GRAN.length + " уроков и итоговый тест модуля.</span>" + granArt() + "</a>";
     return h + "</div>";
   }
 
   function viewGran() {
-    var h = '<div class="view-inner">' + crumbs([["home", "Главная"], ["gran", G.title]]);
-    h += '<section class="hero"><span class="eyebrow">Углублённый модуль · ' + GRAN.length + " уроков</span><h1>" + esc(G.h1) + "</h1>";
-    h += '<div class="prose intro">' + G.intro.map(function (p) { return '<p class="lead">' + esc(p) + "</p>"; }).join("") + "</div></section>";
-    h += '<section class="stack" aria-labelledby="granLessons"><div class="row" style="justify-content:space-between"><h2 id="granLessons">Уроки модуля</h2><span class="muted num">Отмечено ' + doneIn(GRAN) + " из " + GRAN.length + "</span></div>";
+    var h = '<div class="view-inner wide">' + crumbs([["home", "Главная"], ["gran", G.title]]);
+    h += '<section class="hero hero-gran"><div class="hero-copy"><span class="eyebrow">Углублённый модуль · ' + GRAN.length + " уроков</span><h1>" + esc(G.h1) + "</h1>";
+    h += '<div class="prose intro">' + G.intro.map(function (p) { return '<p class="lead">' + esc(p) + "</p>"; }).join("") + "</div></div>" + granArt() + "</section>";
+    h += '<section class="stack" aria-labelledby="granLessons"><div class="sec-head"><h2 id="granLessons">Уроки модуля</h2><span class="muted num">Отмечено ' + doneIn(GRAN) + " из " + GRAN.length + "</span></div>";
     h += modulesHTML(GRAN) + "</section>";
     var r = S.tests["gran-final"];
-    h += '<section class="panel stack"><div class="row" style="justify-content:space-between"><div class="stack" style="gap:4px"><h2>Итоговый тест по грануляции ТЛФ</h2><p class="muted">' + G.finalSize + " случайных вопросов из " + BANK_GRAN.length + " по всем урокам модуля.</p></div>" + scoreChip("gran-final") + "</div>";
+    h += '<section class="panel final-card"><div class="final-top"><div class="stack" style="gap:6px"><span class="eyebrow">Итог модуля</span><h2>Итоговый тест по грануляции ТЛФ</h2><p class="muted">' + G.finalSize + " случайных вопросов из " + BANK_GRAN.length + " по всем урокам модуля.</p></div>" + scoreChip("gran-final") + "</div>";
     h += '<div class="row"><a class="btn primary" href="' + link("test-gran-final") + '">' + (r ? "Пройти итоговый тест ещё раз" : "Начать итоговый тест") + '</a><a class="btn" href="' + link("glossary") + '">Глоссарий терминов грануляции</a></div></section>';
-    h += '<section class="panel faq" aria-labelledby="granFaq"><h2 id="granFaq">Частые вопросы о грануляции ТЛФ</h2>';
-    G.faq.forEach(function (f) { h += "<h3>" + esc(f.q) + "</h3><p>" + esc(f.a) + "</p>"; });
-    h += "</section>";
+    h += '<section class="faq" aria-labelledby="granFaq"><h2 id="granFaq">Частые вопросы о грануляции ТЛФ</h2><div class="acc">';
+    G.faq.forEach(function (f) { h += '<details class="acc-item"><summary><h3>' + esc(f.q) + '</h3><span class="acc-ico" aria-hidden="true"></span></summary><div class="acc-body"><p>' + esc(f.a) + "</p></div></details>"; });
+    h += "</div></section>";
     h += '<p class="note">' + DISCLAIMER + "</p>";
     return h + "</div>";
   }
 
-  function listBlock(tag, cls, title, items, ordered) {
-    var h = '<section class="panel"><div class="section-title"><span class="tag ' + tag + '">' + title + "</span></div><" + (ordered ? "ol" : "ul") + ' class="' + cls + '">';
+  var TAG_ICON = {
+    goals: '<path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>',
+    theory: '<path d="M4 5h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z"/>',
+    rules: '<path d="M5 12l5 5L20 7"/>',
+    errs: '<path d="M6 6l12 12M18 6L6 18"/>',
+    check: '<path d="M9 9a3 3 0 1 1 4 2.8c-.7.3-1 .9-1 1.6V15M12 18.5v.5"/>',
+    safety: '<path d="M12 3l9 16H3zM12 10v4M12 17v.5"/>',
+    table: '<path d="M4 5h16v14H4zM4 10h16M10 10v9"/>'
+  };
+  function tagHTML(tag, title) {
+    return '<span class="tag ' + tag + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + (TAG_ICON[tag] || TAG_ICON.theory) + "</svg>" + title + "</span>";
+  }
+  function listBlock(tag, cls, title, items, ordered, anchor) {
+    var h = '<section class="panel blk-' + tag + '"' + (anchor ? ' id="' + anchor + '"' : "") + '><div class="section-title">' + tagHTML(tag, title) + "</div><" + (ordered ? "ol" : "ul") + ' class="' + cls + '">';
     items.forEach(function (r) { h += "<li>" + esc(r) + "</li>"; });
     return h + "</" + (ordered ? "ol" : "ul") + "></section>";
   }
@@ -334,14 +376,19 @@
     if (!IS_NODE && (!S.opened[id] || S.last !== id)) { S.opened[id] = 1; S.last = id; save(); }
     var list = l.module === "gran" ? GRAN : BASE;
     var prev = list[l.num - 2], next = list[l.num];
-    var h = '<article class="view-inner">';
+    var sc = W.TLF_SCHEMES && W.TLF_SCHEMES.forLesson(id);
+    var safety = id === "safety" || id === "g-safety";
+    var toc = [];
+    var h = '<article class="view-inner lesson" data-morph="deep"><div class="lesson-main" data-morph="deep">';
     h += crumbs(l.module === "gran" ? [["home", "Главная"], ["gran", G.title], ["lesson-" + id, l.title]] : [["home", "Главная"], ["lessons", "Уроки"], ["lesson-" + id, l.title]]);
     h += '<header class="lesson-head"><div class="row">' + lessonChip(l) + '<span class="eyebrow">' + moduleLabel(l) + " из " + list.length + "</span></div>";
-    h += "<h1>" + esc(l.title) + '</h1><p class="lead">' + esc(l.short) + "</p></header>";
+    h += "<h1>" + esc(l.title) + '</h1><p class="lead">' + esc(l.short) + "</p>";
+    h += '<div class="lesson-meta num"><span>' + qWord(l.qs.length) + "</span>" + (sc ? "<span>интерактивная схема</span>" : "") + (l.table ? "<span>таблица</span>" : "") + "</div></header>";
 
-    if (l.goals) h += listBlock("goals", "goallist", "Цели урока", l.goals);
+    if (l.goals) { h += listBlock("goals", "goallist", "Цели урока", l.goals, false, "celi"); toc.push(["celi", "Цели урока"]); }
 
-    h += '<section class="panel"><div class="section-title"><span class="tag theory">Теория</span></div><div class="prose">';
+    h += '<section class="panel" id="teoriya"><div class="section-title">' + tagHTML("theory", "Теория") + '</div><div class="prose">';
+    toc.push(["teoriya", "Теория"]);
     l.theory.forEach(function (p) { h += "<p>" + esc(p) + "</p>"; });
     h += "</div>";
     if (l.stages) {
@@ -352,46 +399,55 @@
     if (l.theory2) { h += '<div class="prose">'; l.theory2.forEach(function (p) { h += "<p>" + esc(p) + "</p>"; }); h += "</div>"; }
     h += "</section>";
 
+    if (sc) { h += W.TLF_SCHEMES.html(sc); toc.push(["shema", "Схема: " + sc.title]); }
+
     if (l.table) {
-      h += '<section class="panel"><div class="section-title"><span class="tag theory">' + esc(l.table.caption) + '</span></div><div class="tbl-wrap"><table class="tbl"><thead><tr>';
+      h += '<section class="panel" id="tablica"><div class="section-title">' + tagHTML("table", esc(l.table.caption)) + '</div><div class="tbl-wrap"><table class="tbl"><thead><tr>';
+      toc.push(["tablica", l.table.caption]);
       l.table.head.forEach(function (c) { h += '<th scope="col">' + esc(c) + "</th>"; });
       h += "</tr></thead><tbody>";
       l.table.rows.forEach(function (r) { h += "<tr>" + r.map(function (c, i) { return (i === 0 ? '<th scope="row">' : '<td data-label="' + esc(l.table.head[i]) + '">') + esc(c) + (i === 0 ? "</th>" : "</td>"); }).join("") + "</tr>"; });
       h += "</tbody></table></div></section>";
     }
     if (l.examples) {
-      h += '<section class="panel"><div class="section-title"><span class="tag theory">Учебные примеры</span><span class="muted">числа условные</span></div><div class="examples">';
+      h += '<section class="panel" id="primery"><div class="section-title">' + tagHTML("table", "Учебные примеры") + '<span class="muted">числа условные</span></div><div class="examples">';
+      toc.push(["primery", "Учебные примеры"]);
       l.examples.forEach(function (ex) {
         h += '<div class="example"><h3>' + esc(ex.title) + "</h3><ul>" + ex.lines.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>";
       });
       h += "</div></section>";
     }
 
-    h += '<div class="two">' + listBlock("rules", "checklist", l.theses ? "Ключевые тезисы" : "Ключевые правила", l.theses || l.rules) +
-      listBlock("errs", "errlist", "Типичные ошибки", l.errors) + "</div>";
+    var rulesTitle = l.theses ? "Ключевые тезисы" : "Ключевые правила";
+    h += '<div class="two">' + listBlock(safety ? "safety" : "rules", "checklist", rulesTitle, l.theses || l.rules, false, "tezisy") +
+      listBlock("errs", "errlist", "Типичные ошибки", l.errors, false, "oshibki") + "</div>";
+    toc.push(["tezisy", rulesTitle], ["oshibki", "Типичные ошибки"]);
 
     if (id === "granulation") {
-      h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Подробнее</span><b>Углублённый модуль «' + G.title + '»</b><span>' + GRAN.length + " отдельных уроков: стадии, оборудование, контроль, дефекты, расчёты, безопасность.</span></a>";
+      h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Подробнее</span><b>Углублённый модуль «' + G.title + '»</b><span>' + GRAN.length + " отдельных уроков: стадии, оборудование, контроль, дефекты, расчёты, безопасность.</span>" + granArt() + "</a>";
     }
 
-    h += '<section class="panel"><div class="section-title"><span class="tag check">Самопроверка</span><span class="muted">' + qWord(l.qs.length) + "</span></div>";
+    h += '<section class="panel" id="samoproverka"><div class="section-title">' + tagHTML("check", "Самопроверка") + '<span class="muted">' + qWord(l.qs.length) + "</span></div>";
+    toc.push(["samoproverka", "Самопроверка"]);
     l.qs.forEach(function (q) {
       var key = "l-" + q.id;
       h += questionHTML(QS[key] || makeQState(key, q, IS_NODE));
     });
     h += "</section>";
 
-    h += '<section class="panel stack"><div class="row" style="justify-content:space-between">';
+    h += '<section class="panel done-card' + (S.done[id] ? " is-done" : "") + '"><div class="done-row">';
     h += "<p>" + (S.done[id] ? "Урок отмечен как пройденный." : "Прочитали теорию и ответили на вопросы? Отметьте урок.") + "</p>";
     h += '<button type="button" class="btn ' + (S.done[id] ? "" : "primary") + '" data-act="toggle-done" data-id="' + id + '">' + (S.done[id] ? "Снять отметку" : "Отметить урок пройденным") + "</button></div>";
     h += '<div class="row"><a class="btn small" href="' + link("test-" + id) + '">Тест по уроку (' + qWord(l.qs.length) + ")</a></div></section>";
 
     h += relatedHTML(l, prev, next);
     h += '<nav class="lesson-nav" aria-label="Соседние уроки">';
-    h += prev ? '<a class="btn ghost" rel="prev" href="' + link("lesson-" + prev.id) + '">← ' + esc(prev.title) + "</a>" : "<span></span>";
-    if (next) h += '<a class="btn ghost" rel="next" href="' + link("lesson-" + next.id) + '">' + esc(next.title) + " →</a>";
-    else h += l.module === "gran" ? '<a class="btn ghost" href="' + link("test-gran-final") + '">Итоговый тест модуля →</a>' : '<a class="btn ghost" href="' + link("gran") + '">Модуль «' + G.title + '» →</a>';
-    return h + "</nav></article>";
+    h += prev ? '<a class="pn prev" rel="prev" href="' + link("lesson-" + prev.id) + '"><span class="eyebrow">← Предыдущий</span><b>' + esc(prev.title) + "</b></a>" : "<span></span>";
+    if (next) h += '<a class="pn next" rel="next" href="' + link("lesson-" + next.id) + '"><span class="eyebrow">Следующий →</span><b>' + esc(next.title) + "</b></a>";
+    else h += l.module === "gran" ? '<a class="pn next" href="' + link("test-gran-final") + '"><span class="eyebrow">Дальше →</span><b>Итоговый тест модуля</b></a>' : '<a class="pn next" href="' + link("gran") + '"><span class="eyebrow">Дальше →</span><b>Модуль «' + G.title + "»</b></a>";
+    h += "</nav></div>";
+    h += '<aside class="toc" aria-label="Содержание урока"><nav><p class="eyebrow">Содержание</p><ol>' + toc.map(function (t) { return '<li><a href="#' + t[0] + '">' + esc(t[1]) + "</a></li>"; }).join("") + "</ol></nav></aside>";
+    return h + "</article>";
   }
 
   function relatedHTML(l, prev, next) {
@@ -585,19 +641,32 @@
     var qe = esc(q).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     try { return t.replace(new RegExp("(" + qe + ")", "gi"), "<mark>$1</mark>"); } catch (e) { return t; }
   }
+  function glossarySorted() { return GLOSSARY.slice().sort(function (a, b) { return a.term.localeCompare(b.term, "ru"); }); }
+  function letterOf(t) { var c = t.charAt(0).toUpperCase(); return /[A-Z]/.test(c) ? "A–Z" : /[0-9]/.test(c) ? "0–9" : c; }
   function glossaryListHTML() {
     var q = GQ.trim().toLowerCase();
-    var items = GLOSSARY.slice().sort(function (a, b) { return a.term.localeCompare(b.term, "ru"); })
+    var items = glossarySorted()
       .filter(function (g) { return !q || g.term.toLowerCase().indexOf(q) !== -1 || g.def.toLowerCase().indexOf(q) !== -1; });
     if (!items.length) return '<div class="gl"><p class="empty">Ничего не найдено по запросу «' + esc(GQ) + "». Попробуйте часть слова.</p></div>";
-    var h = '<dl class="gl">';
-    items.forEach(function (g) { h += '<div class="gl-item"><dt>' + hl(g.term, q) + "</dt>" + starBtn(g.term, false) + "<dd>" + hl(g.def, q) + "</dd></div>"; });
-    return h + "</dl>";
+    var h = "", cur = null;
+    items.forEach(function (g) {
+      var L = letterOf(g.term);
+      if (L !== cur) {
+        if (cur !== null) h += "</dl></section>";
+        cur = L;
+        h += '<section class="gl-group" id="gl-' + esc(L) + '"><h2 class="gl-letter">' + esc(L) + '</h2><dl class="gl">';
+      }
+      h += '<div class="gl-item"><dt>' + hl(g.term, q) + "</dt>" + starBtn(g.term, false) + "<dd>" + hl(g.def, q) + "</dd></div>";
+    });
+    return h + "</dl></section>";
   }
   function viewGlossary() {
     var h = '<div class="view-inner">' + crumbs([["home", "Главная"], ["glossary", "Глоссарий"]]);
     h += '<section class="hero"><span class="eyebrow">Глоссарий</span><h1>Термины производства</h1><p class="lead">' + GLOSSARY.length + " терминов GMP и технологии твёрдых лекарственных форм, включая термины модуля «" + G.title + "». Звёздочка добавляет термин в избранную колоду карточек.</p></section>";
-    h += '<div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14zM16 16l4 4"/></svg><input id="glSearch" type="search" placeholder="Поиск: CAPA, карантин, чоппер…" autocomplete="off" aria-label="Поиск по глоссарию" value="' + esc(GQ) + '"></div>';
+    var letters = [];
+    glossarySorted().forEach(function (g) { var L = letterOf(g.term); if (letters.indexOf(L) === -1) letters.push(L); });
+    h += '<div class="gl-tools"><div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14zM16 16l4 4"/></svg><input id="glSearch" type="search" placeholder="Поиск: CAPA, карантин, чоппер…" autocomplete="off" aria-label="Поиск по глоссарию" value="' + esc(GQ) + '"></div>';
+    h += '<nav class="abc" aria-label="Алфавитный указатель">' + letters.map(function (L) { return '<a href="#gl-' + esc(L) + '">' + esc(L) + "</a>"; }).join("") + "</nav></div>";
     return h + '<div id="glList">' + glossaryListHTML() + "</div></div>";
   }
 
@@ -712,6 +781,7 @@
 
   /* ===================== Браузер ===================== */
   var $view = document.getElementById("view");
+  document.documentElement.classList.add("js");
 
   function applyTheme() {
     if (S.theme === "dark" || S.theme === "light") document.documentElement.setAttribute("data-theme", S.theme);
@@ -747,7 +817,9 @@
       if (T) T.keep = false;
     }
     if (r !== "privacy") CLEAR_ASK = false;
-    $view.innerHTML = render(r);
+    var html = render(r);
+    if (r === lastRoute || lastRoute === "") morph($view, html); // та же страница: обновляем только изменившееся
+    else { $view.innerHTML = html; markSrc($view); }
     if (MODE === "spa") {
       var navBox = document.getElementById("shellNav");
       navBox.innerHTML = navHTML(sectionOf(r));
@@ -759,7 +831,70 @@
       try { $view.focus({ preventScroll: true }); } catch (e) { /* старые браузеры */ }
     }
     lastRoute = r;
+    enhance(r);
   }
+
+  /* Бережное обновление: меняем только те блоки, которые изменились.
+     Так заголовок и текст урока не перерисовываются (стабильная отрисовка),
+     а схема сохраняет свой шаг при ответах на вопросы. */
+  function morph(box, html) {
+    var tpl = document.createElement("template");
+    tpl.innerHTML = html;
+    syncChildren(box, tpl.content);
+  }
+  function markSrc(el) {
+    Array.prototype.forEach.call(el.children, function (c) { c.__src = c.outerHTML; if (c.getAttribute("data-morph") === "deep") markSrc(c); });
+  }
+  function syncChildren(live, fresh) {
+    var nk = Array.prototype.slice.call(fresh.childNodes), lk = Array.prototype.slice.call(live.childNodes);
+    nk.forEach(function (n, i) {
+      var l = lk[i];
+      if (!l) { live.appendChild(n); if (n.nodeType === 1) n.__src = n.outerHTML; return; }
+      if (l.nodeType !== 1 || n.nodeType !== 1 || l.tagName !== n.tagName) {
+        if (l.nodeType === 3 && n.nodeType === 3 && l.data === n.data) return;
+        live.replaceChild(n, l); if (n.nodeType === 1) n.__src = n.outerHTML; return;
+      }
+      if (n.getAttribute("data-morph") === "deep" && l.getAttribute("data-morph") === "deep" && l.className === n.className) { syncChildren(l, n); return; }
+      var src = n.outerHTML, was = l.__src !== undefined ? l.__src : l.outerHTML;
+      if (src !== was) { live.replaceChild(n, l); n.__src = src; } else l.__src = src;
+    });
+    for (var j = nk.length; j < lk.length; j++) live.removeChild(lk[j]);
+  }
+
+  /* Улучшения после отрисовки: схемы, оглавление, прогресс чтения */
+  var tocObs = null;
+  function enhance(r) {
+    document.documentElement.classList.toggle("is-lesson", r.indexOf("lesson-") === 0);
+    if (W.TLF_SCHEMES && W.TLF_SCHEMES.init) W.TLF_SCHEMES.init($view);
+    var links = $view.querySelectorAll(".toc a");
+    if (tocObs) { tocObs.disconnect(); tocObs = null; }
+    if (links.length && "IntersectionObserver" in window) {
+      var map = {};
+      links.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });
+      tocObs = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          links.forEach(function (a) { a.removeAttribute("aria-current"); });
+          var a = map[e.target.id]; if (a) a.setAttribute("aria-current", "location");
+        });
+      }, { rootMargin: "-20% 0px -70% 0px" });
+      Object.keys(map).forEach(function (k) { var el = document.getElementById(k); if (el) tocObs.observe(el); });
+    }
+  }
+  // запасной вариант индикатора чтения для браузеров без scroll-driven анимаций
+  (function () {
+    var bar = document.querySelector(".read-progress i");
+    if (!bar || (window.CSS && CSS.supports && CSS.supports("animation-timeline: scroll()"))) return;
+    var ticking = false;
+    function upd() {
+      ticking = false;
+      var d = document.documentElement, max = d.scrollHeight - d.clientHeight;
+      bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, d.scrollTop / max) : 0) + ")";
+    }
+    window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+    upd();
+  })();
+
   function rerender() { var y = window.scrollY; route(); window.scrollTo(0, y); }
 
   function replaceQ(st) {
@@ -821,7 +956,13 @@
     var st;
     switch (act) {
       case "theme":
-        S.theme = currentTheme() === "dark" ? "light" : "dark"; applyTheme(); save(); break;
+        S.theme = currentTheme() === "dark" ? "light" : "dark"; save();
+        if (document.startViewTransition && !(W.matchMedia && W.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+          document.documentElement.classList.add("vt-theme");
+          var vt = document.startViewTransition(applyTheme);
+          vt.finished.then(function () { document.documentElement.classList.remove("vt-theme"); }, function () { document.documentElement.classList.remove("vt-theme"); });
+        } else applyTheme();
+        break;
       case "share": share(); break;
       case "opt":
         st = QS[b.getAttribute("data-qkey")]; if (!st) return;
