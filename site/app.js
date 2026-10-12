@@ -479,7 +479,7 @@
     var h = '<div class="view-inner">' + crumbs([["home", "Главная"], ["tests", "Тесты"]]);
     h += '<section class="hero"><span class="eyebrow">Тесты</span><h1>Проверка знаний</h1>';
     h += '<p class="lead">' + BANK.length + " вопросов: один ответ, несколько ответов, верно или неверно. Вопросы и варианты перемешиваются, после каждого ответа показывается объяснение. Ориентир для самопроверки — " + PASS + "% (это не норматив и не оценка).</p></section>";
-    h += '<div class="test-grid">';
+    h += '<h2>Итоговые тесты</h2><div class="test-grid">';
     h += testCard("exam", "Итоговый тест", EXAM_SIZE + " случайных вопросов из основных уроков.", true);
     h += testCard("gran-final", "Итоговый тест: грануляция", G.finalSize + " случайных вопросов из модуля «" + G.title + "».", true);
     h += testCard("all", "Все вопросы основных уроков", BANK_BASE.length + " вопросов подряд.");

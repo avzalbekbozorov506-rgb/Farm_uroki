@@ -69,6 +69,11 @@ function jsonLd(route, m, url) {
   return '<script type="application/ld+json">' + JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c") + "</script>";
 }
 
+// схемы нужны только там, где они рисуются: уроки со схемой и списки уроков (метка «Схема»)
+function needsSchemes(route) {
+  if (route === "home" || route === "lessons" || route === "gran") return true;
+  return route.indexOf("lesson-") === 0 && !!ctx.TLF_SCHEMES.forLesson(route.slice(7));
+}
 function pageHtml(route) {
   const p = APP.pathFor(route);
   const depth = p.split("/").length - 1;
@@ -112,7 +117,6 @@ function pageHtml(route) {
 <meta name="twitter:image" content="${SITE}assets/og.png">
 <link rel="icon" href="${rootRel}assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="${rootRel}assets/fonts/golos-text-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="${rootRel}assets/fonts/unbounded-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${rootRel}assets/style.css">
 ${themeInit()}
 ${jsonLd(route, m, url)}${verify}${verifyTags}
@@ -126,8 +130,7 @@ ${parts.nav}
 ${parts.footer}
 <script src="${rootRel}assets/data.js" defer></script>
 <script src="${rootRel}assets/data-gran.js" defer></script>
-<script src="${rootRel}assets/schemes.js" defer></script>
-<script src="${rootRel}assets/app.js" defer></script>
+${needsSchemes(route) ? `<script src="${rootRel}assets/schemes.js" defer></script>\n` : ""}<script src="${rootRel}assets/app.js" defer></script>
 </body>
 </html>
 `;

@@ -312,7 +312,6 @@ main { min-width: 0; padding: 20px 16px calc(var(--nav-h) + 32px + env(safe-area
 .sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
 .link-arrow { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; text-decoration: none; min-height: 44px; }
 .arr { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; transition: transform var(--d-2) var(--ease-out); }
-a:hover > .arr, a:focus-visible > .arr, .lc-foot .arr { }
 a:hover .arr { transform: translateX(3px); }
 .ico { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
@@ -958,10 +957,10 @@ html:not(.js) .sc-go { cursor: default; }
 .k-r-bg { fill: var(--surface); }
 .k-r-line { stroke: color-mix(in srgb, var(--bad) 22%, transparent); stroke-width: 1.2; }
 .k-ico { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-g:has(> .k-q) .k-ico, .k-q ~ .k-ico { color: var(--warn); }
 .k-ok ~ .k-ico { color: var(--ok); }
 .k-no ~ .k-ico { color: var(--bad); }
-.k-q ~ .k-t.k-caps, .k-q ~ .k-ico { fill: var(--warn); }
+.k-q ~ .k-ico { color: var(--warn); }
+.k-q ~ .k-t.k-caps { fill: var(--warn); }
 .k-ok ~ .k-t.k-caps { fill: var(--ok); }
 .k-no ~ .k-t.k-caps { fill: var(--bad); }
 .k-q ~ .k-ico, .k-ok ~ .k-ico, .k-no ~ .k-ico { fill: none; stroke: currentColor; }
@@ -976,8 +975,6 @@ g:has(> .k-q) .k-ico, .k-q ~ .k-ico { color: var(--warn); }
 .sc-svg [data-s] { opacity: 0; transition: opacity var(--d-3) var(--ease-out); }
 .sc-svg [data-s][data-on] { opacity: 1; }
 .sc-svg [data-h] { transition: opacity var(--d-3), filter var(--d-3); }
-.scheme:not([data-step="0"]) .sc-svg [data-h]:not([data-hon]) .k-box,
-.scheme:not([data-step="0"]) .sc-svg .k-box:not([data-hon] *) { }
 .sc-svg [data-hon] .k-part, .sc-svg .k-part[data-hon],
 .sc-svg [data-hon] .k-vessel, .sc-svg .k-vessel[data-hon],
 .sc-svg [data-hon] .k-roll, .sc-svg [data-hon] .k-bag,
@@ -1003,7 +1000,6 @@ g:has(> .k-q) .k-ico, .k-q ~ .k-ico { color: var(--warn); }
   .is-playing .k-dash[data-mon] { animation: sc-dash 1s linear infinite; }
   .is-playing [data-mon].mv-sway { animation: sc-sway 2.4s var(--ease-in-out) infinite alternate; }
   .is-playing [data-mon].mv-tumble { animation: sc-sway 1.6s var(--ease-in-out) infinite alternate; }
-  .is-playing [data-mon].mv-drop > *, .is-playing [data-mon].mv-drop { }
   .is-playing [data-mon].mv-drop > * { animation: sc-drop 1.2s linear infinite; }
   .is-playing [data-mon].mv-fall > * { animation: sc-fall 1.6s var(--ease-in-out) infinite; }
   .is-playing [data-mon].mv-bob { animation: sc-bob 1.1s var(--ease-in-out) infinite alternate; }
@@ -1038,15 +1034,15 @@ g:has(> .k-q) .k-ico, .k-q ~ .k-ico { color: var(--warn); }
   .hero-art .ha-d3 { animation-delay: .24s; }
   .hero-art .ha-d4 { animation-delay: .36s; }
   @supports (animation-timeline: view()) {
-    .lesson-grid > li, .tile, .lesson-main > .panel, .lesson-main > .two, .scheme, .test-card, .acc-item, .gl-group, .sheet section {
+    .lesson-grid > li, .tile-sm, .test-card, .acc-item, .pn {
       animation: reveal linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry 40%;
+      animation-range: entry 0% entry 60%;
     }
   }
 }
 @keyframes art-in { from { opacity: 0; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: none; } }
-@keyframes reveal { from { opacity: .001; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes reveal { from { transform: translateY(22px) scale(.985); } to { transform: none; } }
 
 /* Плавные переходы между страницами (прогрессивное улучшение) */
 @view-transition { navigation: auto; }
