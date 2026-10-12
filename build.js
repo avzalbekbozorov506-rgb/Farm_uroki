@@ -41,12 +41,26 @@ const SITE = APP.SITE_URL;
 
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]); }
 function rm(dir) { fs.rmSync(dir, { recursive: true, force: true }); }
-function write(file, content) { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, content); }
+function write(file, content) {
+  if (file.endsWith(".html") && path.relative(OUT, file) !== "all-in-one.html") content = versionAssets(content);
+  fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, content);
+}
 function read(f) { return fs.readFileSync(path.join(SRC, f), "utf8"); }
 
 // --- CSS со шрифтами ---
 const fontsCss = read("fonts/fonts.css");
 const css = read("style.css");
+const siteCss = () => fontsCss.replace(/url\(([^)]+\.woff2)\)/g, "url(fonts/$1)") + "\n" + css;
+
+// Версия ассета по содержимому (?v=…): после публикации браузер не возьмёт из кэша
+// старые style.css или app.js к новым страницам.
+const ASSET_VER = {};
+for (const f of ["data.js", "data-gran.js", "schemes.js", "app.js"]) ASSET_VER[f] = hash(read(f));
+ASSET_VER["style.css"] = hash(siteCss());
+function hash(s) { return require("crypto").createHash("sha256").update(s).digest("hex").slice(0, 10); }
+function versionAssets(htmlText) {
+  return htmlText.replace(/(assets\/(style\.css|data\.js|data-gran\.js|schemes\.js|app\.js))"/g, (m, p, f) => `${p}?v=${ASSET_VER[f]}"`);
+}
 const fontFiles = fs.readdirSync(path.join(SRC, "fonts")).filter(f => f.endsWith(".woff2"));
 
 function themeInit() {
@@ -220,7 +234,7 @@ for (const r of routes) {
 write(path.join(OUT, "404.html"), page404());
 
 // ассеты
-write(path.join(OUT, "assets/style.css"), fontsCss.replace(/url\(([^)]+\.woff2)\)/g, "url(fonts/$1)") + "\n" + css);
+write(path.join(OUT, "assets/style.css"), siteCss());
 for (const f of ["data.js", "data-gran.js", "schemes.js", "app.js", "favicon.svg"]) fs.copyFileSync(path.join(SRC, f), path.join(OUT, "assets", f));
 fs.copyFileSync(path.join(SRC, "og.png"), path.join(OUT, "assets/og.png"));
 fs.mkdirSync(path.join(OUT, "assets/fonts"), { recursive: true });
