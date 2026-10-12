@@ -143,28 +143,35 @@ function page404() {
 <meta name="description" content="Такой страницы на сайте «Оператор ТЛФ» нет.">
 <meta name="robots" content="noindex">
 <style>
-:root{--bg:#edf1f0;--fg:#142220;--muted:#55625f;--accent:#0e6a5d;--surface:#fff;--line:#c9d3d1}
-@media (prefers-color-scheme:dark){:root{--bg:#0e1514;--fg:#e3ebe9;--muted:#98a7a4;--accent:#5cc4b1;--surface:#162120;--line:#2b3a38;color-scheme:dark}}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-main{max-width:620px;margin:0 auto;padding:64px 16px;display:grid;gap:16px}
-.mark{width:56px;height:56px;border-radius:50%;background:var(--accent);position:relative}
-.mark:after{content:"";position:absolute;left:25px;top:0;width:6px;height:56px;background:var(--bg)}
-h1{margin:0;font-size:1.8rem;line-height:1.2}
-p{margin:0;color:var(--muted)}
-nav{display:flex;flex-wrap:wrap;gap:10px}
+:root{--bg:#f4f7f6;--fg:#0f1f1c;--muted:#566562;--accent:#0a6b5c;--ink:#fff;--surface:#fff;--line:#dbe3e1;--soft:#dff0eb;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0a1113;--fg:#e4ecea;--muted:#93a6a2;--accent:#4fd1b5;--ink:#04201a;--surface:#101a1c;--line:#213235;--soft:#0f2e29;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(900px 420px at 80% -10%,var(--soft),transparent 70%),var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:640px;margin:0 auto;padding:48px 16px;display:grid;gap:18px;justify-items:start}
+svg{width:132px;height:auto}
+.t1{fill:var(--accent)}.t2{fill:var(--surface);stroke:var(--line);stroke-width:2}.cr{stroke:var(--bg);stroke-width:5;stroke-linecap:round}
+.code{font:600 .78rem/1 ui-monospace,Consolas,monospace;letter-spacing:.12em;color:var(--muted)}
+h1{margin:0;font-size:clamp(1.7rem,1.3rem + 2vw,2.4rem);line-height:1.15;letter-spacing:-.02em}
+p{margin:0;color:var(--muted);max-width:60ch}
+nav{display:flex;flex-wrap:wrap;gap:8px}
 a{color:var(--accent);font-weight:600}
-nav a{display:inline-block;padding:10px 16px;border:1px solid var(--line);border-radius:8px;background:var(--surface);text-decoration:none}
+nav a{display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);text-decoration:none;transition:border-color .2s}
+nav a:first-child{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+nav a:hover{border-color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.small{font-size:.85rem}
 </style>
 </head>
 <body>
 <main>
-<div class="mark" aria-hidden="true"></div>
+<svg viewBox="0 0 140 100" aria-hidden="true"><g transform="rotate(-8 50 50)"><path class="t1" d="M50 8a42 42 0 0 0 0 84z"/></g><g transform="translate(14 6) rotate(10 76 50)"><path class="t2" d="M76 8a42 42 0 0 1 0 84z"/></g></svg>
+<span class="code">ОШИБКА 404</span>
 <h1>Страница не найдена</h1>
 <p>Возможно, адрес набран с ошибкой или страница была перемещена. Ссылки ниже ведут на основные разделы.</p>
 <nav aria-label="Разделы">
 <a href="${SITE}">Главная</a><a href="${SITE}uroki/">Уроки</a><a href="${SITE}granulyaciya/">Грануляция ТЛФ</a><a href="${SITE}testy.html">Тесты</a><a href="${SITE}glossarij.html">Глоссарий</a>
 </nav>
-<p>${esc(APP.DISCLAIMER)}</p>
+<p class="small">${esc(APP.DISCLAIMER)}</p>
 </main>
 </body>
 </html>

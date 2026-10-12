@@ -41,7 +41,7 @@
     return pts.map(function (p, i) { return '<circle cx="' + f1(p[0]) + '" cy="' + f1(p[1]) + '" r="' + (typeof r === "function" ? r(i) : r) + '" class="' + (typeof cls === "function" ? cls(i) : cls) + '"' + (extra ? extra(i) : "") + "/>"; }).join("");
   }
   function arrowDefs(id) {
-    return '<defs><marker id="' + id + '-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="k-arhead"/></marker></defs>';
+    return '<defs><marker id="' + id + '-ar" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="k-arhead"/></marker></defs>';
   }
   function arrow(id, d, cls, extra) { return '<path d="' + d + '" class="' + (cls || "k-arrow") + '" marker-end="url(#' + id + '-ar)"' + (extra || "") + "/>"; }
   function delays(i) { return ' style="animation-delay:' + (-(i % 7) * 0.23).toFixed(2) + 's"'; }
@@ -75,8 +75,8 @@
     h += '<g class="mv-sway"' + S("1 2") + M("1 2") + ">";
     h += "<g" + S(2) + ">" + circles(mix, 9, "k-liq-soft") + "</g>";
     h += circles(mix, function (k) { return k % 3 ? 5.5 : 4.5; }, function (k) { return k % 3 ? "k-exc" : "k-api"; }) + "</g>";
-    h += "<g" + S(1) + '><circle cx="392" cy="150" r="5" class="k-api"/>' + T(404, 155, "действующее", "k-t k-sm") + T(404, 172, "вещество", "k-t k-sm") +
-      '<circle cx="392" cy="200" r="5.5" class="k-exc"/>' + T(404, 205, "вспомогательные", "k-t k-sm") + T(404, 222, "вещества", "k-t k-sm") + "</g>";
+    h += "<g" + S(1) + '><circle cx="384" cy="150" r="5" class="k-api"/>' + T(396, 155, "действующее", "k-t k-sm") + T(396, 172, "вещество", "k-t k-sm") +
+      '<circle cx="384" cy="200" r="5.5" class="k-exc"/>' + T(396, 205, "вспомогательные", "k-t k-sm") + T(396, 222, "вещества", "k-t k-sm") + "</g>";
     // форсунка и капли (2)
     h += "<g" + S(2) + '><path d="M240 50H280V66L268 80H252L240 66Z" class="k-part"/>';
     h += '<g class="mv-drop"' + M(2) + '><circle cx="252" cy="98" r="4" class="k-liq"/><circle cx="268" cy="112" r="4" class="k-liq" style="animation-delay:-.4s"/><circle cx="260" cy="130" r="4" class="k-liq" style="animation-delay:-.8s"/></g>';
@@ -84,7 +84,7 @@
     // агломераты (3)
     var agg = [[200, 248], [248, 232], [300, 250], [334, 226], [228, 270], [282, 274], [318, 268], [190, 214], [270, 204]];
     h += '<g class="mv-tumble"' + S(3) + M(3) + ">" + agg.map(function (p, k) { return cluster(p[0], p[1], 15 + (k % 2) * 3, k); }).join("") + "</g>";
-    h += "<g" + S(3) + ">" + T(260, 150, "частицы собираются в агломераты", "k-t", "middle") + "</g>";
+    h += "<g" + S(3) + ">" + T(260, 140, "образуются агломераты", "k-t", "middle") + "</g>";
     // влажное просеивание (4)
     h += "<g" + S(4) + ">" + sieve(140, 380, 196);
     h += lump(196, 146, 34, 22, 1) + lump(274, 132, 28, 20, 2) + lump(340, 156, 24, 16, 3);
@@ -103,7 +103,7 @@
     var g6a = [[180, 160, 16], [226, 150, 9], [262, 164, 20], [306, 148, 7], [346, 162, 13], [204, 120, 7], [292, 116, 11]];
     h += g6a.map(function (p, k) { return granule(p[0], p[1], p[2], k, true); }).join("");
     h += '<g class="mv-fall"' + M(6) + ">" + g4.map(function (p, k) { return granule(p[0], p[1], 9, k + 3, true); }).join("") + "</g>";
-    h += T(392, 201, "сито или мельница", "k-t") + T(260, 100, "размер гранул выравнивается", "k-t", "middle") + "</g>";
+    h += T(392, 194, "сито или", "k-t") + T(392, 212, "мельница", "k-t") + T(260, 100, "размер гранул выравнивается", "k-t", "middle") + "</g>";
     // опудривание (7)
     h += "<g" + S(7) + '><rect x="150" y="110" width="220" height="182" rx="22" class="k-vessel"/>';
     var g7 = scatter(71, 12, 178, 342, 138, 268, 34);
@@ -164,7 +164,7 @@
     // крышка с блокировкой
     h += '<rect x="138" y="82" width="244" height="14" rx="5" class="k-part"' + H(1) + "/>";
     h += "<g" + H(1) + '><path d="M392 84v-6a8 8 0 0 1 16 0v6" class="k-line"/><rect x="388" y="84" width="24" height="16" rx="3" class="k-part"/></g>';
-    h += "<g" + S("0 1") + ">" + T(260, 74, "крышка с блокировкой", "k-t", "middle") + "</g>";
+    h += "<g" + S("0 1") + ">" + T(260, 116, "крышка с блокировкой", "k-t k-sm k-mut", "middle") + "</g>";
     // импеллер
     h += '<ellipse cx="260" cy="266" rx="66" ry="9" class="k-dash"' + M("2 3 4 5") + "/>";
     h += "<g" + H(1) + '><path d="M198 266Q260 250 322 266Q260 280 198 266Z" class="k-part"/><circle cx="260" cy="266" r="6" class="k-ink"/></g>';
@@ -177,11 +177,11 @@
     // разгрузочный клапан и влажный измельчитель
     h += '<path d="M384 252H444V266" class="k-pipe"/>';
     h += '<rect x="366" y="240" width="18" height="24" rx="3" class="k-valve"' + H(6) + TF(["none", "none", "none", "none", "none", "none", "translate(14px,0)"]) + "/>";
-    h += '<rect x="400" y="266" width="104" height="34" rx="6" class="k-part"' + H(6) + "/>" + T(452, 288, "измельчитель", "k-t k-sm", "middle");
-    h += "<g" + S("0 6") + ">" + T(452, 240, "разгрузочный клапан", "k-t k-sm", "middle") + "</g>";
+    h += '<rect x="400" y="266" width="104" height="34" rx="6" class="k-part"' + H(6) + "/>" + T(452, 287, "измельчитель", "k-t k-xs", "middle");
+    h += "<g" + S("0 6") + ">" + T(462, 228, "разгрузочный", "k-t k-xs", "middle") + T(462, 243, "клапан", "k-t k-xs", "middle") + "</g>";
     h += '<g class="mv-flowx"' + S(6) + M(6) + '><circle cx="394" cy="252" r="4" class="k-gran"/><circle cx="414" cy="252" r="4" class="k-gran" style="animation-delay:-.3s"/><circle cx="432" cy="252" r="4" class="k-gran" style="animation-delay:-.6s"/></g>';
     // статус перед пуском (1)
-    h += "<g" + S(1) + '><rect x="186" y="150" width="148" height="56" rx="10" class="k-tagbox"/>' + T(260, 173, "статус «Чистое»", "k-t k-b", "middle") + T(260, 193, "и срок его действия", "k-t k-sm", "middle") + "</g>";
+    h += "<g" + S(1) + '><rect x="180" y="128" width="150" height="54" rx="10" class="k-tagbox"/>' + T(255, 151, "статус «Чистое»", "k-t k-b", "middle") + T(255, 170, "и срок его действия", "k-t k-sm", "middle") + "</g>";
     // график нагрузки (3–5)
     h += "<g" + S("3 4 5") + '><path d="M20 110V226H134" class="k-axis"/>' + T(20, 102, "нагрузка привода", "k-t k-sm") + T(134, 242, "время", "k-t k-sm k-mut", "end") + "</g>";
     h += '<path d="M22 216C42 215 56 208 70 197" class="k-curve"' + S("3 4 5") + "/>";
@@ -195,7 +195,7 @@
   function svgFbd(id) {
     var h = arrowDefs(id);
     // нагреватель и воздуховод
-    h += '<rect x="34" y="268" width="80" height="38" rx="6" class="k-part"' + H(2) + "/>" + T(74, 292, "нагреватель", "k-t k-sm", "middle");
+    h += '<rect x="22" y="268" width="92" height="38" rx="6" class="k-part"' + H(2) + "/>" + T(68, 291, "нагреватель", "k-t k-xs", "middle");
     h += '<path d="M114 280H222M114 294H218" class="k-line"/>';
     h += '<g class="mv-flowx"' + S("2 3 4 5") + M("2 3 4 5") + ">" + arrow(id, "M126 287H150", "k-arrow k-heat") + arrow(id, "M166 287H190", "k-arrow k-heat", ' style="animation-delay:-.5s"') + "</g>";
     h += '<circle cx="168" cy="280" r="5" class="k-sensor"' + H(2) + "/>" + "<g" + S("0 2") + ">" + T(168, 266, "T входа", "k-t k-sm", "middle") + "</g>";
@@ -227,17 +227,17 @@
     h += '<circle cx="364" cy="100" r="5" class="k-sensor"' + H(5) + "/><g" + S("0 5") + ">" + T(364, 86, "T выхода", "k-t k-sm", "middle") + "</g>";
     h += '<g class="mv-flowx"' + S(4) + M(4) + '><path d="M336 108q6-6 12 0t12 0" class="k-vapor"/><path d="M372 108q6-6 12 0t12 0" class="k-vapor" style="animation-delay:-.6s"/></g>';
     // датчик температуры продукта
-    h += '<path d="M302 224H318" class="k-line"/><circle cx="302" cy="224" r="5" class="k-sensor"' + H(5) + "/><g" + S("0 5") + ">" + T(322, 229, "T продукта", "k-t k-sm") + "</g>";
+    h += '<path d="M202 224H218" class="k-line"/><circle cx="218" cy="224" r="5" class="k-sensor"' + H(5) + "/><g" + S("0 5") + ">" + T(196, 229, "T продукта", "k-t k-sm", "end") + "</g>";
     // график (4–6)
     h += "<g" + S("4 5 6") + '><path d="M366 160V250H506" class="k-axis"/>' + T(366, 152, "температура", "k-t k-sm") + T(506, 266, "время", "k-t k-sm k-mut", "end");
-    h += '<path d="M372 284H392" class="k-curve"/>' + T(398, 288, "продукт", "k-t k-sm") + '<path d="M372 302H392" class="k-curve k-curve2"/>' + T(398, 306, "отходящий воздух", "k-t k-sm") + "</g>";
+    h += '<path d="M362 284H380" class="k-curve"/>' + T(386, 288, "продукт", "k-t k-xs") + '<path d="M362 302H380" class="k-curve k-curve2"/>' + T(386, 306, "выход воздуха", "k-t k-xs") + "</g>";
     h += '<path d="M369 230C400 228 420 228 440 227" class="k-curve"' + S("4 5 6") + '/><path d="M369 206C400 211 420 211 440 210" class="k-curve k-curve2"' + S("4 5 6") + "/>";
     h += '<path d="M440 227C462 224 482 202 502 188" class="k-curve"' + S("5 6") + '/><path d="M440 210C462 206 482 186 502 172" class="k-curve k-curve2"' + S("5 6") + "/>";
     h += "<g" + S(4) + ">" + T(436, 180, "тепло уходит", "k-t k-sm", "middle") + T(436, 196, "на испарение", "k-t k-sm", "middle") + "</g>";
     // проба на влажность (6)
     h += "<g" + S(6) + ">" + arrow(id, "M232 222Q190 214 170 214", "k-arrow k-strong") + '<path d="M150 198h16v28a4 4 0 0 1-4 4h-8a4 4 0 0 1-4-4z" class="k-part"/><rect x="148" y="194" width="20" height="6" rx="2" class="k-ink"/>';
     h += '<rect x="20" y="186" width="112" height="44" rx="8" class="k-tagbox"/>' + T(76, 205, "анализатор", "k-t k-sm k-b", "middle") + T(76, 221, "влажности", "k-t k-sm k-b", "middle");
-    h += T(94, 250, "потеря в массе при высушивании", "k-t k-sm", "middle") + "</g>";
+    h += T(76, 248, "потеря в массе", "k-t k-xs", "middle") + T(76, 263, "при высушивании", "k-t k-xs", "middle") + "</g>";
     return h;
   }
 
@@ -273,14 +273,14 @@
     h += '<path d="M346 192H426" class="k-sieve"/>';
     h += "<g" + S("0 4") + ">" + T(386, 90, "гранулятор с ситом", "k-t", "middle") + "</g>";
     // приёмный контейнер
-    h += '<path d="M346 234V300H426V234" class="k-vessel"/>';
+    h += '<path d="M346 234V300H426V234" class="k-vessel"' + S("0 1 2 4 5") + "/>";
     var gr = scatter(19, 12, 356, 416, 256, 292, 12);
     h += "<g" + S("0 4 5") + ">" + circles(gr, 5.5, "k-gran") + "</g>";
     h += '<g class="mv-fall"' + S(4) + M(4) + '><circle cx="370" cy="212" r="4.5" class="k-gran"/><circle cx="392" cy="218" r="4.5" class="k-gran" style="animation-delay:-.4s"/><circle cx="410" cy="210" r="4.5" class="k-gran" style="animation-delay:-.8s"/></g>';
     // мелочь и возврат (5)
     h += "<g" + S(5) + ">" + circles(scatter(29, 14, 354, 418, 246, 294, 8), 2.2, "k-fines") + T(436, 262, "мелочь", "k-t k-b");
     h += arrow(id, "M346 290H16V64H30", "k-arrow k-return");
-    h += T(180, 314, "возврат — только если предусмотрен регламентом", "k-t k-sm", "middle") + "</g>";
+    h += T(186, 312, "возврат — только если предусмотрен регламентом", "k-t k-xs", "middle") + "</g>";
     return h;
   }
 
@@ -329,23 +329,23 @@
 
   /* ---------- 6. Поток материала и статусы ---------- */
   function svgFlow(id) {
-    var h = '<defs><marker id="' + id + '-ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="k-arhead"/></marker>' +
+    var h = '<defs><marker id="' + id + '-ar" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="k-arhead"/></marker>' +
       '<pattern id="' + id + '-hq" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" class="k-q-bg"/><rect width="3" height="8" class="k-q-line"/></pattern>' +
       '<pattern id="' + id + '-hr" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" class="k-r-bg"/><path d="M0 0L9 9M9 0L0 9" class="k-r-line"/></pattern></defs>';
     function box(x, y, w, hh, cls, title, sub, steps, icon, fill) {
-      return "<g" + H(steps) + '><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + hh + '" rx="12" class="k-box ' + cls + '"' + (fill ? ' fill="url(#' + id + "-" + fill + ')"' : "") + "/>" +
-        T(x + 12, y + 27, title, "k-t k-b" + (icon ? " k-caps" : "")) + T(x + 12, y + 47, sub, "k-t k-sm") + (icon ? icon(x + w - 26, y + 22) : "") + "</g>";
+      return "<g" + H(steps) + '><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + hh + '" rx="12" class="k-box ' + cls + '"' + (fill ? ' style="fill:url(#' + id + "-" + fill + ')"' : "") + "/>" +
+        T(x + (icon ? 32 : 12), y + 27, title, "k-t k-b" + (icon ? " k-caps" : " k-sm")) + T(x + 12, y + 46, sub, "k-t k-xs") + (icon ? icon(x + 19, y + 22) : "") + "</g>";
     }
     function iQ(x, y) { return '<path d="M' + (x - 6) + " " + (y - 8) + "h12l-12 16h12z" + '" class="k-ico"/>'; }
     function iOk(x, y) { return '<circle cx="' + x + '" cy="' + y + '" r="9" class="k-ico"/><path d="M' + (x - 4) + " " + y + "l3 3 5-6" + '" class="k-ico"/>'; }
     function iNo(x, y) { return '<circle cx="' + x + '" cy="' + y + '" r="9" class="k-ico"/><path d="M' + (x - 4) + " " + (y - 4) + "l8 8m0-8l-8 8" + '" class="k-ico"/>'; }
     h += box(10, 36, 122, 66, "", "Приёмка", "осмотр, номер", "1");
-    h += box(168, 28, 152, 82, "k-q", "Карантин", "использовать нельзя", "2", iQ, "hq");
+    h += box(168, 28, 152, 82, "k-q", "Карантин", "не использовать", "2", iQ, "hq");
     h += box(356, 36, 154, 66, "", "Служба качества", "пробы, испытания", "3");
     h += box(356, 150, 154, 66, "k-ok", "Разрешено", "можно выдавать", "4", iOk);
-    h += box(356, 252, 154, 58, "", "Весовая", "навеска, маркировка", "5");
-    h += box(168, 150, 152, 66, "k-no", "Забраковано", "использовать нельзя", "6", iNo, "hr");
-    h += box(168, 252, 152, 58, "", "Изоляция", "возврат или уничтожение", "6");
+    h += box(356, 252, 154, 58, "", "Весовая", "маркировка", "5");
+    h += box(168, 150, 152, 66, "k-no", "Забраковано", "не использовать", "6", iNo, "hr");
+    h += box(168, 252, 152, 58, "", "Изоляция", "возврат, уничтожение", "6");
     function ar(d, steps) { return '<path d="' + d + '" class="k-arrow k-flow"' + H(steps) + ' marker-end="url(#' + id + '-ar)"/>'; }
     h += ar("M134 69H164", "2") + ar("M322 69H352", "3") + ar("M433 104V146", "4") + ar("M433 218V248", "5") + ar("M380 104V126H244V146", "6") + ar("M244 218V248", "6");
     // ярлык статуса на таре

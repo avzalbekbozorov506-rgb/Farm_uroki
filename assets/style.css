@@ -894,8 +894,9 @@ html:not(.js) .sc-go { cursor: default; }
 .sc-svg text { font-size: 15px; }
 .k-t { fill: var(--fg); font-size: 15px; }
 .k-sm { font-size: 13px; }
+.k-xs { font-size: 12px; }
 .k-b { font-weight: 650; }
-.k-caps { text-transform: uppercase; letter-spacing: .06em; font-size: 13px; }
+.k-caps { text-transform: uppercase; letter-spacing: .05em; font-size: 12px; }
 .k-mut { fill: var(--muted); }
 .k-heat-t { fill: var(--heat); font-weight: 600; }
 .k-line, .k-pipe, .k-axis, .k-leader { fill: none; stroke: var(--fg-2); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
