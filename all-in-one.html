@@ -65,457 +65,1025 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Layout: top bar + left rail (desktop) / bottom tab bar (phone); status chips borrow the look of material status labels. */
-:root {
-  --bg: #edf1f0;
-  --surface: #ffffff;
-  --surface-2: #e2e9e7;
-  --line: #c9d3d1;
-  --fg: #142220;
-  --muted: #55625f;
-  --accent: #0e6a5d;
-  --accent-ink: #ffffff;
-  --accent-soft: #d3eae4;
-  --ok: #1d7a3b;
-  --ok-soft: #dcf0e1;
-  --warn: #8a5d00;
-  --warn-soft: #f7e8b5;
-  --bad: #b3261e;
-  --bad-soft: #f8dcd9;
-  --shadow: 0 1px 2px rgba(20, 34, 32, .06), 0 6px 20px rgba(20, 34, 32, .06);
+/* Оператор ТЛФ — дизайн-система «Чистая зона».
+   Спокойная медтех-эстетика: светлые слои, тонкие границы, глубокий фармзелёный акцент,
+   крупная гротесковая типографика, моноширинные служебные подписи.
+   Токены — в :root; тёмная тема — отдельная палитра «ночная смена». Подробно: DESIGN_NOTES.md */
 
+/* ================= 1. Токены ================= */
+:root {
+  /* поверхности */
+  --bg: #f4f7f6;
+  --bg-glow: #e3f1ec;
+  --surface: #ffffff;
+  --surface-2: #eef3f2;
+  --surface-3: #e3eae8;
+  --line: #dbe3e1;
+  --line-strong: #bfccc9;
+  /* текст */
+  --fg: #0f1f1c;
+  --fg-2: #2a3a37;
+  --muted: #566562;
+  /* акцент */
+  --accent: #0a6b5c;
+  --accent-hover: #075447;
+  --accent-ink: #ffffff;
+  --accent-soft: #dff0eb;
+  --accent-line: #a9d5ca;
+  /* статусы */
+  --ok: #17734a;   --ok-soft: #e1f3e8;
+  --warn: #8a5800; --warn-soft: #fbf0d3;
+  --bad: #b42318;  --bad-soft: #fde8e5;
+  --info: #2459b8; --info-soft: #e5edfb;
+  /* схемы */
+  --liquid: #2f6fd6;
+  --liquid-soft: rgba(47, 111, 214, .16);
+  --heat: #c9531f;
+  --sc-paper: #fbfcfc;
+  /* тени: мягкие слои вместо тяжёлых теней */
+  --sh-1: 0 1px 2px rgba(15, 31, 28, .05);
+  --sh-2: 0 1px 2px rgba(15, 31, 28, .04), 0 10px 28px -12px rgba(15, 31, 28, .16);
+  --sh-3: 0 2px 4px rgba(15, 31, 28, .04), 0 24px 48px -20px rgba(15, 31, 28, .24);
+  --ring: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+
+  /* типографика */
   --f-display: "Unbounded", "Golos Text", system-ui, sans-serif;
   --f-body: "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --t-xs: .75rem;
+  --t-sm: .875rem;
+  --t-base: clamp(1rem, .97rem + .15vw, 1.0625rem);
+  --t-lg: clamp(1.0625rem, 1rem + .3vw, 1.2rem);
+  --t-xl: clamp(1.25rem, 1.12rem + .6vw, 1.55rem);
+  --t-2xl: clamp(1.7rem, 1.3rem + 1.8vw, 2.6rem);
+  --t-3xl: clamp(2rem, 1.35rem + 3vw, 3.5rem);
+  --measure: 68ch;
 
-  --r: 10px;
-  --nav-h: 64px;
+  /* отступы и радиусы */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px;
+  --r-xs: 6px; --r-sm: 10px; --r: 16px; --r-lg: 22px; --r-pill: 999px;
+  --nav-h: 68px;
+  --top-h: 60px;
+
+  /* движение */
+  --d-1: 120ms; --d-2: 200ms; --d-3: 300ms; --d-scheme: 650ms;
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --ease-spring: cubic-bezier(.34, 1.4, .64, 1);
+  color-scheme: light;
 }
+/* Тёмная тема «ночная смена»: глубокий сине-зелёный, приглушённые слои, мятный акцент */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0e1514; --surface: #162120; --surface-2: #1d2a28; --line: #2b3a38;
-    --fg: #e3ebe9; --muted: #98a7a4; --accent: #5cc4b1; --accent-ink: #052019; --accent-soft: #15362f;
-    --ok: #74d18f; --ok-soft: #173322; --warn: #e6c15a; --warn-soft: #3a3011; --bad: #f28b80; --bad-soft: #3d1c19;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .25);
+    --bg: #0a1113; --bg-glow: #0f2623; --surface: #101a1c; --surface-2: #152225; --surface-3: #1b2b2e;
+    --line: #213235; --line-strong: #30474b;
+    --fg: #e4ecea; --fg-2: #c4d1ce; --muted: #93a6a2;
+    --accent: #4fd1b5; --accent-hover: #74e0c8; --accent-ink: #04201a; --accent-soft: #0f2e29; --accent-line: #1f5b50;
+    --ok: #63d495; --ok-soft: #0f2a1c; --warn: #f2c25b; --warn-soft: #2c230e; --bad: #ff8b7f; --bad-soft: #351717; --info: #8db4ff; --info-soft: #14213a;
+    --liquid: #6ea8ff; --liquid-soft: rgba(110, 168, 255, .2); --heat: #ff9a62; --sc-paper: #0d1618;
+    --sh-1: 0 1px 2px rgba(0, 0, 0, .4);
+    --sh-2: 0 1px 0 rgba(255, 255, 255, .03) inset, 0 12px 30px -14px rgba(0, 0, 0, .7);
+    --sh-3: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 28px 56px -24px rgba(0, 0, 0, .8);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0e1514; --surface: #162120; --surface-2: #1d2a28; --line: #2b3a38;
-  --fg: #e3ebe9; --muted: #98a7a4; --accent: #5cc4b1; --accent-ink: #052019; --accent-soft: #15362f;
-  --ok: #74d18f; --ok-soft: #173322; --warn: #e6c15a; --warn-soft: #3a3011; --bad: #f28b80; --bad-soft: #3d1c19;
-  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 20px rgba(0, 0, 0, .25);
+  --bg: #0a1113; --bg-glow: #0f2623; --surface: #101a1c; --surface-2: #152225; --surface-3: #1b2b2e;
+  --line: #213235; --line-strong: #30474b;
+  --fg: #e4ecea; --fg-2: #c4d1ce; --muted: #93a6a2;
+  --accent: #4fd1b5; --accent-hover: #74e0c8; --accent-ink: #04201a; --accent-soft: #0f2e29; --accent-line: #1f5b50;
+  --ok: #63d495; --ok-soft: #0f2a1c; --warn: #f2c25b; --warn-soft: #2c230e; --bad: #ff8b7f; --bad-soft: #351717; --info: #8db4ff; --info-soft: #14213a;
+  --liquid: #6ea8ff; --liquid-soft: rgba(110, 168, 255, .2); --heat: #ff9a62; --sc-paper: #0d1618;
+  --sh-1: 0 1px 2px rgba(0, 0, 0, .4);
+  --sh-2: 0 1px 0 rgba(255, 255, 255, .03) inset, 0 12px 30px -14px rgba(0, 0, 0, .7);
+  --sh-3: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 28px 56px -24px rgba(0, 0, 0, .8);
   color-scheme: dark;
 }
 
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+/* ================= 2. База ================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--top-h) + 16px); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(1200px 520px at 85% -120px, var(--bg-glow), transparent 70%),
+    var(--bg);
+  background-repeat: no-repeat;
   color: var(--fg);
-  font: 16px/1.55 var(--f-body);
+  font: 400 var(--t-base)/1.6 var(--f-body);
   min-height: 100vh;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 [hidden] { display: none !important; }
-a { color: var(--accent); }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: .18em; }
+a:hover { color: var(--accent-hover); }
 button { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
-h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; }
-h1 { font: 700 clamp(1.5rem, 1.1rem + 1.8vw, 2.2rem)/1.15 var(--f-display); letter-spacing: -.01em; }
-h2 { font: 600 1.3rem/1.25 var(--f-body); }
-h3 { font: 600 1.05rem/1.3 var(--f-body); }
-p { margin: 0; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.2; margin: 0; color: var(--fg); }
+h1 { font: 700 var(--t-2xl)/1.1 var(--f-display); letter-spacing: -.025em; }
+h2 { font: 650 var(--t-xl)/1.25 var(--f-body); letter-spacing: -.01em; }
+h3 { font: 600 1.05rem/1.35 var(--f-body); }
+p { margin: 0; text-wrap: pretty; }
+::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
 
-.skip { position: absolute; left: -999px; top: 8px; background: var(--surface); padding: 8px 12px; z-index: 50; }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--surface); padding: 10px 14px; z-index: 80; border-radius: var(--r-sm); box-shadow: var(--sh-2); }
 .skip:focus { left: 16px; }
 
-/* Top bar */
+/* ================= 3. Шапка ================= */
 .top {
-  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  position: sticky; top: 0; z-index: 40;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 10px 16px;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
+  min-height: var(--top-h);
+  padding: 10px 16px; padding-top: max(10px, env(safe-area-inset-top));
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  backdrop-filter: saturate(1.4) blur(14px);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+  view-transition-name: top;
 }
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--fg); min-width: 0; }
-.brand-mark {
-  width: 34px; height: 34px; flex: none; border-radius: 50%;
-  background:
-    linear-gradient(90deg, transparent 47%, var(--accent-ink) 47% 53%, transparent 53%),
-    var(--accent);
-  box-shadow: inset 0 -3px 0 rgba(0,0,0,.18);
-}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--fg); min-width: 0; border-radius: 12px; }
+.brand:hover { color: var(--fg); }
+.brand-mark { width: 36px; height: 36px; flex: none; transition: transform var(--d-3) var(--ease-spring); }
+.brand:hover .brand-mark { transform: rotate(-20deg); }
+.bm-a { fill: var(--accent); }
+.bm-b { stroke: var(--accent-ink); stroke-width: 3.2; stroke-linecap: round; }
+.bm-c { fill: none; stroke: color-mix(in srgb, var(--fg) 14%, transparent); stroke-width: 1; }
 .brand-text { display: flex; flex-direction: column; min-width: 0; }
-.brand-text b { font: 700 .95rem/1.1 var(--f-display); }
+.brand-text b { font: 700 .98rem/1.1 var(--f-display); letter-spacing: -.01em; }
+.brand-text small { font: 400 .7rem/1.4 var(--f-mono); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 420px) { .brand-text small { display: none; } }
-.brand-text small { font: 400 .72rem/1.3 var(--f-mono); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.icon-btn {
-  display: inline-grid; place-items: center; width: 40px; height: 40px; flex: none;
-  border: 1px solid var(--line); border-radius: 50%; background: var(--surface); cursor: pointer;
-}
-.icon-btn:hover { border-color: var(--accent); }
 .top-actions { display: flex; gap: 8px; flex: none; }
+.icon-btn {
+  display: inline-grid; place-items: center; width: 44px; height: 44px; flex: none;
+  border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--fg-2); cursor: pointer;
+  transition: border-color var(--d-2), background var(--d-2), transform var(--d-1) var(--ease-out);
+}
+.icon-btn:hover { border-color: var(--accent-line); color: var(--accent); }
+.icon-btn:active { transform: scale(.94); }
+.theme-btn .i-sun { display: none; }
+:root[data-theme="dark"] .theme-btn .i-sun { display: block; }
+:root[data-theme="dark"] .theme-btn .i-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-btn .i-sun { display: block; }
+  :root:not([data-theme="light"]) .theme-btn .i-moon { display: none; }
+}
+/* индикатор прогресса чтения урока */
+.read-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; pointer-events: none; display: none; }
+.read-progress i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 50%, var(--info))); transform: scaleX(0); transform-origin: 0 50%; }
+body[data-route^="lesson-"] .read-progress, .is-lesson .read-progress { display: block; }
+@supports (animation-timeline: scroll()) {
+  .read-progress i { animation: read-grow linear both; animation-timeline: scroll(root block); }
+}
+@keyframes read-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-/* Shell */
+/* ================= 4. Каркас и навигация ================= */
 .shell { display: grid; grid-template-columns: 1fr; }
-main { min-width: 0; padding: 20px 16px calc(var(--nav-h) + 28px + env(safe-area-inset-bottom, 0px)); outline: none; }
-.view-inner { max-width: 880px; margin: 0 auto; display: grid; gap: 22px; }
+main { min-width: 0; padding: 20px 16px calc(var(--nav-h) + 32px + env(safe-area-inset-bottom, 0px)); outline: none; }
+.view-inner { max-width: 880px; margin: 0 auto; display: grid; gap: 24px; }
+.view-inner.wide { max-width: 1120px; }
+.view-inner.narrow { max-width: 720px; }
 .view-inner > * { min-width: 0; }
 
 .nav {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  position: fixed; left: 8px; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); z-index: 50;
   display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
-  background: var(--surface); border-top: 1px solid var(--line);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(16px);
+  backdrop-filter: saturate(1.4) blur(16px);
+  border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--sh-3);
+  padding: 4px;
+  view-transition-name: nav;
 }
 .nav a {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-  height: var(--nav-h); text-decoration: none; color: var(--muted);
-  font-size: .68rem; font-weight: 500; min-width: 0;
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  height: calc(var(--nav-h) - 10px); min-width: 0; border-radius: 18px;
+  text-decoration: none; color: var(--muted);
+  font-size: .68rem; font-weight: 550;
+  -webkit-tap-highlight-color: transparent;
 }
-.nav a span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-inline: 2px; }
+.nav .nav-ico { display: grid; place-items: center; width: 52px; height: 30px; border-radius: 99px; transition: background var(--d-2) var(--ease-out), transform var(--d-2) var(--ease-out); }
+.nav .nav-t { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-inline: 2px; }
 .nav svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .nav a.active { color: var(--accent); }
-.nav a.active svg { stroke-width: 2.2; }
+.nav a.active .nav-ico { background: var(--accent-soft); }
+.nav a.active svg { stroke-width: 2.1; }
+.nav a:active .nav-ico { transform: scale(.92); }
 .nav a.nav-extra { display: none; }
 
-.foot {
-  padding: 18px 16px calc(var(--nav-h) + 24px + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem;
-}
-.foot-in { max-width: 880px; margin: 0 auto; display: grid; gap: 8px; }
-.foot strong { color: var(--fg); font-weight: 600; }
-.foot-links { display: flex; flex-wrap: wrap; gap: 6px 16px; }
-.foot-links a { color: var(--fg); }
-.foot-src { font-size: .78rem; }
-#shellTop, #shellNav, #shellFoot { display: contents; }
-
 @media (min-width: 960px) {
-  .shell { grid-template-columns: 232px 1fr; }
+  .shell { grid-template-columns: 248px 1fr; }
   .nav {
-    position: sticky; top: 61px; align-self: start; height: calc(100vh - 61px);
+    position: sticky; top: var(--top-h); left: auto; right: auto; bottom: auto; align-self: start; height: calc(100vh - var(--top-h));
     display: flex; flex-direction: column; gap: 2px;
-    padding: 18px 12px; border-top: 0; border-right: 1px solid var(--line); background: transparent;
+    padding: 20px 14px; border: 0; border-right: 1px solid var(--line); border-radius: 0; box-shadow: none;
+    background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none;
   }
   .nav a {
-    flex-direction: row; justify-content: flex-start; gap: 12px; height: auto;
-    padding: 10px 12px; border-radius: 8px; font-size: .95rem; color: var(--fg);
+    flex-direction: row; justify-content: flex-start; gap: 10px; height: auto;
+    padding: 6px 10px 6px 6px; border-radius: 12px; font-size: .95rem; font-weight: 500; color: var(--fg-2);
+    transition: background var(--d-2), color var(--d-2);
   }
+  .nav .nav-ico { width: 34px; height: 34px; border-radius: 10px; }
   .nav a.nav-extra { display: flex; }
-  .nav a:hover { background: var(--surface-2); }
-  .nav a.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
-  main { padding: 32px 32px 48px; }
-  .foot { padding: 20px 32px 28px 264px; }
+  .nav a:hover { background: var(--surface-2); color: var(--fg); }
+  .nav a.active { background: var(--surface); color: var(--accent); font-weight: 650; box-shadow: var(--sh-1), 0 0 0 1px var(--line); }
+  .nav a.active .nav-ico { background: var(--accent); color: var(--accent-ink); }
+  main { padding: 36px 40px 64px; }
+  .foot { padding-left: 288px !important; }
 }
 
-/* Generic pieces */
-.eyebrow { font: 600 .72rem/1.2 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.lead { color: var(--muted); font-size: 1.02rem; max-width: 62ch; }
+/* ================= 5. Подвал ================= */
+.foot {
+  padding: 32px 16px calc(var(--nav-h) + 40px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line); color: var(--muted); font-size: var(--t-sm);
+  background: linear-gradient(var(--surface-2), transparent 160px);
+}
+@media (min-width: 960px) { .foot { padding: 40px 40px 40px; } }
+.foot-in { max-width: 1120px; margin: 0 auto; display: grid; gap: 18px; }
+.foot-brand { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 14px; align-items: start; }
+.foot-brand > div { display: grid; gap: 6px; max-width: 78ch; }
+.foot strong { color: var(--fg); font-weight: 600; }
+.foot-links { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.foot-links a { color: var(--fg-2); text-decoration: none; padding: 8px 12px; border-radius: var(--r-pill); border: 1px solid var(--line); background: var(--surface); min-height: 40px; display: inline-flex; align-items: center; transition: border-color var(--d-2), color var(--d-2); }
+.foot-links a:hover { border-color: var(--accent-line); color: var(--accent); }
+.foot-src { font-size: .78rem; max-width: 100ch; }
+#shellTop, #shellNav, #shellFoot { display: contents; }
+
+/* ================= 6. Общие элементы ================= */
+.eyebrow { font: 600 .7rem/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.lead { color: var(--fg-2); font-size: var(--t-lg); line-height: 1.55; max-width: 62ch; }
 .muted { color: var(--muted); }
 .stack { display: grid; gap: 12px; }
 .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; }
-.panel.lifted { box-shadow: var(--shadow); }
 .num { font-variant-numeric: tabular-nums; font-family: var(--f-mono); }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: clamp(18px, 3vw, 28px); box-shadow: var(--sh-1); }
+.panel.lifted { box-shadow: var(--sh-2); }
+.sec-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.link-arrow { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; text-decoration: none; min-height: 44px; }
+.arr { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; transition: transform var(--d-2) var(--ease-out); }
+a:hover .arr { transform: translateX(3px); }
+.ico { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
+/* Кнопки */
 .btn {
+  position: relative;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  min-height: 44px; padding: 10px 18px; border-radius: 8px;
-  border: 1px solid var(--line); background: var(--surface); color: var(--fg);
-  font-weight: 600; text-decoration: none; cursor: pointer; transition: border-color .15s, background .15s;
+  min-height: 44px; padding: 10px 18px; border-radius: 12px;
+  border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg);
+  font-weight: 600; line-height: 1.2; text-decoration: none; cursor: pointer;
+  transition: border-color var(--d-2), background var(--d-2), color var(--d-2), box-shadow var(--d-2), transform var(--d-1) var(--ease-out);
 }
-.btn:hover { border-color: var(--accent); }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.btn.primary:hover { filter: brightness(1.07); }
-.btn.ghost { background: transparent; }
-.btn.small { min-height: 36px; padding: 6px 12px; font-size: .9rem; }
-.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.btn:hover { border-color: var(--accent); color: var(--fg); }
+.btn:active:not([disabled]) { transform: translateY(1px) scale(.985); }
+.btn.primary {
+  background: var(--accent); border-color: var(--accent); color: var(--accent-ink);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .18) inset, 0 6px 16px -8px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: var(--accent-ink); }
+.btn.ghost { background: transparent; border-color: transparent; color: var(--accent); }
+.btn.ghost:hover { background: var(--accent-soft); }
+.btn.small { min-height: 40px; padding: 8px 14px; font-size: .92rem; border-radius: 10px; }
+.btn.lg { min-height: 52px; padding: 12px 22px; font-size: 1.02rem; border-radius: 14px; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; box-shadow: none; }
+.btn.danger { background: var(--bad); border-color: var(--bad); color: var(--surface); }
 
-/* Status chip — styled like a GMP material label */
+/* Чипы статусов: форма значка + текст, а не только цвет */
 .chip {
   display: inline-flex; align-items: center; gap: 6px;
   font: 600 .68rem/1 var(--f-mono); letter-spacing: .07em; text-transform: uppercase;
-  padding: 5px 8px; border-radius: 4px; border: 1px solid currentColor; white-space: nowrap;
+  padding: 6px 9px 6px 7px; border-radius: var(--r-pill); border: 1px solid transparent; white-space: nowrap;
 }
-.chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-.chip.ok { color: var(--ok); background: var(--ok-soft); }
-.chip.warn { color: var(--warn); background: var(--warn-soft); }
-.chip.bad { color: var(--bad); background: var(--bad-soft); }
+.chip::before { content: ""; width: 10px; height: 10px; flex: none; border-radius: 50%; box-sizing: border-box; }
+.chip.ok { color: var(--ok); background: var(--ok-soft); border-color: color-mix(in srgb, var(--ok) 30%, transparent); }
+.chip.ok::before { border-radius: 0; width: 9px; height: 5px; border: solid currentColor; border-width: 0 0 2px 2px; transform: translateY(-1px) rotate(-45deg); }
+.chip.warn { color: var(--warn); background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 30%, transparent); }
+.chip.warn::before { border: 2px solid currentColor; background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
+.chip.bad { color: var(--bad); background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 30%, transparent); }
+.chip.bad::before { border-radius: 2px; background: linear-gradient(45deg, transparent 42%, currentColor 42% 58%, transparent 58%), linear-gradient(-45deg, transparent 42%, currentColor 42% 58%, transparent 58%); }
 .chip.idle { color: var(--muted); background: var(--surface-2); border-color: var(--line); }
+.chip.idle::before { border: 2px solid currentColor; }
+.chip.scheme-chip { color: var(--info); background: var(--info-soft); border-color: color-mix(in srgb, var(--info) 25%, transparent); }
+.chip.scheme-chip::before { border-radius: 2px; border: 2px solid currentColor; width: 9px; height: 9px; }
 
-.bar { height: 10px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
-.bar > i { display: block; height: 100%; background: var(--accent); border-radius: inherit; transition: width .4s ease; }
+/* Прогресс */
+.bar { height: 8px; border-radius: 99px; background: var(--surface-3); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 60%, var(--info))); border-radius: inherit; transition: width .5s var(--ease-out); }
 
+/* Заметки и предупреждения */
 .note {
-  border: 1px dashed var(--warn); background: var(--warn-soft); color: var(--fg);
-  border-radius: 8px; padding: 12px 14px; font-size: .92rem;
+  position: relative; display: block;
+  border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent); background: var(--warn-soft); color: var(--fg);
+  border-radius: var(--r-sm); padding: 14px 16px 14px 46px; font-size: .94rem;
 }
-
-/* Home */
-.hero { display: grid; gap: 12px; padding-top: 4px; }
-.progress-card { display: grid; gap: 16px; }
-.progress-top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; }
-.big { font: 700 clamp(2.4rem, 2rem + 2vw, 3.4rem)/1 var(--f-display); letter-spacing: -.02em; }
-.big small { font-size: .4em; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: 4px; }
-.cta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-.cta .btn { width: 100%; }
-@media (max-width: 560px) { .cta { grid-template-columns: 1fr; } }
-
-.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-.stat { padding: 14px 16px; border-radius: var(--r); background: var(--surface-2); display: grid; gap: 4px; min-width: 0; }
-.stat b { font: 600 1.4rem/1.1 var(--f-mono); font-variant-numeric: tabular-nums; }
-.stat span { font-size: .82rem; color: var(--muted); }
-@media (max-width: 480px) { .stats { grid-template-columns: 1fr; } .stat { grid-template-columns: auto 1fr; align-items: baseline; gap: 12px; } }
-
-/* Module list */
-.modules { display: grid; gap: 0; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); overflow: hidden; }
-.module {
-  display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 14px; align-items: center;
-  padding: 14px 16px; text-decoration: none; color: var(--fg); border-top: 1px solid var(--line);
+.note::before {
+  content: "!"; position: absolute; left: 14px; top: 13px; width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center; font: 700 .8rem/1 var(--f-mono); color: var(--surface); background: var(--warn);
 }
-.module:first-child { border-top: 0; }
-.module:hover { background: var(--surface-2); }
-.module .idx { font: 600 .9rem/1 var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
-.module .t { display: grid; gap: 2px; min-width: 0; }
-.module .t b { font-weight: 600; }
-.module .t span { font-size: .86rem; color: var(--muted); }
-@media (max-width: 560px) {
-  .module { grid-template-columns: 32px minmax(0, 1fr); }
-  .module .chip { grid-column: 2; justify-self: start; }
-}
+.note.med { border-color: var(--accent-line); background: var(--accent-soft); }
+.note.med::before { content: "i"; background: var(--accent); color: var(--accent-ink); }
 
-/* Lesson */
-.lesson-head { display: grid; gap: 10px; }
+/* Хлебные крошки */
 .crumbs { font-size: .86rem; }
-.crumbs ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
-.crumbs li { display: inline-flex; gap: 4px; min-width: 0; }
-.crumbs li + li::before { content: "/"; color: var(--muted); }
-.crumbs a { text-decoration: none; }
-.crumbs [aria-current] { color: var(--muted); }
-.prose { display: grid; gap: 14px; max-width: 68ch; }
-.prose p { font-size: 1.02rem; }
-.section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.section-title .tag { font: 600 .7rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; padding: 5px 7px; border-radius: 4px; }
+.crumbs ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px 6px; align-items: center; }
+.crumbs li { display: inline-flex; gap: 6px; min-width: 0; align-items: center; }
+.crumbs li + li::before { content: ""; width: 6px; height: 6px; border-right: 1.5px solid var(--line-strong); border-top: 1.5px solid var(--line-strong); transform: rotate(45deg); margin-right: 2px; }
+.crumbs a { text-decoration: none; color: var(--muted); padding: 6px 0; }
+.crumbs a:hover { color: var(--accent); }
+.crumbs [aria-current] { color: var(--fg-2); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52vw; }
+
+/* ================= 7. Главная ================= */
+.hero { display: grid; gap: 14px; padding-top: 4px; }
+.hero h1 { max-width: 20ch; }
+.hero-home { grid-template-columns: minmax(0, 1fr); align-items: center; gap: 8px 32px; }
+.hero-home h1 { font-size: var(--t-3xl); }
+.hero-copy { display: grid; gap: 16px; }
+.hero-cta { margin-top: 6px; }
+.hero-art { width: 100%; max-width: 420px; justify-self: center; height: auto; order: -1; margin-bottom: -8px; }
+@media (max-width: 719px) { .hero-art { max-width: 300px; } }
+@media (min-width: 720px) { .hero-home { grid-template-columns: minmax(0, 1.25fr) minmax(0, .9fr); } .hero-art { order: 0; margin: 0; } }
+.ha-halo { fill: var(--accent-soft); }
+.ha-orbit { fill: none; stroke: var(--accent-line); stroke-width: 1; stroke-dasharray: 2 7; }
+.ha-shadow { fill: color-mix(in srgb, var(--fg) 10%, transparent); }
+.ha-tab-side { fill: var(--surface-3); stroke: var(--line-strong); }
+.ha-tab { fill: var(--surface); stroke: var(--line-strong); }
+.ha-tab-in { fill: none; stroke: var(--line); stroke-width: 1.5; }
+.ha-score { stroke: var(--line-strong); stroke-width: 4; stroke-linecap: round; }
+.ha-cap-a { fill: var(--accent); }
+.ha-cap-b { fill: var(--surface); stroke: var(--line-strong); }
+.ha-cap-l { stroke: color-mix(in srgb, var(--fg) 25%, transparent); stroke-width: 1.5; }
+.ha-g1 { fill: var(--accent); opacity: .85; }
+.ha-g2 { fill: var(--surface); stroke: var(--accent); stroke-width: 2; }
+.ha-pill { fill: var(--surface); stroke: var(--line); }
+.ha-pill-t { font: 600 12px var(--f-mono); fill: var(--accent); letter-spacing: .06em; }
+
+/* Bento */
+.bento { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tile {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: grid; gap: 8px; align-content: start;
+  padding: 20px; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--surface);
+  color: var(--fg); text-decoration: none; box-shadow: var(--sh-1);
+  transition: border-color var(--d-2), box-shadow var(--d-3) var(--ease-out), transform var(--d-3) var(--ease-out);
+}
+a.tile:hover { color: var(--fg); border-color: var(--accent-line); box-shadow: var(--sh-2); transform: translateY(-2px); }
+a.tile:active { transform: translateY(0) scale(.99); }
+.tile-progress { grid-column: 1 / -1; gap: 16px; }
+.tile-gran { grid-column: 1 / -1; min-height: 210px; padding-right: clamp(20px, 30%, 240px); background: radial-gradient(420px 220px at 100% 100%, var(--accent-soft), transparent 70%), var(--surface); }
+.tile-h { font: 700 1.05rem/1.25 var(--f-display); letter-spacing: -.01em; }
+.tile-gran .tile-h { font-size: var(--t-xl); max-width: 22ch; }
+.tile-p { color: var(--muted); font-size: .92rem; }
+.tile-meta { display: inline-flex; gap: 8px; align-items: center; font-size: .78rem; color: var(--accent); margin-top: auto; padding-top: 8px; }
+.tile-sm { padding: 18px 18px 46px; min-height: 160px; }
+.tile-sm > .arr { position: absolute; right: 16px; bottom: 16px; color: var(--accent); }
+.tile-ico { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: var(--accent-soft); color: var(--accent); margin-bottom: 6px; transition: transform var(--d-3) var(--ease-spring); }
+a.tile:hover .tile-ico { transform: rotate(-6deg) scale(1.06); }
+.gran-art { position: absolute; z-index: -1; right: -18px; bottom: -14px; width: min(46%, 260px); height: auto; pointer-events: none; }
+.ga-1 { fill: var(--accent); opacity: .9; }
+.ga-2 { fill: var(--surface); stroke: var(--accent); stroke-width: 2.5; }
+.ga-3 { fill: var(--accent-line); }
+.ga-dot { fill: var(--accent-ink); opacity: .7; }
+@media (min-width: 720px) {
+  .bento { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .tile-progress { grid-column: 1 / span 2; grid-row: 1 / span 3; }
+  .tile-gran { grid-column: 3 / span 2; }
+}
+.progress-top { display: flex; align-items: center; gap: 18px; }
+.progress-top .ring { width: 92px; height: 92px; }
+.big { font: 700 clamp(2.2rem, 1.9rem + 1.6vw, 3rem)/1 var(--f-display); letter-spacing: -.03em; margin: 2px 0 4px; }
+.big small { font-size: .42em; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: 4px; }
+.pmini { display: grid; gap: 8px; }
+.pmini-top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.pmini a { color: var(--fg); text-decoration: none; }
+.pmini a:hover { color: var(--accent); }
+.next-up {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: center;
+  padding: 12px 14px; border-radius: var(--r-sm); background: var(--surface-2); color: var(--fg); text-decoration: none;
+  border: 1px solid transparent; transition: border-color var(--d-2), background var(--d-2);
+}
+.next-up .arr { grid-row: 1 / span 2; grid-column: 2; color: var(--accent); }
+.next-up:hover { border-color: var(--accent-line); color: var(--fg); background: var(--accent-soft); }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; border-top: 1px solid var(--line); padding-top: 14px; }
+.stat { display: grid; gap: 2px; min-width: 0; align-content: start; }
+.stat b { font: 600 1.3rem/1.15 var(--f-mono); font-variant-numeric: tabular-nums; }
+.stat span { font-size: .78rem; color: var(--muted); line-height: 1.35; }
+
+/* Карточки уроков */
+.lesson-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.lesson-grid > li { display: grid; min-width: 0; }
+.lcard {
+  position: relative; display: grid; grid-template-rows: auto 1fr auto; gap: 10px;
+  padding: 18px; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  color: var(--fg); text-decoration: none; box-shadow: var(--sh-1); min-width: 0;
+  transition: border-color var(--d-2), box-shadow var(--d-3) var(--ease-out), transform var(--d-3) var(--ease-out);
+}
+.lcard:hover { color: var(--fg); border-color: var(--accent-line); box-shadow: var(--sh-2); transform: translateY(-2px); }
+.lcard:active { transform: scale(.99); }
+.lc-num { font: 600 .8rem/1 var(--f-mono); color: var(--accent); background: var(--accent-soft); width: 38px; height: 28px; border-radius: 8px; display: grid; place-items: center; }
+.lcard.is-done .lc-num { background: var(--accent); color: var(--accent-ink); }
+.lc-body { display: grid; gap: 4px; align-content: start; min-width: 0; }
+.lc-body b { font-weight: 650; font-size: 1.04rem; line-height: 1.3; }
+.lc-body span { font-size: .88rem; color: var(--muted); line-height: 1.45; }
+.lc-foot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.lc-foot .arr { margin-left: auto; color: var(--accent); }
+.lcard:hover .arr { transform: translateX(3px); }
+
+.feature-link {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: grid; gap: 6px; padding: 20px 22px; padding-right: clamp(22px, 32%, 220px); border-radius: var(--r-lg); text-decoration: none; color: var(--fg);
+  border: 1px solid var(--accent-line); background: radial-gradient(380px 200px at 100% 100%, var(--accent-soft), transparent 70%), var(--surface);
+  transition: box-shadow var(--d-3) var(--ease-out), transform var(--d-3) var(--ease-out);
+}
+.feature-link b { font: 700 1.1rem/1.25 var(--f-display); }
+.feature-link > span:not(.eyebrow) { color: var(--muted); font-size: .92rem; }
+.feature-link:hover { color: var(--fg); box-shadow: var(--sh-2); transform: translateY(-2px); }
+.feature-link .gran-art { width: min(34%, 200px); }
+
+/* ================= 8. Модуль ================= */
+.hero-gran { grid-template-columns: minmax(0, 1fr); position: relative; }
+.hero-gran > .gran-art { display: none; }
+@media (min-width: 900px) { .hero-gran { grid-template-columns: minmax(0, 1fr) 220px; align-items: center; } .hero-gran > .gran-art { display: block; position: static; width: 100%; z-index: 0; } }
+.intro { gap: 10px; max-width: 70ch; display: grid; }
+.intro .lead { font-size: var(--t-base); }
+.intro .lead:first-child { font-size: var(--t-lg); color: var(--fg); }
+.final-card { display: grid; gap: 16px; background: linear-gradient(135deg, var(--accent-soft), var(--surface) 60%); border-color: var(--accent-line); }
+.final-top { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-start; }
+.faq { display: grid; gap: 14px; }
+.acc { display: grid; gap: 8px; }
+.acc-item { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); overflow: hidden; transition: border-color var(--d-2), box-shadow var(--d-2); }
+.acc-item[open] { border-color: var(--accent-line); box-shadow: var(--sh-1); }
+.acc-item summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 18px; cursor: pointer; min-height: 56px; }
+.acc-item summary::-webkit-details-marker { display: none; }
+.acc-item summary h3 { font-size: 1rem; font-weight: 600; }
+.acc-item summary:hover h3 { color: var(--accent); }
+.acc-ico { position: relative; width: 28px; height: 28px; flex: none; border-radius: 50%; background: var(--surface-2); }
+.acc-ico::before, .acc-ico::after { content: ""; position: absolute; left: 8px; right: 8px; top: 13px; height: 2px; border-radius: 2px; background: var(--fg-2); transition: transform var(--d-2) var(--ease-out); }
+.acc-ico::after { transform: rotate(90deg); }
+.acc-item[open] .acc-ico { background: var(--accent-soft); }
+.acc-item[open] .acc-ico::after { transform: rotate(0deg); }
+.acc-body { padding: 0 18px 18px; color: var(--fg-2); max-width: 72ch; }
+@media (prefers-reduced-motion: no-preference) {
+  .acc-item[open] .acc-body { animation: rise var(--d-3) var(--ease-out); }
+}
+
+/* ================= 9. Урок ================= */
+.lesson { max-width: 820px; }
+.lesson-main { display: grid; gap: 22px; min-width: 0; }
+.lesson-main > * { min-width: 0; }
+.toc { display: none; }
+@media (min-width: 1280px) {
+  .lesson { max-width: 1100px; grid-template-columns: minmax(0, 1fr) 232px; gap: 48px; align-items: start; }
+  .toc { display: block; position: sticky; top: calc(var(--top-h) + 28px); }
+  .toc nav { display: grid; gap: 10px; }
+  .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; border-left: 1px solid var(--line); }
+  .toc a {
+    display: block; padding: 7px 12px; margin-left: -1px; border-left: 2px solid transparent;
+    color: var(--muted); text-decoration: none; font-size: .88rem; line-height: 1.35;
+    transition: color var(--d-2), border-color var(--d-2);
+  }
+  .toc a:hover { color: var(--fg); }
+  .toc a[aria-current] { color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
+}
+.lesson-head { display: grid; gap: 12px; padding-bottom: 4px; }
+.lesson-head h1 { max-width: 22ch; }
+.lesson-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .78rem; color: var(--muted); }
+.lesson-meta span { display: inline-flex; align-items: center; gap: 6px; }
+.lesson-meta span::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--accent-line); }
+.prose { display: grid; gap: 1em; max-width: var(--measure); }
+.prose p { font-size: var(--t-base); line-height: 1.7; color: var(--fg); }
+.prose h2 { margin-top: 10px; }
+.section-title { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; }
+.tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  font: 600 .7rem/1 var(--f-mono); letter-spacing: .09em; text-transform: uppercase;
+  padding: 7px 10px 7px 8px; border-radius: var(--r-pill);
+}
+.tag svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .tag.rules { background: var(--ok-soft); color: var(--ok); }
 .tag.errs { background: var(--bad-soft); color: var(--bad); }
-.tag.theory { background: var(--accent-soft); color: var(--accent); }
+.tag.theory, .tag.table { background: var(--accent-soft); color: var(--accent); }
 .tag.check { background: var(--warn-soft); color: var(--warn); }
-.checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.checklist li { position: relative; padding-left: 28px; }
+.tag.goals { background: var(--info-soft); color: var(--info); }
+.tag.safety { background: var(--warn); color: var(--surface); }
+.blk-rules { border-top: 3px solid var(--ok); }
+.blk-errs { border-top: 3px solid var(--bad); }
+.blk-safety { border-top: 3px solid var(--warn); background: linear-gradient(var(--warn-soft), var(--surface) 140px); }
+.goallist { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: g; }
+.goallist li { counter-increment: g; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: start; }
+.goallist li::before { content: counter(g); width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font: 600 .78rem/1 var(--f-mono); color: var(--info); background: var(--info-soft); }
+.checklist, .errlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.checklist li, .errlist li { position: relative; padding-left: 32px; line-height: 1.55; }
 .checklist li::before {
-  content: ""; position: absolute; left: 0; top: .28em; width: 16px; height: 16px;
-  border: 2px solid var(--ok); border-radius: 3px;
+  content: ""; position: absolute; left: 0; top: .15em; width: 20px; height: 20px; border-radius: 6px;
+  background: var(--ok-soft); border: 1.5px solid color-mix(in srgb, var(--ok) 55%, transparent);
 }
 .checklist li::after {
-  content: ""; position: absolute; left: 5px; top: calc(.28em + 2px); width: 5px; height: 9px;
+  content: ""; position: absolute; left: 7px; top: calc(.15em + 4px); width: 5px; height: 9px;
   border: solid var(--ok); border-width: 0 2px 2px 0; transform: rotate(45deg);
 }
-.errlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.errlist li { position: relative; padding-left: 28px; }
-.errlist li::before, .errlist li::after {
-  content: ""; position: absolute; left: 1px; top: calc(.28em + 7px); width: 14px; height: 2px; background: var(--bad); transform: rotate(45deg);
+.blk-safety .checklist li::before { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 60%, transparent); }
+.blk-safety .checklist li::after { border-color: var(--warn); }
+.errlist li::before {
+  content: ""; position: absolute; left: 0; top: .15em; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--bad-soft); border: 1.5px solid color-mix(in srgb, var(--bad) 55%, transparent);
 }
-.errlist li::after { transform: rotate(-45deg); }
+.errlist li::after {
+  content: ""; position: absolute; left: 6px; top: calc(.15em + 6px); width: 8px; height: 8px;
+  background:
+    linear-gradient(45deg, transparent 40%, var(--bad) 40% 60%, transparent 60%),
+    linear-gradient(-45deg, transparent 40%, var(--bad) 40% 60%, transparent 60%);
+}
 .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
-.lesson-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; }
 
-/* Questions */
+.stages { list-style: none; counter-reset: st; margin: 22px 0; padding: 0; display: grid; gap: 0; max-width: 72ch; }
+.stages li { counter-increment: st; display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 14px; padding: 0 0 20px; position: relative; }
+.stages li::before {
+  content: counter(st); grid-row: 1 / span 2; width: 34px; height: 34px; border-radius: 11px;
+  display: grid; place-items: center; font: 600 .9rem/1 var(--f-mono); background: var(--accent); color: var(--accent-ink);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.stages li::after { content: ""; position: absolute; left: 16px; top: 42px; bottom: 6px; width: 2px; border-radius: 2px; background: linear-gradient(var(--accent-line), var(--line)); }
+.stages li:last-child::after { display: none; }
+.stages b { display: block; margin-bottom: 2px; font-size: 1.02rem; }
+.stages span { color: var(--fg-2); }
+
+/* Таблицы */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-sm); }
+.tbl { border-collapse: collapse; width: 100%; min-width: 620px; font-size: .93rem; }
+.tbl th, .tbl td { text-align: left; vertical-align: top; padding: 12px 14px; border-top: 1px solid var(--line); line-height: 1.5; }
+.tbl thead th { border-top: 0; background: var(--surface-2); font: 600 .7rem/1.3 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.tbl tbody th { font-weight: 650; width: 28%; }
+.tbl tbody tr { transition: background var(--d-1); }
+.tbl tbody tr:hover { background: color-mix(in srgb, var(--accent-soft) 50%, transparent); }
+@media (max-width: 640px) {
+  .tbl-wrap { border: 0; overflow: visible; }
+  .tbl { min-width: 0; }
+  .tbl thead { display: none; }
+  .tbl, .tbl tbody, .tbl tr, .tbl th, .tbl td { display: block; width: auto; }
+  .tbl tr { border: 1px solid var(--line); border-radius: var(--r-sm); margin-bottom: 10px; overflow: hidden; }
+  .tbl tbody th { width: auto; border-top: 0; background: var(--surface-2); }
+  .tbl td::before { content: attr(data-label); display: block; font: 600 .68rem/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+}
+.examples { display: grid; gap: 12px; }
+.example { border: 1px dashed var(--line-strong); border-radius: var(--r-sm); padding: 14px 16px; background: var(--surface-2); }
+.example h3 { font-size: .98rem; margin-bottom: 8px; }
+.example ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-family: var(--f-mono); font-size: .86rem; font-variant-numeric: tabular-nums; }
+
+.done-card { display: grid; gap: 14px; }
+.done-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+.done-card.is-done { background: linear-gradient(135deg, var(--ok-soft), var(--surface) 70%); border-color: color-mix(in srgb, var(--ok) 35%, transparent); }
+.related h2 { font-size: 1rem; margin-bottom: 12px; }
+.related ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.related li a { display: flex; align-items: center; gap: 10px; min-height: 40px; text-decoration: none; padding: 4px 0; }
+.related li a::before { content: ""; flex: none; width: 7px; height: 7px; border-right: 2px solid currentColor; border-top: 2px solid currentColor; transform: rotate(45deg); margin-right: 4px; transition: transform var(--d-2) var(--ease-out); }
+.related li a:hover::before { transform: translateX(3px) rotate(45deg); }
+.lesson-nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.pn {
+  display: grid; gap: 4px; padding: 16px 18px; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  text-decoration: none; color: var(--fg); min-height: 44px; transition: border-color var(--d-2), box-shadow var(--d-3), transform var(--d-3) var(--ease-out);
+}
+.pn b { font-weight: 600; line-height: 1.35; }
+.pn.next { text-align: right; grid-column: 2; }
+.pn:hover { color: var(--fg); border-color: var(--accent-line); box-shadow: var(--sh-2); transform: translateY(-2px); }
+@media (max-width: 560px) { .lesson-nav { grid-template-columns: 1fr; } .pn.next { grid-column: 1; } }
+
+/* ================= 10. Вопросы ================= */
 .q { display: grid; gap: 12px; }
-.q + .q { border-top: 1px solid var(--line); padding-top: 18px; }
+.q + .q { border-top: 1px solid var(--line); padding-top: 22px; margin-top: 8px; }
 .q-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.q-type { font: 600 .7rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.q-text { font-weight: 600; font-size: 1.05rem; }
+.q-type { font: 600 .68rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 6px 9px; border-radius: var(--r-pill); background: var(--surface-2); }
+.q-text { font-weight: 600; font-size: 1.06rem; line-height: 1.45; }
 .opts { display: grid; gap: 8px; }
 .opt {
   display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; align-items: start; text-align: left;
-  width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface);
-  cursor: pointer; line-height: 1.4;
+  width: 100%; min-height: 48px; padding: 13px 15px; border-radius: 12px; border: 1px solid var(--line-strong); background: var(--surface);
+  cursor: pointer; line-height: 1.45;
+  transition: border-color var(--d-2), background var(--d-2), transform var(--d-1) var(--ease-out), box-shadow var(--d-2);
 }
-.opt:hover:not([disabled]) { border-color: var(--accent); }
-.opt .mk { width: 20px; height: 20px; margin-top: 1px; border: 2px solid var(--line); border-radius: 50%; display: grid; place-items: center; }
-.opt.multi .mk { border-radius: 4px; }
+.opt:hover:not([disabled]) { border-color: var(--accent); box-shadow: var(--sh-1); }
+.opt:active:not([disabled]) { transform: scale(.992); }
+.opt .mk { width: 20px; height: 20px; margin-top: 1px; border: 2px solid var(--line-strong); border-radius: 50%; display: grid; place-items: center; transition: border-color var(--d-2), background var(--d-2), box-shadow var(--d-2); }
+.opt.multi .mk { border-radius: 6px; }
 .opt.sel { border-color: var(--accent); background: var(--accent-soft); }
 .opt.sel .mk { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 3px var(--accent-soft); }
 .opt.multi.sel .mk { box-shadow: none; }
-.opt.multi.sel .mk::after { content: ""; width: 5px; height: 9px; border: solid var(--accent-ink); border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
+.opt.multi.sel .mk::after, .opt.right .mk::after { content: ""; width: 5px; height: 9px; border: solid var(--accent-ink); border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
 .opt.right { border-color: var(--ok); background: var(--ok-soft); }
-.opt.right .mk { border-color: var(--ok); }
+.opt.right .mk { border-color: var(--ok); background: var(--ok); box-shadow: none; }
+.opt.right .mk::after { border-color: var(--surface); }
 .opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
 .opt.wrong .mk { border-color: var(--bad); background: var(--bad); box-shadow: none; }
+.opt.wrong .mk::after { content: ""; width: 10px; height: 10px; background: linear-gradient(45deg, transparent 40%, var(--surface) 40% 60%, transparent 60%), linear-gradient(-45deg, transparent 40%, var(--surface) 40% 60%, transparent 60%); }
 .opt[disabled] { cursor: default; }
-.explain { border-radius: 8px; padding: 12px 14px; font-size: .95rem; display: grid; gap: 4px; }
-.explain.ok { background: var(--ok-soft); }
-.explain.bad { background: var(--bad-soft); }
-.explain b { font-family: var(--f-mono); font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; }
+.opt[disabled]:not(.right):not(.wrong) { opacity: .7; }
+.explain { border-radius: 12px; padding: 14px 16px; font-size: .95rem; display: grid; gap: 4px; border: 1px solid transparent; }
+.explain.ok { background: var(--ok-soft); border-color: color-mix(in srgb, var(--ok) 30%, transparent); }
+.explain.bad { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 30%, transparent); }
+.explain b { font-family: var(--f-mono); font-size: .76rem; letter-spacing: .08em; text-transform: uppercase; }
 .explain.ok b { color: var(--ok); }
 .explain.bad b { color: var(--bad); }
+@media (prefers-reduced-motion: no-preference) {
+  .explain { animation: rise var(--d-3) var(--ease-out); }
+  .opt.right .mk { animation: pop var(--d-3) var(--ease-spring); }
+  .opt.wrong { animation: nudge 260ms var(--ease-out); }
+}
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes pop { 0% { transform: scale(.6); } 100% { transform: scale(1); } }
+@keyframes nudge { 0%, 100% { transform: translateX(0); } 30% { transform: translateX(-4px); } 60% { transform: translateX(3px); } }
 
-/* Tests */
-.test-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
-.test-card { display: grid; gap: 10px; align-content: space-between; padding: 16px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); min-width: 0; }
-.test-card.feature { border-color: var(--accent); }
+/* ================= 11. Тесты ================= */
+.test-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 12px; }
+.test-card {
+  display: grid; gap: 12px; align-content: space-between; padding: 18px; border: 1px solid var(--line); border-radius: var(--r);
+  background: var(--surface); min-width: 0; box-shadow: var(--sh-1); transition: border-color var(--d-2), box-shadow var(--d-3);
+}
+.test-card:hover { border-color: var(--accent-line); box-shadow: var(--sh-2); }
+.test-card.feature { border-color: var(--accent-line); background: radial-gradient(300px 160px at 100% 0%, var(--accent-soft), transparent 70%), var(--surface); }
+.test-card.feature h3 { font: 700 1.05rem/1.25 var(--f-display); }
 .test-card p { font-size: .88rem; color: var(--muted); }
 .test-card .row { justify-content: space-between; }
+.view-inner > h2 { margin-top: 10px; }
 .runner-head { display: grid; gap: 10px; }
 .runner-head .row { justify-content: space-between; }
-.result-score { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+.runner-head .bar { height: 6px; }
+.h-test { font-size: clamp(1.15rem, 1rem + .8vw, 1.5rem); }
+.result-score { display: flex; flex-wrap: wrap; gap: 22px; align-items: center; }
 .ring { width: 112px; height: 112px; flex: none; }
-.ring circle { fill: none; stroke-width: 10; }
-.ring .bg { stroke: var(--surface-2); }
+.ring circle { fill: none; stroke-width: 9; }
+.ring .bg { stroke: var(--surface-3); }
 .ring .fg { stroke: var(--accent); stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; }
 .ring text { fill: var(--fg); font: 700 22px var(--f-mono); }
-.mistake { display: grid; gap: 8px; padding: 14px 0; border-top: 1px solid var(--line); }
+@media (prefers-reduced-motion: no-preference) { .ring .fg { animation: ring-in .9s var(--ease-out) both; } }
+@keyframes ring-in { from { stroke-dasharray: 0 400; } }
+.mistake { display: grid; gap: 8px; padding: 16px 0; border-top: 1px solid var(--line); }
 .mistake:first-child { border-top: 0; padding-top: 0; }
 .mistake .lbl { font: 600 .7rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; }
 .mistake .yours { color: var(--bad); }
 .mistake .right { color: var(--ok); }
 .mistake ul { margin: 4px 0 0; padding-left: 18px; }
+.small-link { font-size: .85rem; }
+.plain-list { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+.plain-list a { display: inline-block; padding: 2px 0; }
 
-/* Flashcards */
+/* ================= 12. Карточки ================= */
 .fc-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
-.seg { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); max-width: 100%; }
-.seg button { border: 0; background: transparent; padding: 8px 12px; cursor: pointer; font-size: .88rem; font-weight: 500; min-height: 38px; line-height: 1.25; }
-@media (max-width: 560px) { .seg { width: 100%; } .seg button { padding: 8px 6px; font-size: .82rem; } }
-.seg button + button { border-left: 1px solid var(--line); }
-.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
-.card-stage { perspective: 1200px; }
+.seg { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-2); max-width: 100%; }
+.seg button { border: 0; background: transparent; padding: 8px 12px; cursor: pointer; font-size: .88rem; font-weight: 550; min-height: 40px; line-height: 1.25; border-radius: 11px; color: var(--fg-2); transition: background var(--d-2), color var(--d-2), box-shadow var(--d-2); }
+.seg button:hover { color: var(--fg); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--accent); box-shadow: var(--sh-1), 0 0 0 1px var(--line); }
+@media (max-width: 560px) { .seg { width: 100%; } .seg button { padding: 8px 6px; font-size: .8rem; } }
+.card-stage { perspective: 1400px; }
 .flash {
-  position: relative; display: grid; width: 100%; min-height: 260px; border: 0; padding: 0; background: none; cursor: pointer; text-align: center;
-  transform-style: preserve-3d; transition: transform .45s cubic-bezier(.2,.7,.2,1);
+  position: relative; display: grid; width: 100%; min-height: 300px; border: 0; padding: 0; background: none; cursor: pointer; text-align: center;
+  transform-style: preserve-3d; transition: transform .55s var(--ease-out); border-radius: var(--r-lg);
 }
+.flash:hover .face.front { border-color: var(--accent-line); }
 .flash.flipped { transform: rotateY(180deg); }
 .face {
   grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden;
-  display: grid; align-content: center; justify-items: center; gap: 12px; text-align: center;
-  padding: 28px 24px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow);
+  display: grid; align-content: center; justify-items: center; gap: 14px; text-align: center;
+  padding: 32px 24px; border-radius: var(--r-lg); border: 1px solid var(--line); box-shadow: var(--sh-2);
+  background: radial-gradient(500px 240px at 50% 0%, var(--accent-soft), transparent 70%), var(--surface);
+  transition: border-color var(--d-2);
 }
-.face.back { transform: rotateY(180deg); background: var(--accent-soft); border-color: var(--accent); }
-.face .term { font: 700 clamp(1.4rem, 1.1rem + 1.5vw, 2rem)/1.2 var(--f-display); overflow-wrap: anywhere; }
-.face .def { display: block; font-size: 1.05rem; max-width: 52ch; }
-.face .hint { font: 500 .72rem/1 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.face.back { transform: rotateY(180deg); background: radial-gradient(500px 240px at 50% 100%, var(--accent-soft), transparent 70%), var(--surface); border-color: var(--accent-line); }
+.face .term { font: 700 clamp(1.4rem, 1.1rem + 1.5vw, 2.1rem)/1.2 var(--f-display); overflow-wrap: anywhere; letter-spacing: -.01em; }
+.face .def { display: block; font-size: 1.06rem; max-width: 52ch; line-height: 1.6; }
+.face .hint { font: 500 .7rem/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .fc-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.fc-actions .no { border-color: var(--bad); color: var(--bad); }
-.fc-actions .yes { border-color: var(--ok); color: var(--ok); }
+.fc-actions .btn { min-height: 52px; }
+.fc-actions .no { border-color: color-mix(in srgb, var(--bad) 50%, transparent); color: var(--bad); }
+.fc-actions .no:hover { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
+.fc-actions .yes { border-color: color-mix(in srgb, var(--ok) 50%, transparent); color: var(--ok); }
+.fc-actions .yes:hover { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
 .star {
-  border: 1px solid var(--line); background: var(--surface); border-radius: 8px; min-height: 36px; padding: 6px 10px;
-  display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: .88rem;
+  border: 1px solid var(--line); background: var(--surface); border-radius: 10px; min-height: 40px; min-width: 40px; padding: 6px 10px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; font-size: .88rem; color: var(--fg-2);
+  transition: border-color var(--d-2), background var(--d-2), color var(--d-2), transform var(--d-1);
 }
-.star svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
-.star[aria-pressed="true"] { color: var(--warn); border-color: var(--warn); background: var(--warn-soft); }
+.star:hover { border-color: var(--warn); color: var(--warn); }
+.star:active { transform: scale(.94); }
+.star svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+.star[aria-pressed="true"] { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 60%, transparent); background: var(--warn-soft); }
 .star[aria-pressed="true"] svg { fill: currentColor; }
-@media (prefers-reduced-motion: reduce) { .flash, .bar > i { transition: none; } }
+@media (prefers-reduced-motion: no-preference) { .star[aria-pressed="true"] svg { animation: pop var(--d-3) var(--ease-spring); } }
 
-/* Glossary */
+/* ================= 13. Глоссарий ================= */
+.gl-tools { position: sticky; top: calc(var(--top-h) - 1px); z-index: 20; display: grid; gap: 10px; padding: 10px 0; background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .search { position: relative; }
 .search input {
-  width: 100%; min-height: 48px; padding: 12px 14px 12px 42px; border-radius: 10px;
-  border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: inherit;
+  width: 100%; min-height: 52px; padding: 12px 16px 12px 46px; border-radius: 14px;
+  border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg); font: inherit; box-shadow: var(--sh-1);
+  transition: border-color var(--d-2), box-shadow var(--d-2);
 }
-.search input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
-.search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: var(--muted); stroke-width: 2; }
-.gl { display: grid; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); overflow: hidden; }
-.gl-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 14px; padding: 14px 16px; border-top: 1px solid var(--line); }
+.search input:focus { outline: none; border-color: var(--accent); box-shadow: var(--ring); }
+.search svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 19px; height: 19px; fill: none; stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
+.abc { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.abc::-webkit-scrollbar { display: none; }
+.abc a { flex: none; display: grid; place-items: center; min-width: 36px; height: 36px; padding: 0 8px; border-radius: 10px; font: 600 .82rem/1 var(--f-mono); color: var(--fg-2); text-decoration: none; background: var(--surface); border: 1px solid var(--line); }
+.abc a:hover { color: var(--accent); border-color: var(--accent-line); }
+.gl-group { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 12px; align-items: start; margin-bottom: 18px; scroll-margin-top: calc(var(--top-h) + 120px); }
+.gl-letter { position: sticky; top: calc(var(--top-h) + 120px); font: 700 1.5rem/1 var(--f-display); color: var(--accent); padding-top: 14px; }
+.gl { display: grid; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); overflow: hidden; margin: 0; box-shadow: var(--sh-1); }
+.gl-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 14px; padding: 16px 18px; border-top: 1px solid var(--line); transition: background var(--d-1); }
+.gl-item:hover { background: color-mix(in srgb, var(--surface-2) 60%, transparent); }
 .gl-item:first-child { border-top: 0; }
 .gl-item dt { font-weight: 700; }
-.gl-item dd { margin: 0; grid-column: 1; color: var(--fg); font-size: .95rem; }
+.gl-item dd { margin: 0; grid-column: 1; color: var(--fg-2); font-size: .95rem; line-height: 1.55; }
 .gl-item .star { grid-row: 1 / span 2; grid-column: 2; align-self: start; }
-mark { background: var(--warn-soft); color: inherit; border-radius: 2px; padding: 0 1px; }
-.empty { padding: 28px 16px; text-align: center; color: var(--muted); }
+mark { background: color-mix(in srgb, var(--warn) 28%, transparent); color: inherit; border-radius: 3px; padding: 0 2px; }
+.empty { padding: 32px 16px; text-align: center; color: var(--muted); }
+@media (max-width: 560px) { .gl-group { grid-template-columns: 1fr; gap: 6px; } .gl-letter { position: static; padding: 6px 2px 0; } }
 
-/* Cheat sheet */
+/* ================= 14. Шпаргалка ================= */
 .sheet-head { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-end; }
 .sheet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 @media (max-width: 680px) { .sheet { grid-template-columns: 1fr; } }
-.sheet section { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 14px 16px; break-inside: avoid; }
-.sheet h3 { font: 600 .78rem/1.2 var(--f-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-.sheet ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; font-size: .92rem; }
-.sheet li { display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 8px; }
-.sheet li::before { content: ""; width: 11px; height: 11px; margin-top: .3em; border: 1.5px solid var(--muted); border-radius: 2px; }
+.sheet section { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 16px 18px; break-inside: avoid; box-shadow: var(--sh-1); }
+.sheet h3 { font: 600 .74rem/1.3 var(--f-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.sheet h3::before { content: ""; width: 8px; height: 8px; border-radius: 2px; background: var(--accent); }
+.sheet ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; font-size: .93rem; }
+.sheet li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 10px; line-height: 1.45; }
+.sheet li::before { content: ""; width: 14px; height: 14px; margin-top: .2em; border: 1.5px solid var(--line-strong); border-radius: 4px; }
 .sheet-foot { font-size: .85rem; color: var(--muted); }
 .print-only { display: none; }
 
-/* ---- Добавлено: модуль грануляции, служебные страницы, «Поделиться» ---- */
-.view-inner.narrow { max-width: 720px; }
-.note.med { border-color: var(--accent); background: var(--accent-soft); }
-.pmini { display: grid; gap: 6px; }
-.pmini a { color: var(--fg); text-decoration: none; }
-.pmini a:hover { color: var(--accent); }
-.feature-link {
-  display: grid; gap: 4px; padding: 16px 18px; border-radius: var(--r); text-decoration: none; color: var(--fg);
-  border: 1px solid var(--accent); background:
-    radial-gradient(circle at 92% 30%, var(--accent-soft) 0 18px, transparent 19px),
-    radial-gradient(circle at 84% 70%, var(--accent-soft) 0 11px, transparent 12px),
-    radial-gradient(circle at 97% 78%, var(--accent-soft) 0 7px, transparent 8px),
-    var(--surface);
-  padding-right: 92px;
-}
-.feature-link b { font: 700 1.05rem/1.25 var(--f-display); }
-.feature-link span:last-child { color: var(--muted); font-size: .92rem; }
-.feature-link:hover { box-shadow: var(--shadow); }
-.tag.goals { background: var(--surface-2); color: var(--fg); }
-.goallist { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
-.goallist li::marker { color: var(--accent); }
-.stages { list-style: none; counter-reset: st; margin: 18px 0; padding: 0; display: grid; gap: 0; max-width: 72ch; }
-.stages li { counter-increment: st; display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 14px; padding: 0 0 18px; position: relative; }
-.stages li::before {
-  content: counter(st); grid-row: 1 / span 2; width: 32px; height: 32px; border-radius: 50%;
-  display: grid; place-items: center; font: 600 .9rem/1 var(--f-mono); background: var(--accent); color: var(--accent-ink);
-}
-.stages li::after { content: ""; position: absolute; left: 15px; top: 36px; bottom: 4px; width: 2px; background: var(--line); }
-.stages li:last-child::after { display: none; }
-.stages b { display: block; margin-bottom: 2px; }
-.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
-.tbl { border-collapse: collapse; width: 100%; min-width: 620px; font-size: .92rem; }
-.tbl th, .tbl td { text-align: left; vertical-align: top; padding: 10px 12px; border-top: 1px solid var(--line); }
-.tbl thead th { border-top: 0; background: var(--surface-2); font: 600 .72rem/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.tbl tbody th { font-weight: 600; width: 30%; }
-.examples { display: grid; gap: 12px; }
-.example { border: 1px dashed var(--line); border-radius: 8px; padding: 12px 14px; background: var(--bg); }
-.example h3 { font-size: .95rem; margin-bottom: 6px; }
-.example ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; font-family: var(--f-mono); font-size: .86rem; font-variant-numeric: tabular-nums; }
-.plain-list { margin: 0; padding-left: 22px; display: grid; gap: 6px; }
-.h-test { font-size: clamp(1.15rem, 1rem + .8vw, 1.5rem); }
-.small-link { font-size: .85rem; }
-.prose h2 { margin-top: 6px; }
-code { font-family: var(--f-mono); font-size: .88em; background: var(--surface-2); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
-.author { display: flex; gap: 16px; align-items: center; }
+/* ================= 15. Автор, конфиденциальность, служебное ================= */
+.author { display: flex; gap: 18px; align-items: center; background: radial-gradient(300px 160px at 0% 0%, var(--accent-soft), transparent 70%), var(--surface); }
 .author-mark {
-  width: 64px; height: 64px; flex: none; border-radius: 50%; display: grid; place-items: center;
-  font: 700 1.1rem/1 var(--f-display); color: var(--accent-ink); background: var(--accent);
+  width: 72px; height: 72px; flex: none; border-radius: 22px; display: grid; place-items: center;
+  font: 700 1.2rem/1 var(--f-display); color: var(--accent-ink); background: var(--accent);
+  box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--accent) 80%, transparent);
 }
-.author-name { font-size: 1.1rem; }
-.confirm { border: 1px solid var(--bad); background: var(--bad-soft); border-radius: 8px; padding: 14px; display: grid; gap: 10px; }
-.btn.danger { background: var(--bad); border-color: var(--bad); color: var(--surface); }
+.author-name { font-size: 1.15rem; }
+.prose h2 { font-size: 1.15rem; }
+code { font-family: var(--f-mono); font-size: .86em; background: var(--surface-2); border: 1px solid var(--line); padding: 1px 6px; border-radius: 6px; overflow-wrap: anywhere; }
+.confirm { border: 1px solid var(--bad); background: var(--bad-soft); border-radius: var(--r-sm); padding: 16px; display: grid; gap: 12px; }
 .toast {
-  position: fixed; left: 50%; bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 20px);
-  background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 8px; font-weight: 600; font-size: .92rem;
-  opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 60; max-width: calc(100% - 32px);
+  position: fixed; left: 50%; bottom: calc(var(--nav-h) + 28px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 16px);
+  background: var(--fg); color: var(--bg); padding: 12px 18px; border-radius: 14px; font-weight: 600; font-size: .92rem; box-shadow: var(--sh-3);
+  opacity: 0; pointer-events: none; transition: opacity var(--d-2), transform var(--d-3) var(--ease-spring); z-index: 90; max-width: calc(100% - 32px);
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 .share-box {
-  position: fixed; left: 16px; right: 16px; bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px)); z-index: 60;
-  max-width: 560px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-  box-shadow: var(--shadow); padding: 14px; display: grid; gap: 8px; font-size: .9rem;
+  position: fixed; left: 16px; right: 16px; bottom: calc(var(--nav-h) + 28px + env(safe-area-inset-bottom, 0px)); z-index: 90;
+  max-width: 560px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+  box-shadow: var(--sh-3); padding: 16px; display: grid; gap: 10px; font-size: .9rem;
 }
-.share-box input { flex: 1; min-width: 0; min-height: 40px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); font: inherit; }
-@media (min-width: 960px) { .toast, .share-box { bottom: 24px; } }
-@media (max-width: 420px) { .feature-link { padding-right: 18px; background: var(--surface); } }
-@media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+.share-box input { flex: 1; min-width: 0; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--fg); font: inherit; }
+@media (min-width: 960px) { .toast, .share-box { bottom: 28px; } }
 
+/* ================= 16. Интерактивные схемы ================= */
+.scheme {
+  margin: 0; container-type: inline-size;
+  border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--sh-2);
+  padding: clamp(16px, 3vw, 26px); display: grid; gap: 16px; scroll-margin-top: calc(var(--top-h) + 16px);
+}
+.sc-head { display: grid; gap: 6px; }
+.sc-kicker { font: 600 .7rem/1.3 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--info); }
+.sc-title { font: 700 var(--t-xl)/1.2 var(--f-display); letter-spacing: -.015em; }
+.sc-body { display: grid; gap: 16px; }
+@container (min-width: 760px) {
+  .sc-body { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); align-items: start; gap: 22px; }
+}
+.sc-stage { display: grid; gap: 12px; min-width: 0; }
+.sc-svg {
+  display: block; width: 100%; height: auto; border-radius: var(--r); border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--fg) 9%, transparent) 1px, transparent 1.4px) 0 0 / 20px 20px,
+    var(--sc-paper);
+  font-family: var(--f-body);
+}
+.sc-ui { display: none; }
+.js .sc-ui { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; }
+.sc-status { display: grid; gap: 2px; min-width: 0; }
+.sc-count { font-size: .72rem; color: var(--muted); letter-spacing: .04em; }
+.sc-label { font-weight: 650; font-size: 1rem; line-height: 1.3; overflow-wrap: anywhere; }
+.sc-btns { display: flex; gap: 6px; }
+.sc-btn {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; cursor: pointer;
+  border: 1px solid var(--line-strong); background: var(--surface); color: var(--fg-2);
+  transition: border-color var(--d-2), background var(--d-2), color var(--d-2), transform var(--d-1) var(--ease-out);
+}
+.sc-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sc-btn:hover:not([disabled]) { border-color: var(--accent); color: var(--accent); }
+.sc-btn:active:not([disabled]) { transform: scale(.94); }
+.sc-btn[disabled] { opacity: .4; cursor: not-allowed; }
+.sc-play { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.sc-play:hover:not([disabled]) { background: var(--accent-hover); color: var(--accent-ink); }
+.sc-play .i-play { fill: currentColor; stroke: none; }
+.sc-play .i-pause { display: none; stroke-width: 3; }
+.sc-play[aria-pressed="true"] .i-play { display: none; }
+.sc-play[aria-pressed="true"] .i-pause { display: block; }
+.sc-prog { grid-column: 1 / -1; height: 4px; border-radius: 4px; background: var(--surface-3); overflow: hidden; }
+.sc-prog i { display: block; height: 100%; background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; transition: transform var(--d-scheme) var(--ease-out); }
+.sc-cap { display: grid; gap: 12px; min-width: 0; }
+.sc-desc { color: var(--fg-2); font-size: .95rem; line-height: 1.55; }
+.sc-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; counter-reset: none; }
+.sc-steps li { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); transition: border-color var(--d-2), background var(--d-2), box-shadow var(--d-2); }
+.sc-go {
+  display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 8px 12px;
+  border: 0; background: none; text-align: left; font-weight: 600; font-size: .95rem; line-height: 1.3; cursor: pointer; border-radius: 12px; color: var(--fg);
+}
+html:not(.js) .sc-go { cursor: default; }
+.sc-n { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; font-size: .78rem; background: var(--surface-2); color: var(--fg-2); transition: background var(--d-2), color var(--d-2); }
+.sc-more { display: grid; gap: 8px; padding: 0 12px 12px 48px; font-size: .92rem; line-height: 1.55; color: var(--fg-2); }
+.sc-k { display: block; font: 600 .66rem/1.4 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.sc-err { padding: 8px 10px; border-radius: 10px; background: var(--bad-soft); color: var(--fg); }
+.sc-err .sc-k { color: var(--bad); }
+.is-live .sc-steps li:not(.cur) .sc-more { display: none; }
+.is-live .sc-go:hover .sc-n { background: var(--accent-soft); color: var(--accent); }
+.sc-steps li.past .sc-n { background: var(--accent-soft); color: var(--accent); }
+.sc-steps li.cur { border-color: var(--accent-line); background: color-mix(in srgb, var(--accent-soft) 45%, var(--surface)); box-shadow: var(--sh-1); }
+.sc-steps li.cur .sc-n { background: var(--accent); color: var(--accent-ink); }
+@media (prefers-reduced-motion: no-preference) { .is-live .sc-steps li.cur .sc-more { animation: rise var(--d-3) var(--ease-out); } }
+
+/* SVG: части и состояния */
+.sc-svg text { font-size: 15px; }
+.k-t { fill: var(--fg); font-size: 15px; }
+.k-sm { font-size: 13px; }
+.k-xs { font-size: 12px; }
+.k-b { font-weight: 650; }
+.k-caps { text-transform: uppercase; letter-spacing: .05em; font-size: 12px; }
+.k-mut { fill: var(--muted); }
+.k-heat-t { fill: var(--heat); font-weight: 600; }
+.k-line, .k-pipe, .k-axis, .k-leader { fill: none; stroke: var(--fg-2); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.k-pipe { stroke: var(--line-strong); stroke-width: 6; }
+.k-axis { stroke: var(--muted); stroke-width: 1.5; }
+.k-leader { stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.k-vessel { fill: color-mix(in srgb, var(--surface) 70%, transparent); stroke: var(--fg-2); stroke-width: 2.5; stroke-linejoin: round; }
+.k-part { fill: var(--surface-3); stroke: var(--fg-2); stroke-width: 1.8; stroke-linejoin: round; }
+.k-ink { fill: var(--fg-2); }
+.k-none { fill: none; stroke: none; }
+.k-acc { fill: var(--accent); }
+.k-dash { fill: none; stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 6; opacity: .7; }
+.k-api { fill: var(--accent); }
+.k-exc { fill: var(--surface); stroke: var(--fg-2); stroke-width: 1.6; }
+.k-liq { fill: var(--liquid); }
+.k-liq-soft { fill: var(--liquid-soft); }
+.k-vapor { fill: none; stroke: var(--liquid); stroke-width: 2.2; stroke-linecap: round; opacity: .75; }
+.k-gran { fill: color-mix(in srgb, var(--accent) 22%, var(--surface)); stroke: var(--accent); stroke-width: 1.8; }
+.k-lump { fill: color-mix(in srgb, var(--liquid) 18%, var(--surface)); stroke: var(--liquid); stroke-width: 1.8; }
+.k-lub { fill: var(--muted); }
+.k-fines { fill: var(--warn); }
+.k-sieve { fill: none; stroke: var(--fg-2); stroke-width: 4; stroke-dasharray: 14 6; }
+.k-plate { fill: none; stroke: var(--fg-2); stroke-width: 4; stroke-dasharray: 6 4; }
+.k-track { stroke: var(--line-strong); stroke-width: 2; }
+.k-node { fill: var(--surface); stroke: var(--line-strong); stroke-width: 2; }
+.k-node-t { fill: var(--muted); font: 600 12px var(--f-mono); }
+.k-ring { fill: none; stroke: var(--accent); stroke-width: 2; opacity: .5; }
+.k-arrow { fill: none; stroke: var(--fg-2); stroke-width: 2; stroke-linecap: round; }
+.k-arhead { fill: var(--fg-2); }
+.k-arrow.k-strong { stroke-width: 3; }
+.k-arrow.k-soft { stroke: var(--muted); stroke-dasharray: 4 4; }
+.k-arrow.k-heat { stroke: var(--heat); stroke-width: 2.5; }
+.k-arrow.k-return { stroke: var(--warn); stroke-dasharray: 7 5; stroke-width: 2.2; }
+.k-mark { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.k-curve { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; }
+.k-curve2 { stroke: var(--heat); stroke-dasharray: 6 5; stroke-width: 2.5; }
+.k-blade { fill: var(--fg-2); }
+.k-blade-line { stroke: var(--fg-2); stroke-width: 4; stroke-linecap: round; }
+.k-bag { fill: color-mix(in srgb, var(--surface-3) 70%, transparent); stroke: var(--fg-2); stroke-width: 1.6; stroke-dasharray: 2 3; }
+.k-sensor { fill: var(--surface); stroke: var(--heat); stroke-width: 2.5; }
+.k-valve { fill: var(--warn-soft); stroke: var(--fg-2); stroke-width: 1.8; }
+.k-roll { fill: var(--surface-3); stroke: var(--fg-2); stroke-width: 2; }
+.k-flight { fill: none; stroke: var(--fg-2); stroke-width: 2; }
+.k-ribbon { fill: color-mix(in srgb, var(--accent) 35%, var(--surface)); stroke: var(--fg-2); stroke-width: 1.4; }
+.k-ribbon-edge { fill: color-mix(in srgb, var(--accent) 12%, var(--surface)); stroke: none; }
+.k-tagbox { fill: var(--surface); stroke: var(--accent); stroke-width: 1.6; }
+.k-punch { fill: color-mix(in srgb, var(--fg-2) 16%, var(--surface)); stroke: var(--fg-2); stroke-width: 1.8; }
+.k-table { fill: var(--surface-3); stroke: var(--fg-2); stroke-width: 1.8; }
+.k-feeder { fill: color-mix(in srgb, var(--warn) 14%, var(--surface)); stroke: var(--fg-2); stroke-width: 1.8; }
+.k-powder { fill: color-mix(in srgb, var(--accent) 22%, var(--surface)); stroke: var(--accent); stroke-width: 1.2; }
+.k-tablet { fill: var(--surface); stroke: var(--accent); stroke-width: 2.4; }
+.k-die { fill: var(--surface); stroke: var(--fg-2); stroke-width: 1.2; }
+.k-box { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.6; }
+.k-box.k-q { stroke: var(--warn); }
+.k-box.k-ok { fill: var(--ok-soft); stroke: var(--ok); }
+.k-box.k-no { stroke: var(--bad); }
+.k-q-bg { fill: var(--surface); }
+.k-q-line { fill: color-mix(in srgb, var(--warn) 18%, transparent); }
+.k-r-bg { fill: var(--surface); }
+.k-r-line { stroke: color-mix(in srgb, var(--bad) 22%, transparent); stroke-width: 1.2; }
+.k-ico { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.k-ok ~ .k-ico { color: var(--ok); }
+.k-no ~ .k-ico { color: var(--bad); }
+.k-q ~ .k-ico { color: var(--warn); }
+.k-q ~ .k-t.k-caps { fill: var(--warn); }
+.k-ok ~ .k-t.k-caps { fill: var(--ok); }
+.k-no ~ .k-t.k-caps { fill: var(--bad); }
+.k-q ~ .k-ico, .k-ok ~ .k-ico, .k-no ~ .k-ico { fill: none; stroke: currentColor; }
+.k-flow { stroke: var(--line-strong); }
+.k-badge { stroke: var(--surface); stroke-width: 3; }
+.k-badge.k-q { fill: var(--warn); }
+.k-badge.k-ok { fill: var(--ok); }
+.k-badge.k-no { fill: var(--bad); }
+.k-badge-i { fill: none; stroke: var(--surface); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+/* шаги: появление и подсветка */
+.sc-svg [data-s] { opacity: 0; transition: opacity var(--d-3) var(--ease-out); }
+.sc-svg [data-s][data-on] { opacity: 1; }
+.sc-svg [data-h] { transition: opacity var(--d-3), filter var(--d-3); }
+.sc-svg [data-hon] .k-part, .sc-svg .k-part[data-hon],
+.sc-svg [data-hon] .k-vessel, .sc-svg .k-vessel[data-hon],
+.sc-svg [data-hon] .k-roll, .sc-svg [data-hon] .k-bag,
+.sc-svg .k-plate[data-hon], .sc-svg .k-ribbon[data-hon], .sc-svg .k-valve[data-hon] { stroke: var(--accent); stroke-width: 3; }
+.sc-svg .k-sensor[data-hon] { fill: var(--heat); }
+.sc-svg [data-hon] .k-box, .sc-svg .k-box[data-hon] { stroke-width: 3; }
+.sc-svg [data-hon] > .k-box:not(.k-q):not(.k-ok):not(.k-no) { stroke: var(--accent); }
+.sc-svg .k-node[data-hon] { fill: var(--accent); stroke: var(--accent); }
+.sc-svg .k-node-t[data-hon] { fill: var(--accent-ink); }
+.sc-svg text[data-hon] { fill: var(--accent); }
+.sc-svg .k-flow[data-hon] { stroke: var(--accent); stroke-width: 3; }
+/* перемещения: плавный переход между состояниями */
+.sc-svg [data-tf] { transition: transform var(--d-scheme) var(--ease-in-out), opacity var(--d-3); }
+.k-rotor { transform-box: fill-box; transform-origin: center; }
+.k-powder { transform-box: view-box; transform-origin: 0 0; }
+
+/* движение внутри шага — только пока схема проигрывается */
+.mv-spin, .mv-spin-rev, .mv-spin-fast { transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: no-preference) {
+  .is-playing [data-mon].mv-spin, .is-playing [data-mon] .mv-spin { animation: sc-spin 3s linear infinite; }
+  .is-playing [data-mon].mv-spin-rev { animation: sc-spin 3s linear infinite reverse; }
+  .is-playing [data-mon].mv-spin-fast { animation: sc-spin .8s linear infinite; }
+  .is-playing .k-dash[data-mon] { animation: sc-dash 1s linear infinite; }
+  .is-playing [data-mon].mv-sway { animation: sc-sway 2.4s var(--ease-in-out) infinite alternate; }
+  .is-playing [data-mon].mv-tumble { animation: sc-sway 1.6s var(--ease-in-out) infinite alternate; }
+  .is-playing [data-mon].mv-drop > * { animation: sc-drop 1.2s linear infinite; }
+  .is-playing [data-mon].mv-fall > * { animation: sc-fall 1.6s var(--ease-in-out) infinite; }
+  .is-playing [data-mon].mv-bob { animation: sc-bob 1.1s var(--ease-in-out) infinite alternate; }
+  .is-playing [data-mon] .mv-bob, .is-playing .mv-bob[data-mon] { animation: sc-bob 1.1s var(--ease-in-out) infinite alternate; }
+  .is-playing [data-mon].mv-rise, .is-playing [data-mon] .mv-rise { animation: sc-rise 1.8s var(--ease-out) infinite; }
+  .is-playing [data-mon].mv-up { animation: sc-up 1.2s linear infinite; }
+  .is-playing [data-mon].mv-flowx > * { animation: sc-flowx 1.2s linear infinite; }
+  .is-playing [data-mon].mv-screw { animation: sc-screw .7s linear infinite; }
+  .is-playing [data-mon].mv-fly > * { animation: sc-fly 1s var(--ease-out) infinite; }
+  .is-playing [data-mon].mv-fadein { animation: sc-fadein 1.6s var(--ease-out) both; }
+}
+@keyframes sc-spin { to { transform: rotate(360deg); } }
+@keyframes sc-dash { to { stroke-dashoffset: -24; } }
+@keyframes sc-sway { from { transform: translateX(-5px); } to { transform: translateX(5px); } }
+@keyframes sc-drop { 0% { transform: translateY(-14px); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(40px); opacity: 0; } }
+@keyframes sc-fall { 0% { transform: translateY(-20px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(0); opacity: 1; } }
+@keyframes sc-bob { from { transform: translateY(4px); } to { transform: translateY(-8px); } }
+@keyframes sc-rise { 0% { transform: translateY(10px); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-18px); opacity: 0; } }
+@keyframes sc-up { 0% { transform: translateY(8px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-8px); opacity: 0; } }
+@keyframes sc-flowx { 0% { transform: translateX(-10px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateX(14px); opacity: 0; } }
+@keyframes sc-screw { to { transform: translateX(20px); } }
+@keyframes sc-fly { 0% { transform: translate(0, 0); opacity: 1; } 100% { transform: translate(10px, -6px); opacity: 0; } }
+@keyframes sc-fadein { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .sc-svg [data-s], .sc-svg [data-tf], .sc-svg [data-h], .sc-prog i { transition: none !important; }
+}
+
+/* ================= 17. Появление при прокрутке и переходы ================= */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-art .ha-in { animation: art-in .9s var(--ease-out) both; }
+  .hero-art .ha-d2 { animation-delay: .12s; }
+  .hero-art .ha-d3 { animation-delay: .24s; }
+  .hero-art .ha-d4 { animation-delay: .36s; }
+  @supports (animation-timeline: view()) {
+    .lesson-grid > li, .tile-sm, .test-card, .acc-item, .pn {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+@keyframes art-in { from { opacity: 0; transform: translateY(14px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes reveal { from { transform: translateY(22px) scale(.985); } to { transform: none; } }
+
+/* Плавные переходы между страницами (прогрессивное улучшение) */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 220ms; animation-timing-function: var(--ease-out); }
+::view-transition-new(root) { animation-name: vt-in; }
+::view-transition-old(root) { animation-name: vt-out; }
+@keyframes vt-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes vt-out { to { opacity: 0; } }
+.vt-theme::view-transition-new(root), .vt-theme::view-transition-old(root) { animation: none; }
+.vt-theme::view-transition-new(root) { animation: vt-fade 260ms var(--ease-out); }
+@keyframes vt-fade { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+
+/* ================= 18. Печать ================= */
 @media print {
   @page { size: A4; margin: 10mm; }
   :root, :root[data-theme="dark"] {
-    --bg: #fff; --surface: #fff; --surface-2: #f1f1f1; --line: #999; --fg: #000; --muted: #333; --accent: #000; --accent-soft: #fff;
+    --bg: #fff; --surface: #fff; --surface-2: #f1f1f1; --line: #999; --line-strong: #777; --fg: #000; --fg-2: #111; --muted: #333; --accent: #000; --accent-soft: #fff;
     color-scheme: light;
   }
   body { background: #fff; color: #000; font-size: 10pt; line-height: 1.35; }
-  .top, .nav, .foot, .skip, .no-print, .crumbs, #toast { display: none !important; }
+  .top, .nav, .foot, .skip, .no-print, .crumbs, #toast, .toc, .sc-ui, .read-progress { display: none !important; }
   .shell { display: block; }
   main { padding: 0 !important; }
   .view-inner { max-width: none; gap: 8px; }
+  .panel, .sheet section, .scheme { box-shadow: none !important; }
   .print-only { display: block; }
   .sheet { grid-template-columns: 1fr 1fr; gap: 6px; }
   .sheet section { padding: 6px 8px; border-radius: 0; }
@@ -523,28 +1091,9 @@ code { font-family: var(--f-mono); font-size: .88em; background: var(--surface-2
   .sheet ul { font-size: 8.6pt; gap: 2px; }
   h1 { font-size: 15pt; }
   .lead { font-size: 9pt; }
+  * { animation: none !important; }
 }
-@media (max-width: 400px) { .nav a { font-size: .62rem; letter-spacing: -.01em; } .nav a span { padding-inline: 0; } }
-@media (max-width: 640px) {
-  .tbl-wrap { border: 0; overflow: visible; }
-  .tbl { min-width: 0; }
-  .tbl thead { display: none; }
-  .tbl, .tbl tbody, .tbl tr, .tbl th, .tbl td { display: block; width: auto; }
-  .tbl tr { border: 1px solid var(--line); border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
-  .tbl tbody th { width: auto; border-top: 0; background: var(--surface-2); }
-  .tbl td::before { content: attr(data-label); display: block; font: 600 .68rem/1.3 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
-}
-/* ---- Модуль: вводный текст, частые вопросы, связанные материалы ---- */
-.intro { gap: 10px; max-width: 70ch; }
-.intro .lead { font-size: 1rem; }
-.faq { display: grid; gap: 6px; }
-.faq h2 { margin-bottom: 8px; }
-.faq h3 { margin-top: 10px; font-size: 1rem; }
-.faq p { max-width: 68ch; }
-.related h2 { font-size: 1rem; margin-bottom: 10px; }
-.related ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.related li { padding-left: 18px; position: relative; }
-.related li::before { content: ""; position: absolute; left: 2px; top: .55em; width: 7px; height: 7px; border-right: 2px solid var(--accent); border-top: 2px solid var(--accent); transform: rotate(45deg); }
+@media (max-width: 400px) { .nav a { font-size: .62rem; letter-spacing: -.01em; } .nav .nav-t { padding-inline: 0; } .nav .nav-ico { width: 44px; } }
 </style>
 </head>
 <body>
@@ -2067,6 +2616,566 @@ window.TLF_GRAN = {
 };
 </script>
 <script>
+/* Оператор ТЛФ — интерактивные SVG-схемы процессов.
+   Каждая схема — рисунок с шагами. Сборка (node) выводит схему в состоянии «обзор» (шаг 0):
+   без JavaScript это статичная картинка с подписью и списком стадий.
+   В браузере TLF_SCHEMES.init() добавляет управление: заново, назад, пуск/пауза, вперёд.
+   Разметка шагов внутри SVG:
+     data-s="1 2"   элемент виден только на этих шагах (0 — обзор);
+     data-h="1 2"   элемент подсвечен на этих шагах;
+     data-m="1 2"   элемент движется на этих шагах, пока схема проигрывается;
+     data-tf="a|b"  CSS-трансформация для шагов 0, 1, 2… (последнее значение повторяется).
+   Числовых режимов в схемах нет: значения задают регламент и СОП. */
+(function (root) {
+  "use strict";
+
+  var IS_NODE = typeof document === "undefined";
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function S(v) { return ' data-s="' + v + '"'; }
+  function H(v) { return ' data-h="' + v + '"'; }
+  function M(v) { return ' data-m="' + v + '"'; }
+  function TF(list) { return ' data-tf="' + list.join("|") + '"'; }
+  function T(x, y, s, cls, anchor) {
+    return '<text x="' + x + '" y="' + y + '" class="' + (cls || "k-t") + '"' + (anchor ? ' text-anchor="' + anchor + '"' : "") + ">" + esc(s) + "</text>";
+  }
+  // детерминированный «случайный» разброс частиц, чтобы сборка всегда давала одинаковый рисунок
+  function rng(seed) { var x = seed; return function () { x = (x * 1103515245 + 12345) % 2147483648; return x / 2147483648; }; }
+  function scatter(seed, n, x0, x1, y0, y1, minD) {
+    var r = rng(seed), pts = [], guard = 0;
+    while (pts.length < n && guard++ < 4000) {
+      var p = [x0 + r() * (x1 - x0), y0 + r() * (y1 - y0)], ok = true;
+      for (var i = 0; i < pts.length; i++) { var dx = pts[i][0] - p[0], dy = pts[i][1] - p[1]; if (dx * dx + dy * dy < minD * minD) { ok = false; break; } }
+      if (ok) pts.push(p);
+    }
+    return pts;
+  }
+  function f1(n) { return Math.round(n * 10) / 10; }
+  function circles(pts, r, cls, extra) {
+    return pts.map(function (p, i) { return '<circle cx="' + f1(p[0]) + '" cy="' + f1(p[1]) + '" r="' + (typeof r === "function" ? r(i) : r) + '" class="' + (typeof cls === "function" ? cls(i) : cls) + '"' + (extra ? extra(i) : "") + "/>"; }).join("");
+  }
+  function arrowDefs(id) {
+    return '<defs><marker id="' + id + '-ar" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="k-arhead"/></marker></defs>';
+  }
+  function arrow(id, d, cls, extra) { return '<path d="' + d + '" class="' + (cls || "k-arrow") + '" marker-end="url(#' + id + '-ar)"' + (extra || "") + "/>"; }
+  function delays(i) { return ' style="animation-delay:' + (-(i % 7) * 0.23).toFixed(2) + 's"'; }
+
+  /* ---------- 1. Влажная грануляция по стадиям ---------- */
+  function svgWet(id) {
+    var h = arrowDefs(id);
+    // дорожка стадий
+    h += '<path d="M50 30H470" class="k-track"/>';
+    for (var i = 1; i <= 7; i++) {
+      var x = 50 + (i - 1) * 70, done = [];
+      for (var j = i; j <= 7; j++) done.push(j);
+      h += '<circle cx="' + x + '" cy="30" r="18" class="k-ring"' + S(i) + "/>";
+      h += '<circle cx="' + x + '" cy="30" r="12" class="k-node"' + H(done.join(" ")) + "/>";
+      h += '<text x="' + x + '" y="34.5" class="k-node-t" text-anchor="middle"' + H(done.join(" ")) + ">" + i + "</text>";
+    }
+    // обзор: порошок → гранулы
+    var powder = scatter(11, 46, 80, 210, 120, 250, 11);
+    var gr = [[330, 150], [385, 140], [440, 160], [350, 205], [410, 200], [455, 225], [330, 255], [390, 250]];
+    h += "<g" + S(0) + ">" + circles(powder, function (k) { return k % 3 ? 4.5 : 3.5; }, function (k) { return k % 3 ? "k-exc" : "k-api"; });
+    h += arrow(id, "M228 192H290", "k-arrow k-strong");
+    h += gr.map(function (p, k) { return granule(p[0], p[1], 20 + (k % 3) * 2, k); }).join("");
+    h += T(145, 288, "порошковая смесь", "k-t k-mut", "middle") + T(392, 298, "гранулы", "k-t k-mut", "middle") + "</g>";
+
+    // чаша (стадии 1–3)
+    h += "<g" + S("1 2 3") + '><path d="M150 96V252Q150 292 188 292H332Q370 292 370 252V96" class="k-vessel"/>';
+    h += '<ellipse cx="260" cy="276" rx="66" ry="9" class="k-dash"' + M("1 2 3") + "/>";
+    h += '<path d="M206 276Q260 262 314 276Q260 288 206 276Z" class="k-part"/><circle cx="260" cy="276" r="5" class="k-ink"/></g>';
+    // частицы (1–2)
+    var mix = scatter(23, 34, 172, 348, 176, 266, 14);
+    h += '<g class="mv-sway"' + S("1 2") + M("1 2") + ">";
+    h += "<g" + S(2) + ">" + circles(mix, 9, "k-liq-soft") + "</g>";
+    h += circles(mix, function (k) { return k % 3 ? 5.5 : 4.5; }, function (k) { return k % 3 ? "k-exc" : "k-api"; }) + "</g>";
+    h += "<g" + S(1) + '><circle cx="384" cy="150" r="5" class="k-api"/>' + T(396, 155, "действующее", "k-t k-sm") + T(396, 172, "вещество", "k-t k-sm") +
+      '<circle cx="384" cy="200" r="5.5" class="k-exc"/>' + T(396, 205, "вспомогательные", "k-t k-sm") + T(396, 222, "вещества", "k-t k-sm") + "</g>";
+    // форсунка и капли (2)
+    h += "<g" + S(2) + '><path d="M240 50H280V66L268 80H252L240 66Z" class="k-part"/>';
+    h += '<g class="mv-drop"' + M(2) + '><circle cx="252" cy="98" r="4" class="k-liq"/><circle cx="268" cy="112" r="4" class="k-liq" style="animation-delay:-.4s"/><circle cx="260" cy="130" r="4" class="k-liq" style="animation-delay:-.8s"/></g>';
+    h += T(292, 66, "раствор связующего", "k-t") + "</g>";
+    // агломераты (3)
+    var agg = [[200, 248], [248, 232], [300, 250], [334, 226], [228, 270], [282, 274], [318, 268], [190, 214], [270, 204]];
+    h += '<g class="mv-tumble"' + S(3) + M(3) + ">" + agg.map(function (p, k) { return cluster(p[0], p[1], 15 + (k % 2) * 3, k); }).join("") + "</g>";
+    h += "<g" + S(3) + ">" + T(260, 140, "образуются агломераты", "k-t", "middle") + "</g>";
+    // влажное просеивание (4)
+    h += "<g" + S(4) + ">" + sieve(140, 380, 196);
+    h += lump(196, 146, 34, 22, 1) + lump(274, 132, 28, 20, 2) + lump(340, 156, 24, 16, 3);
+    var g4 = [[175, 236], [215, 252], [258, 236], [300, 256], [342, 240], [196, 280], [238, 284], [282, 286], [326, 282]];
+    h += '<g class="mv-fall"' + M(4) + ">" + g4.map(function (p, k) { return granule(p[0], p[1], 10, k, true); }).join("") + "</g>";
+    h += T(392, 201, "сито", "k-t") + T(260, 108, "крупные комки разбиваются", "k-t", "middle") + "</g>";
+    // сушка (5)
+    h += "<g" + S(5) + '><path d="M150 274H370" class="k-plate"/>';
+    [180, 230, 280, 330].forEach(function (x, k) { h += arrow(id, "M" + x + " 312V284", "k-arrow k-heat mv-up", M(5) + ' style="animation-delay:' + (-k * 0.3) + 's"'); });
+    var g5 = [[180, 236], [222, 214], [262, 240], [304, 212], [344, 238], [200, 176], [246, 170], [290, 180], [334, 168]];
+    h += g5.map(function (p, k) { return '<g class="mv-bob"' + M(5) + delays(k) + ">" + granule(p[0], p[1], 11, k, true) + "</g>"; }).join("");
+    [200, 260, 320].forEach(function (x, k) { h += '<path d="M' + x + ' 150q-8-10 0-20t0-20" class="k-vapor mv-rise"' + M(5) + ' style="animation-delay:' + (-k * 0.5) + 's"/>'; });
+    h += T(380, 300, "горячий воздух", "k-t k-heat-t") + T(346, 104, "влага испаряется", "k-t") + "</g>";
+    // сухая калибровка (6)
+    h += "<g" + S(6) + ">" + sieve(140, 380, 196);
+    var g6a = [[180, 160, 16], [226, 150, 9], [262, 164, 20], [306, 148, 7], [346, 162, 13], [204, 120, 7], [292, 116, 11]];
+    h += g6a.map(function (p, k) { return granule(p[0], p[1], p[2], k, true); }).join("");
+    h += '<g class="mv-fall"' + M(6) + ">" + g4.map(function (p, k) { return granule(p[0], p[1], 9, k + 3, true); }).join("") + "</g>";
+    h += T(392, 194, "сито или", "k-t") + T(392, 212, "мельница", "k-t") + T(260, 100, "размер гранул выравнивается", "k-t", "middle") + "</g>";
+    // опудривание (7)
+    h += "<g" + S(7) + '><rect x="150" y="110" width="220" height="182" rx="22" class="k-vessel"/>';
+    var g7 = scatter(71, 12, 178, 342, 138, 268, 34);
+    h += g7.map(function (p, k) { return granule(p[0], p[1], 10, k, true); }).join("");
+    var lub = scatter(97, 60, 166, 354, 124, 282, 8);
+    h += '<g class="mv-fadein"' + M(7) + ">" + circles(lub, 2, "k-lub") + "</g>";
+    h += T(384, 150, "внешняя фаза:", "k-t k-sm") + T(384, 168, "разрыхлитель,", "k-t k-sm") + T(384, 186, "скользящие,", "k-t k-sm") + T(384, 204, "смазывающие", "k-t k-sm");
+    h += T(260, 312, "смазывающее — коротко, по регламенту", "k-t", "middle") + "</g>";
+    return h;
+  }
+  function granule(x, y, r, k, plain) {
+    var h = '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" class="k-gran"/>';
+    if (!plain) {
+      h += '<circle cx="' + (x - r * 0.35).toFixed(1) + '" cy="' + (y - r * 0.2).toFixed(1) + '" r="' + (r * 0.18).toFixed(1) + '" class="k-api"/>';
+      h += '<circle cx="' + (x + r * 0.3).toFixed(1) + '" cy="' + (y + r * 0.3).toFixed(1) + '" r="' + (r * 0.16).toFixed(1) + '" class="k-api"/>';
+    }
+    return h;
+  }
+  function cluster(x, y, r, k) {
+    var h = '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" class="k-liq-soft"/>';
+    var off = [[-6, -5], [6, -4], [-4, 6], [7, 6], [0, 0]];
+    off.forEach(function (o, i) { h += '<circle cx="' + (x + o[0]) + '" cy="' + (y + o[1]) + '" r="' + (i === 4 ? 4 : 5) + '" class="' + (i % 3 ? "k-exc" : "k-api") + '"/>'; });
+    return h;
+  }
+  function lump(x, y, rx, ry, k) {
+    return '<ellipse cx="' + x + '" cy="' + y + '" rx="' + rx + '" ry="' + ry + '" class="k-lump"/>' +
+      '<circle cx="' + (x - rx * 0.4) + '" cy="' + (y - 3) + '" r="4" class="k-api"/><circle cx="' + (x + rx * 0.35) + '" cy="' + (y + 4) + '" r="4" class="k-api"/>';
+  }
+  function sieve(x0, x1, y) {
+    return '<path d="M' + x0 + " " + (y - 14) + "V" + (y + 6) + "M" + x1 + " " + (y - 14) + "V" + (y + 6) + '" class="k-line"/><path d="M' + x0 + " " + y + "H" + x1 + '" class="k-sieve"/>';
+  }
+
+  /* ---------- 2. Смеситель-гранулятор: импеллер и чоппер ---------- */
+  function svgHsg(id) {
+    var h = arrowDefs(id);
+    // подача раствора и форсунка
+    h += '<path d="M150 40H226V60" class="k-pipe"/>';
+    h += '<rect x="219" y="58" width="14" height="36" rx="3" class="k-part"' + H(3) + "/>";
+    h += "<g" + S("0 3") + ">" + T(240, 54, "форсунка", "k-t") + "</g>";
+    h += "<g" + S("0 3") + ">" + T(18, 44, "подача раствора", "k-t k-mut") + "</g>";
+    // чаша
+    h += '<path d="M150 96V250Q150 286 186 286H334Q370 286 370 250V96" class="k-vessel"/>';
+    // влажная масса (3–5)
+    h += '<path d="M152 196Q260 182 368 196V250Q368 284 334 284H186Q152 284 152 250Z" class="k-liq-soft"' + S("3 4 5") + "/>";
+    // сухая смесь (2–4)
+    var mass = scatter(41, 36, 168, 352, 206, 274, 12);
+    h += '<g class="mv-sway"' + S("2 3 4") + M("2 3") + ">" + circles(mass, function (k) { return k % 3 ? 5 : 4; }, function (k) { return k % 3 ? "k-exc" : "k-api"; }) + "</g>";
+    // циркуляция массы
+    h += "<g" + S("2 3") + ">" + arrow(id, "M178 262Q160 216 204 196", "k-arrow k-soft") + arrow(id, "M342 262Q360 216 316 196", "k-arrow k-soft") + "</g>";
+    // капли (3)
+    h += '<g class="mv-drop"' + S(3) + M(3) + '><circle cx="226" cy="108" r="4" class="k-liq"/><circle cx="226" cy="128" r="4" class="k-liq" style="animation-delay:-.45s"/><circle cx="226" cy="150" r="4" class="k-liq" style="animation-delay:-.9s"/></g>';
+    // комки у чоппера (4)
+    h += "<g" + S(4) + ">" + lump(318, 230, 16, 12, 1) + lump(300, 256, 13, 10, 2) + '<g class="mv-fly"' + M(4) + '><circle cx="330" cy="212" r="4" class="k-gran"/><circle cx="338" cy="242" r="3.5" class="k-gran"/><circle cx="322" cy="262" r="3" class="k-gran"/></g>' + T(260, 150, "чоппер разбивает комки", "k-t", "middle") + "</g>";
+    // гранулы (5–6)
+    var gran = scatter(53, 18, 172, 348, 214, 272, 17);
+    h += "<g" + S(5) + ">" + gran.map(function (p) { return '<circle cx="' + f1(p[0]) + '" cy="' + f1(p[1]) + '" r="7" class="k-gran"/>'; }).join("") + "</g>";
+    h += "<g" + S(6) + ">" + gran.slice(0, 7).map(function (p) { return '<circle cx="' + f1(p[0]) + '" cy="' + f1(p[1] + 6) + '" r="7" class="k-gran"/>'; }).join("") + "</g>";
+    // крышка с блокировкой
+    h += '<rect x="138" y="82" width="244" height="14" rx="5" class="k-part"' + H(1) + "/>";
+    h += "<g" + H(1) + '><path d="M392 84v-6a8 8 0 0 1 16 0v6" class="k-line"/><rect x="388" y="84" width="24" height="16" rx="3" class="k-part"/></g>';
+    h += "<g" + S("0 1") + ">" + T(260, 116, "крышка с блокировкой", "k-t k-sm k-mut", "middle") + "</g>";
+    // импеллер
+    h += '<ellipse cx="260" cy="266" rx="66" ry="9" class="k-dash"' + M("2 3 4 5") + "/>";
+    h += "<g" + H(1) + '><path d="M198 266Q260 250 322 266Q260 280 198 266Z" class="k-part"/><circle cx="260" cy="266" r="6" class="k-ink"/></g>';
+    h += '<rect x="255" y="286" width="10" height="12" class="k-part"/><rect x="226" y="298" width="68" height="18" rx="4" class="k-part"/>';
+    h += "<g" + S("0 1 2") + ">" + T(218, 312, "импеллер и привод", "k-t", "end") + "</g>";
+    // чоппер
+    h += '<rect x="352" y="195" width="58" height="8" class="k-part"/><rect x="408" y="184" width="40" height="30" rx="4" class="k-part"' + H(4) + "/>";
+    h += '<g class="mv-spin-fast"' + M("3 4 5") + H("1 4") + '><circle cx="350" cy="199" r="15" class="k-none"/><path d="M350 184l3 12-3 3-3-3zM350 214l-3-12 3-3 3 3zM335 199l12-3 3 3-3 3zM365 199l-12 3-3-3 3-3z" class="k-blade"/></g>';
+    h += "<g" + S("0 1 4") + ">" + T(428, 176, "чоппер", "k-t", "middle") + "</g>";
+    // разгрузочный клапан и влажный измельчитель
+    h += '<path d="M384 252H444V266" class="k-pipe"/>';
+    h += '<rect x="366" y="240" width="18" height="24" rx="3" class="k-valve"' + H(6) + TF(["none", "none", "none", "none", "none", "none", "translate(14px,0)"]) + "/>";
+    h += '<rect x="400" y="266" width="104" height="34" rx="6" class="k-part"' + H(6) + "/>" + T(452, 287, "измельчитель", "k-t k-xs", "middle");
+    h += "<g" + S("0 6") + ">" + T(462, 228, "разгрузочный", "k-t k-xs", "middle") + T(462, 243, "клапан", "k-t k-xs", "middle") + "</g>";
+    h += '<g class="mv-flowx"' + S(6) + M(6) + '><circle cx="394" cy="252" r="4" class="k-gran"/><circle cx="414" cy="252" r="4" class="k-gran" style="animation-delay:-.3s"/><circle cx="432" cy="252" r="4" class="k-gran" style="animation-delay:-.6s"/></g>';
+    // статус перед пуском (1)
+    h += "<g" + S(1) + '><rect x="180" y="128" width="150" height="54" rx="10" class="k-tagbox"/>' + T(255, 151, "статус «Чистое»", "k-t k-b", "middle") + T(255, 170, "и срок его действия", "k-t k-sm", "middle") + "</g>";
+    // график нагрузки (3–5)
+    h += "<g" + S("3 4 5") + '><path d="M20 110V226H134" class="k-axis"/>' + T(20, 102, "нагрузка привода", "k-t k-sm") + T(134, 242, "время", "k-t k-sm k-mut", "end") + "</g>";
+    h += '<path d="M22 216C42 215 56 208 70 197" class="k-curve"' + S("3 4 5") + "/>";
+    h += '<path d="M70 197C86 182 94 160 104 150" class="k-curve"' + S("4 5") + "/>";
+    h += '<path d="M104 150C112 143 120 141 132 140" class="k-curve"' + S(5) + "/>";
+    h += "<g" + S(5) + '><path d="M104 120V226" class="k-mark"/><circle cx="104" cy="150" r="5" class="k-acc"/>' + T(76, 262, "конечная точка", "k-t k-sm k-b", "middle") + T(76, 278, "по регламенту", "k-t k-sm", "middle") + "</g>";
+    return h;
+  }
+
+  /* ---------- 3. Кипящий слой ---------- */
+  function svgFbd(id) {
+    var h = arrowDefs(id);
+    // нагреватель и воздуховод
+    h += '<rect x="22" y="268" width="92" height="38" rx="6" class="k-part"' + H(2) + "/>" + T(68, 291, "нагреватель", "k-t k-xs", "middle");
+    h += '<path d="M114 280H222M114 294H218" class="k-line"/>';
+    h += '<g class="mv-flowx"' + S("2 3 4 5") + M("2 3 4 5") + ">" + arrow(id, "M126 287H150", "k-arrow k-heat") + arrow(id, "M166 287H190", "k-arrow k-heat", ' style="animation-delay:-.5s"') + "</g>";
+    h += '<circle cx="168" cy="280" r="5" class="k-sensor"' + H(2) + "/>" + "<g" + S("0 2") + ">" + T(168, 266, "T входа", "k-t k-sm", "middle") + "</g>";
+    // камера
+    h += '<path d="M228 262L196 175V80H324V175L292 262Z" class="k-vessel"/>';
+    h += '<path d="M222 262H298L306 294H214Z" class="k-part"/>';
+    h += '<path d="M228 262H292" class="k-plate"' + H(1) + "/>";
+    // заземление
+    h += "<g" + H(1) + '><path d="M306 286H340V300M330 300H350M334 306H346M338 312H342" class="k-line"/></g><g' + S(1) + ">" + T(356, 306, "заземление", "k-t k-sm") + "</g>";
+    // поток воздуха вверх через решётку
+    h += "<g" + S("2 3 4 5") + ">";
+    [240, 260, 280].forEach(function (x, k) { h += arrow(id, "M" + x + " 258V234", "k-arrow k-heat mv-up", M("2 3 4 5") + ' style="animation-delay:' + (-k * 0.35) + 's"'); });
+    h += "</g>";
+    // продукт: лежит (0–2) и «кипит» (3–6)
+    var rest = scatter(5, 22, 232, 288, 238, 256, 8);
+    h += "<g" + S("0 1 2") + ">" + circles(rest, 4.5, "k-gran") + "</g>";
+    var fl = scatter(8, 22, 218, 302, 160, 246, 14).filter(function (p) { var half = 32 + (262 - p[1]) * (32 / 87); return Math.abs(p[0] - 260) < half - 6; });
+    h += "<g" + S("3 4 5 6") + ">" + fl.map(function (p, k) { return '<circle cx="' + f1(p[0]) + '" cy="' + f1(p[1]) + '" r="4.5" class="k-gran mv-bob"' + M("3 4 5") + delays(k) + "/>"; }).join("") + "</g>";
+    // рукава
+    h += "<g" + H(1) + ">" + [208, 245, 282].map(function (x) { return '<rect x="' + x + '" y="88" width="30" height="54" rx="13" class="k-bag"/>'; }).join("") + "</g>";
+    h += "<g" + S("0 1") + ">" + T(260, 70, "фильтровальные рукава", "k-t", "middle") + "</g>";
+    // испарение (4)
+    h += "<g" + S(4) + ">" + [236, 260, 284].map(function (x, k) { return '<path d="M' + x + ' 196q-7-9 0-18t0-18" class="k-vapor mv-rise"' + M(4) + ' style="animation-delay:' + (-k * 0.5) + 's"/>'; }).join("") + "</g>";
+    // отходящий воздух и вентилятор
+    h += '<path d="M324 100H400" class="k-pipe"/><circle cx="420" cy="100" r="18" class="k-part"/>';
+    h += '<g class="mv-spin"' + M("2 3 4 5") + '><circle cx="420" cy="100" r="14" class="k-none"/><path d="M420 100l0-12a6 6 0 0 1 6 6zM420 100l12 0a6 6 0 0 1-6 6zM420 100l0 12a6 6 0 0 1-6-6zM420 100l-12 0a6 6 0 0 1 6-6z" class="k-blade"/></g>';
+    h += arrow(id, "M438 100H476V74", "k-arrow");
+    h += "<g" + S("0 2") + ">" + T(420, 134, "вентилятор", "k-t k-sm", "middle") + "</g>";
+    h += '<circle cx="364" cy="100" r="5" class="k-sensor"' + H(5) + "/><g" + S("0 5") + ">" + T(364, 86, "T выхода", "k-t k-sm", "middle") + "</g>";
+    h += '<g class="mv-flowx"' + S(4) + M(4) + '><path d="M336 108q6-6 12 0t12 0" class="k-vapor"/><path d="M372 108q6-6 12 0t12 0" class="k-vapor" style="animation-delay:-.6s"/></g>';
+    // датчик температуры продукта
+    h += '<path d="M202 224H218" class="k-line"/><circle cx="218" cy="224" r="5" class="k-sensor"' + H(5) + "/><g" + S("0 5") + ">" + T(196, 229, "T продукта", "k-t k-sm", "end") + "</g>";
+    // график (4–6)
+    h += "<g" + S("4 5 6") + '><path d="M366 160V250H506" class="k-axis"/>' + T(366, 152, "температура", "k-t k-sm") + T(506, 266, "время", "k-t k-sm k-mut", "end");
+    h += '<path d="M362 284H380" class="k-curve"/>' + T(386, 288, "продукт", "k-t k-xs") + '<path d="M362 302H380" class="k-curve k-curve2"/>' + T(386, 306, "выход воздуха", "k-t k-xs") + "</g>";
+    h += '<path d="M369 230C400 228 420 228 440 227" class="k-curve"' + S("4 5 6") + '/><path d="M369 206C400 211 420 211 440 210" class="k-curve k-curve2"' + S("4 5 6") + "/>";
+    h += '<path d="M440 227C462 224 482 202 502 188" class="k-curve"' + S("5 6") + '/><path d="M440 210C462 206 482 186 502 172" class="k-curve k-curve2"' + S("5 6") + "/>";
+    h += "<g" + S(4) + ">" + T(436, 180, "тепло уходит", "k-t k-sm", "middle") + T(436, 196, "на испарение", "k-t k-sm", "middle") + "</g>";
+    // проба на влажность (6)
+    h += "<g" + S(6) + ">" + arrow(id, "M232 222Q190 214 170 214", "k-arrow k-strong") + '<path d="M150 198h16v28a4 4 0 0 1-4 4h-8a4 4 0 0 1-4-4z" class="k-part"/><rect x="148" y="194" width="20" height="6" rx="2" class="k-ink"/>';
+    h += '<rect x="20" y="186" width="112" height="44" rx="8" class="k-tagbox"/>' + T(76, 205, "анализатор", "k-t k-sm k-b", "middle") + T(76, 221, "влажности", "k-t k-sm k-b", "middle");
+    h += T(76, 248, "потеря в массе", "k-t k-xs", "middle") + T(76, 263, "при высушивании", "k-t k-xs", "middle") + "</g>";
+    return h;
+  }
+
+  /* ---------- 4. Сухая грануляция: роликовое уплотнение ---------- */
+  function svgRc(id) {
+    var h = arrowDefs(id);
+    h += '<clipPath id="' + id + '-tube"><rect x="56" y="106" width="148" height="32" rx="6"/></clipPath>';
+    // бункер
+    h += '<path d="M28 40H132L96 106H64Z" class="k-vessel"' + H(1) + "/>" + T(80, 30, "бункер", "k-t", "middle");
+    h += circles(scatter(3, 14, 52, 108, 52, 92, 9).filter(function (p) { return Math.abs(p[0] - 80) < 44 - (p[1] - 40) * 0.42; }), 4, "k-exc");
+    // шнек
+    h += '<rect x="54" y="104" width="152" height="36" rx="7" class="k-part"' + H(1) + "/>";
+    var z = "M50 109";
+    for (var x = 50; x < 222; x += 20) z += "L" + (x + 10) + " 135L" + (x + 20) + " 109";
+    h += '<g clip-path="url(#' + id + '-tube)"><path d="M58 122H204" class="k-line"/><path d="' + z + '" class="k-flight mv-screw"' + M(1) + "/></g>";
+    h += "<g" + S("0 1") + ">" + T(130, 162, "подающий шнек", "k-t", "middle") + "</g>";
+    h += '<g class="mv-flowx"' + S(1) + M(1) + '><circle cx="210" cy="118" r="3.5" class="k-exc"/><circle cx="214" cy="128" r="3.5" class="k-exc" style="animation-delay:-.5s"/></g>';
+    // валки
+    h += "<g" + H(2) + '><circle cx="240" cy="90" r="30" class="k-roll"/><circle cx="240" cy="154" r="30" class="k-roll"/></g>';
+    h += '<circle cx="240" cy="90" r="19" class="k-dash mv-spin"' + M("2 3 4") + '/><circle cx="240" cy="154" r="19" class="k-dash mv-spin-rev"' + M("2 3 4") + "/>";
+    h += '<circle cx="240" cy="90" r="4" class="k-ink"/><circle cx="240" cy="154" r="4" class="k-ink"/>';
+    h += "<g" + S("0 2") + ">" + arrow(id, "M240 30V54", "k-arrow k-strong") + arrow(id, "M240 214V190", "k-arrow k-strong") + T(254, 40, "усилие", "k-t") + "</g>";
+    h += "<g" + S(2) + '><path d="M296 168L250 124" class="k-leader"/>' + T(300, 180, "зазор", "k-t k-b") + "</g>";
+    // лента
+    h += '<rect x="262" y="117" width="80" height="10" rx="2" class="k-ribbon"' + H(3) + "/>";
+    h += "<g" + S("0 3") + ">" + T(302, 108, "лента", "k-t", "middle") + "</g>";
+    h += "<g" + S(3) + '><path d="M300 128L240 228M320 128L340 228" class="k-leader"/><rect x="180" y="228" width="180" height="50" rx="6" class="k-ribbon"/>';
+    h += '<rect x="180" y="228" width="180" height="10" rx="4" class="k-ribbon-edge"/><rect x="180" y="268" width="180" height="10" rx="4" class="k-ribbon-edge"/>';
+    h += T(270, 258, "плотная середина", "k-t k-sm", "middle") + T(370, 238, "края", "k-t k-sm") + T(370, 254, "рыхлее", "k-t k-sm") + "</g>";
+    // гранулятор с ситом
+    h += '<rect x="342" y="100" width="88" height="100" rx="10" class="k-vessel"' + H(4) + "/>";
+    h += '<g class="mv-spin"' + M(4) + '><circle cx="386" cy="146" r="22" class="k-part"/><path d="M386 126V166M366 146H406" class="k-line"/></g>';
+    h += '<path d="M346 192H426" class="k-sieve"/>';
+    h += "<g" + S("0 4") + ">" + T(386, 90, "гранулятор с ситом", "k-t", "middle") + "</g>";
+    // приёмный контейнер
+    h += '<path d="M346 234V300H426V234" class="k-vessel"' + S("0 1 2 4 5") + "/>";
+    var gr = scatter(19, 12, 356, 416, 256, 292, 12);
+    h += "<g" + S("0 4 5") + ">" + circles(gr, 5.5, "k-gran") + "</g>";
+    h += '<g class="mv-fall"' + S(4) + M(4) + '><circle cx="370" cy="212" r="4.5" class="k-gran"/><circle cx="392" cy="218" r="4.5" class="k-gran" style="animation-delay:-.4s"/><circle cx="410" cy="210" r="4.5" class="k-gran" style="animation-delay:-.8s"/></g>';
+    // мелочь и возврат (5)
+    h += "<g" + S(5) + ">" + circles(scatter(29, 14, 354, 418, 246, 294, 8), 2.2, "k-fines") + T(436, 262, "мелочь", "k-t k-b");
+    h += arrow(id, "M346 290H16V64H30", "k-arrow k-return");
+    h += T(186, 312, "возврат — только если предусмотрен регламентом", "k-t k-xs", "middle") + "</g>";
+    return h;
+  }
+
+  /* ---------- 5. Цикл таблеточного пресса ---------- */
+  function svgPress(id) {
+    var h = arrowDefs(id);
+    // ротор, вид сверху
+    h += '<circle cx="75" cy="95" r="48" class="k-part"/><circle cx="75" cy="95" r="12" class="k-ink"/>';
+    for (var a = 0; a < 12; a++) {
+      var ang = a * Math.PI / 6;
+      h += '<circle cx="' + f1(75 + 34 * Math.sin(ang)) + '" cy="' + f1(95 - 34 * Math.cos(ang)) + '" r="4.5" class="k-die"/>';
+    }
+    for (var st = 1; st <= 6; st++) {
+      var t = (st - 1) * Math.PI / 3;
+      h += '<text x="' + f1(75 + 62 * Math.sin(t)) + '" y="' + f1(99 - 62 * Math.cos(t)) + '" class="k-t k-sm k-b" text-anchor="middle"' + H(String(st)) + ">" + st + "</text>";
+    }
+    h += '<g class="k-rotor"' + TF(["rotate(0deg)", "rotate(0deg)", "rotate(60deg)", "rotate(120deg)", "rotate(180deg)", "rotate(240deg)", "rotate(300deg)"]) + '><circle cx="75" cy="95" r="48" class="k-none"/><circle cx="75" cy="61" r="7" class="k-acc"/></g>';
+    h += "<g" + S(0) + ">" + T(75, 178, "ротор, вид сверху", "k-t k-sm k-mut", "middle") + "</g>";
+    // верхний пуансон (кончик в 0)
+    h += '<g class="k-move"' + TF(["translate(0,110px)", "translate(0,110px)", "translate(0,110px)", "translate(0,182px)", "translate(0,196px)", "translate(0,96px)", "translate(0,96px)"]) + '><rect x="254" y="-96" width="32" height="96" rx="2" class="k-punch"/><rect x="246" y="-108" width="48" height="13" rx="3" class="k-punch"/></g>';
+    // ролики предварительного и основного прессования
+    h += "<g" + S(3) + '><circle cx="270" cy="58" r="16" class="k-roll"/><circle cx="270" cy="308" r="12" class="k-roll"/></g>';
+    h += "<g" + S(4) + '><circle cx="270" cy="62" r="26" class="k-roll"/><circle cx="270" cy="306" r="14" class="k-roll"/></g>';
+    // нижний пуансон (верх в 0)
+    h += '<g class="k-move"' + TF(["translate(0,228px)", "translate(0,228px)", "translate(0,214px)", "translate(0,214px)", "translate(0,210px)", "translate(0,170px)", "translate(0,170px)"]) + '><rect x="254" y="0" width="32" height="72" rx="2" class="k-punch"/><rect x="246" y="70" width="48" height="12" rx="3" class="k-punch"/></g>';
+    // масса в матрице и таблетка
+    h += '<rect x="250" y="0" width="40" height="100" class="k-powder k-move"' + S("0 1 2 3") + TF(["translate(0,165px) scale(1,.63)", "translate(0,165px) scale(1,.63)", "translate(0,170px) scale(1,.44)", "translate(0,182px) scale(1,.32)", "translate(0,196px) scale(1,.14)"]) + "/>";
+    h += '<rect x="252" y="0" width="36" height="14" rx="5" class="k-tablet k-move"' + S("4 5 6") + TF(["translate(0,196px)", "translate(0,196px)", "translate(0,196px)", "translate(0,196px)", "translate(0,196px)", "translate(0,156px)", "translate(122px,162px)"]) + "/>";
+    // стол матриц
+    h += '<rect x="166" y="170" width="84" height="60" rx="3" class="k-table"/><rect x="290" y="170" width="84" height="60" rx="3" class="k-table"/>';
+    h += "<g" + S(0) + ">" + T(320, 250, "матрица", "k-t k-sm", "middle") + T(304, 66, "верхний пуансон", "k-t k-sm") + T(300, 306, "нижний пуансон", "k-t k-sm") + "</g>";
+    // питатель (0–1)
+    h += "<g" + S("0 1") + '><rect x="196" y="148" width="148" height="20" rx="5" class="k-feeder"/>' + circles(scatter(61, 12, 204, 336, 152, 164, 10), 3, "k-exc") + T(384, 162, "питатель", "k-t") + "</g>";
+    // дозирование (2)
+    h += "<g" + S(2) + '><path d="M300 168L332 148" class="k-blade-line"/><g class="mv-flowx"' + M(2) + '><circle cx="304" cy="163" r="3" class="k-exc"/><circle cx="314" cy="160" r="3" class="k-exc" style="animation-delay:-.5s"/></g>' + T(384, 186, "лишнее", "k-t") + T(384, 204, "снимается", "k-t") + "</g>";
+    // воздух (3)
+    h += "<g" + S(3) + ">" + arrow(id, "M246 176Q236 160 226 150", "k-arrow k-soft mv-up", M(3)) + arrow(id, "M294 176Q304 160 314 150", "k-arrow k-soft mv-up", M(3) + ' style="animation-delay:-.4s"') + T(384, 186, "уходит", "k-t") + T(384, 204, "воздух", "k-t") + "</g>";
+    // основное прессование (4)
+    h += "<g" + S(4) + ">" + T(384, 186, "усилие →", "k-t k-b") + T(384, 204, "прочность", "k-t") + T(384, 222, "и толщина", "k-t") + "</g>";
+    // выталкивание (5)
+    h += "<g" + S(5) + ">" + arrow(id, "M232 296V250", "k-arrow k-strong") + T(384, 186, "таблетка", "k-t") + T(384, 204, "выходит", "k-t") + T(384, 222, "на стол", "k-t") + "</g>";
+    // съём (6)
+    h += "<g" + S(6) + '><path d="M296 150L318 168" class="k-blade-line"/><path d="M374 172L470 190" class="k-line"/>' + T(384, 218, "обеспыливатель,", "k-t k-sm") + T(384, 236, "металлодетектор", "k-t k-sm") + "</g>";
+    return h;
+  }
+
+  /* ---------- 6. Поток материала и статусы ---------- */
+  function svgFlow(id) {
+    var h = '<defs><marker id="' + id + '-ar" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="k-arhead"/></marker>' +
+      '<pattern id="' + id + '-hq" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" class="k-q-bg"/><rect width="3" height="8" class="k-q-line"/></pattern>' +
+      '<pattern id="' + id + '-hr" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" class="k-r-bg"/><path d="M0 0L9 9M9 0L0 9" class="k-r-line"/></pattern></defs>';
+    function box(x, y, w, hh, cls, title, sub, steps, icon, fill) {
+      return "<g" + H(steps) + '><rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + hh + '" rx="12" class="k-box ' + cls + '"' + (fill ? ' style="fill:url(#' + id + "-" + fill + ')"' : "") + "/>" +
+        T(x + (icon ? 32 : 12), y + 27, title, "k-t k-b" + (icon ? " k-caps" : " k-sm")) + T(x + 12, y + 46, sub, "k-t k-xs") + (icon ? icon(x + 19, y + 22) : "") + "</g>";
+    }
+    function iQ(x, y) { return '<path d="M' + (x - 6) + " " + (y - 8) + "h12l-12 16h12z" + '" class="k-ico"/>'; }
+    function iOk(x, y) { return '<circle cx="' + x + '" cy="' + y + '" r="9" class="k-ico"/><path d="M' + (x - 4) + " " + y + "l3 3 5-6" + '" class="k-ico"/>'; }
+    function iNo(x, y) { return '<circle cx="' + x + '" cy="' + y + '" r="9" class="k-ico"/><path d="M' + (x - 4) + " " + (y - 4) + "l8 8m0-8l-8 8" + '" class="k-ico"/>'; }
+    h += box(10, 36, 122, 66, "", "Приёмка", "осмотр, номер", "1");
+    h += box(168, 28, 152, 82, "k-q", "Карантин", "не использовать", "2", iQ, "hq");
+    h += box(356, 36, 154, 66, "", "Служба качества", "пробы, испытания", "3");
+    h += box(356, 150, 154, 66, "k-ok", "Разрешено", "можно выдавать", "4", iOk);
+    h += box(356, 252, 154, 58, "", "Весовая", "маркировка", "5");
+    h += box(168, 150, 152, 66, "k-no", "Забраковано", "не использовать", "6", iNo, "hr");
+    h += box(168, 252, 152, 58, "", "Изоляция", "возврат, уничтожение", "6");
+    function ar(d, steps) { return '<path d="' + d + '" class="k-arrow k-flow"' + H(steps) + ' marker-end="url(#' + id + '-ar)"/>'; }
+    h += ar("M134 69H164", "2") + ar("M322 69H352", "3") + ar("M433 104V146", "4") + ar("M433 218V248", "5") + ar("M380 104V126H244V146", "6") + ar("M244 218V248", "6");
+    // ярлык статуса на таре
+    function badge(cls, icon) { return '<circle cx="0" cy="0" r="13" class="k-badge ' + cls + '"/>' + icon; }
+    var pos = ["translate(320px,28px)", "translate(132px,36px)", "translate(320px,28px)", "translate(510px,36px)", "translate(510px,150px)", "translate(510px,252px)", "translate(510px,252px)"];
+    h += '<g class="k-move"' + S("0 1 2 3 4 5") + TF(pos) + ">";
+    h += "<g" + S("0 1 2 3") + ">" + badge("k-q", '<path d="M-5-6h10l-10 12h10z" class="k-badge-i"/>') + "</g>";
+    h += "<g" + S("4 5") + ">" + badge("k-ok", '<path d="M-5 0l3 3 6-7" class="k-badge-i"/>') + "</g></g>";
+    h += '<g class="k-move"' + S(6) + TF(["translate(320px,150px)"]) + ">" + badge("k-no", '<path d="M-4-4l8 8m0-8l-8 8" class="k-badge-i"/>') + "</g>";
+    return h;
+  }
+
+  /* ---------- Тексты схем ---------- */
+  var SCHEMES = [
+    { id: "wet", lesson: "g-wet", svg: svgWet,
+      title: "Влажная грануляция по стадиям",
+      desc: "Как порошковая смесь превращается в гранулят: семь стадий влажной грануляции. Порядок, режимы и время для вашего продукта задаёт регламент.",
+      steps: [
+        { t: "Сухое смешивание", w: "Компоненты перемешивают без жидкости, чтобы действующее вещество равномерно распределилось по всей массе до увлажнения.", e: "Сократить сухое смешивание «для экономии времени»: неравномерность на следующих стадиях уже не исправить." },
+        { t: "Увлажнение связующим", w: "Раствор связующего подают с заданной скоростью при работающем импеллере и, как правило, чоппере. Жидкость смачивает частицы и связывает их между собой.", e: "Подать весь раствор одной порцией: местное переувлажнение и комки." },
+        { t: "Массирование", w: "Влажное перемешивание после подачи жидкости: масса уплотняется, частицы собираются в агломераты нужной плотности. Окончание стадии определяют способом из регламента.", e: "Закончить массирование «на глаз», без признака конечной точки из регламента." },
+        { t: "Влажное просеивание", w: "Влажную массу пропускают через сито или влажный измельчитель: крупные комки разбиваются, и гранулы затем сохнут равномерно.", e: "Сушить без влажного просеивания, когда оно предусмотрено регламентом." },
+        { t: "Сушка", w: "Гранулы сушат в кипящем слое или сушильном шкафу. Конечную точку подтверждают измерением потери в массе при высушивании.", e: "Остановить сушку только по времени, без измерения влажности." },
+        { t: "Сухая калибровка", w: "Сухой гранулят пропускают через сито или мельницу: разбиваются агломераты, образовавшиеся при сушке, выравнивается гранулометрический состав.", e: "Работать с ситом, целостность которого не проверена до и после операции." },
+        { t: "Опудривание", w: "К грануляту добавляют внешнюю фазу: разрыхлитель (если предусмотрен), скользящие и смазывающие вещества. Смазывающее смешивают коротко, строго по регламенту.", e: "Добавить смазывающее вещество на старте вместе с остальными компонентами." }
+      ] },
+    { id: "hsg", lesson: "g-equip", svg: svgHsg,
+      title: "Смеситель-гранулятор: импеллер и чоппер",
+      desc: "Высокоскоростной смеситель-гранулятор в разрезе: чаша, импеллер на дне, чоппер сбоку, форсунка подачи раствора, крышка с блокировкой и разгрузочный клапан.",
+      steps: [
+        { t: "Проверка перед пуском", w: "Статус «Чистое» и срок его действия, выполненный line clearance, целостность импеллера, чоппера и уплотнений, исправная блокировка крышки, правильная программа на панели.", e: "Пуск без проверки статуса «Чистое» и срока его действия." },
+        { t: "Сухое перемешивание", w: "Импеллер вращается у дна и поднимает массу вдоль стенок чаши: компоненты перемешиваются без жидкости.", e: "Загрузить компоненты не в том порядке, который указан в регламенте." },
+        { t: "Подача связующего", w: "Раствор подают через форсунку или воронку с заданной скоростью при работающих импеллере и чоппере. Фактическое количество и время записывают.", e: "Подогнать скорость подачи раствора и не записать изменение." },
+        { t: "Работа чоппера", w: "Чоппер быстро вращается сбоку и разбивает комки, регулируя размер гранул. Его скорость задана регламентом.", e: "Продолжать работу при необычном звуке или вибрации вместо остановки по СОП." },
+        { t: "Конечная точка", w: "По мере образования гранул масса уплотняется, и нагрузка привода импеллера растёт, выходя на характерный уровень. Конечную точку определяют способом из регламента.", e: "Промолчать, если конечная точка достигнута заметно раньше или позже, чем по регламенту: это отклонение." },
+        { t: "Выгрузка", w: "Открывают разгрузочный клапан, и влажная масса уходит во влажный измельчитель. Время хранения влажной массы ограничено регламентом.", e: "Оставить влажную массу в таре дольше разрешённого времени." }
+      ] },
+    { id: "fbd", lesson: "g-control", svg: svgFbd,
+      title: "Сушка в кипящем слое",
+      desc: "Сушилка с кипящим (псевдоожиженным) слоем: нагретый воздух поднимается через перфорированное дно, продукт сверху задерживают фильтровальные рукава.",
+      steps: [
+        { t: "Проверка перед пуском", w: "Проверяют целостность и правильную установку рукавов, целостность дна контейнера, уплотнения и подключённое заземление: мелкая пыль горюча.", e: "Установить повреждённый рукав или рукав другого продукта." },
+        { t: "Подача нагретого воздуха", w: "Воздух проходит через нагреватель и снизу через перфорированное дно попадает в продукт. Контролируют температуру воздуха на входе и расход воздуха.", e: "Продолжать сушку при срабатывании сигнализации установки." },
+        { t: "Псевдоожижение", w: "Поток воздуха поднимает и перемешивает частицы: слой «кипит», и каждая гранула омывается воздухом. Характер псевдоожижения видно в смотровом окне.", e: "Не заметить, что слой «кипит» неравномерно, и продолжать как обычно." },
+        { t: "Испарение влаги", w: "Пока свободной влаги много, тепло уходит на испарение, и температура продукта держится относительно низкой. Влажный воздух уходит через рукава.", e: "Игнорировать рост перепада давления на фильтрах." },
+        { t: "Рост температуры", w: "Когда свободной влаги становится мало, температура продукта и отходящего воздуха начинает расти. Это признак приближения к концу сушки, но не доказательство нужной влажности.", e: "Прекратить сушку только по времени или по ощущению." },
+        { t: "Проба на влажность", w: "Пробу отбирают в указанных местах, сразу закрывают и без задержки определяют потерю в массе при высушивании. Результат сравнивают с пределами из регламента.", e: "Повторять измерение, пока не получится «нужный» результат." }
+      ] },
+    { id: "rc", lesson: "g-dry", svg: svgRc,
+      title: "Сухая грануляция: роликовое уплотнение",
+      desc: "Компактор: шнек подаёт порошок в зазор между валками, валки сжимают его в ленту, гранулятор с ситом измельчает ленту в гранулы.",
+      steps: [
+        { t: "Подача шнеком", w: "Подающий шнек направляет порошок из бункера в зазор между валками. От равномерности подачи зависит плотность ленты.", e: "Неравномерная подача порошка в шнек." },
+        { t: "Уплотнение между валками", w: "Валки сжимают порошок с заданным усилием при заданном зазоре и скорости вращения. Значения задаёт регламент, оператор следит за их стабильностью.", e: "Изменить усилие валков, чтобы уменьшить мелочь, без согласования." },
+        { t: "Лента", w: "Внешний вид ленты — быстрый признак качества: без расслоения, трещин и рыхлых краёв. По краям лента обычно рыхлее, чем в середине.", e: "Не обращать внимания на утечку порошка мимо валков." },
+        { t: "Измельчение", w: "Ленту измельчают в грануляторе с ситом заданного размера. Оператор следит за долей мелкой фракции и нагревом.", e: "Работать с ситом, целостность которого не проверена." },
+        { t: "Мелкая фракция", w: "Мелочь после измельчения неизбежна. Возвращать её на повторное уплотнение можно, только если это предусмотрено регламентом.", e: "Вернуть мелочь в процесс, когда регламент этого не предусматривает." }
+      ] },
+    { id: "press", lesson: "tableting", svg: svgPress,
+      title: "Цикл таблеточного пресса",
+      desc: "Цикл одной таблетки на роторном прессе: матрица проходит станции заполнения, дозирования, предварительного и основного прессования, выталкивания и съёма.",
+      steps: [
+        { t: "Заполнение", w: "Нижний пуансон опущен, матрица проходит под питателем и заполняется гранулятом с избытком.", e: "Дать бункеру опустеть, пока оператор занят записями." },
+        { t: "Дозирование", w: "Нижний пуансон поднимается до заданного уровня, лишнее выталкивается и снимается. Глубина заполнения в первую очередь задаёт массу таблетки.", e: "Скорректировать глубину заполнения и не записать изменение." },
+        { t: "Предварительное прессование", w: "Ролики предварительного прессования сближают пуансоны: из массы уходит воздух. Недостаточное предварительное прессование — одна из причин капинга и расслаивания.", e: "Поднять скорость ротора выше разрешённой, чтобы «нагнать план»." },
+        { t: "Основное прессование", w: "Основные ролики сближают пуансоны, и формируется таблетка. При прочих равных большее усилие даёт более прочную и тонкую таблетку.", e: "Поднять усилие прессования, чтобы «вылечить» капинг, без согласования." },
+        { t: "Выталкивание", w: "Верхний пуансон уходит вверх, нижний поднимается и выталкивает таблетку на уровень стола матриц.", e: "Работать пуансоном со сколом «до конца серии»." },
+        { t: "Съём", w: "Съёмник направляет таблетку в лоток; дальше таблетки обычно проходят обеспыливатель и металлодетектор.", e: "Вернуть таблетки, полученные при настройке, в общий поток." }
+      ] },
+    { id: "flow", lesson: "weighing", svg: svgFlow,
+      title: "Поток материала: карантин, разрешено, забраковано",
+      desc: "Путь материала от приёмки до весовой. Статус показан цветом, значком и надписью; цвет и вид этикеток на вашем участке задаёт СОП предприятия.",
+      steps: [
+        { t: "Приёмка", w: "Проверяют целостность упаковки и пломб, этикетки поставщика, документы. Материалу присваивают внутренний номер и статус «Карантин».", e: "Пересыпать сырьё из повреждённого мешка без уведомления мастера." },
+        { t: "Карантин", w: "Материал хранят отдельно — физически или с блокировкой в учётной системе. Пока нет решения, использовать его нельзя.", e: "Взять материал из карантина, «потому что анализ точно будет хороший»." },
+        { t: "Решение службы качества", w: "Отбирают пробы и проводят испытания. Решение о статусе принимает служба контроля качества, а не оператор.", e: "Решить вопрос о пригодности самому, не дожидаясь службы качества." },
+        { t: "Разрешено", w: "Материал можно выдавать в производство — в пределах срока годности или даты переконтроля.", e: "Выдать материал с истёкшим сроком годности или датой переконтроля." },
+        { t: "Взвешивание", w: "В весовой работают с одним материалом за раз. Навеску маркируют, правильность материала и массы подтверждает второй человек или электронная система.", e: "Использовать один совок для нескольких веществ." },
+        { t: "Забраковано", w: "Если материал не соответствует требованиям, он получает статус «Забраковано»: его изолируют до возврата или уничтожения.", e: "Хранить забракованный материал рядом с разрешённым без изоляции." }
+      ] }
+  ];
+  var BY_LESSON = {}, BY_ID = {};
+  SCHEMES.forEach(function (s) { BY_LESSON[s.lesson] = s; BY_ID[s.id] = s; });
+
+  // применить шаг к строке SVG (для статичного вывода)
+  function staticize(svg, step) {
+    function has(list) { return (" " + list + " ").indexOf(" " + step + " ") !== -1; }
+    return svg
+      .replace(/data-s="([^"]*)"/g, function (m, l) { return m + (has(l) ? " data-on" : ""); })
+      .replace(/data-h="([^"]*)"/g, function (m, l) { return m + (has(l) ? " data-hon" : ""); })
+      .replace(/data-tf="([^"]*)"/g, function (m, l) { var a = l.split("|"); return m + ' style="transform:' + (a[Math.min(step, a.length - 1)]) + '"'; });
+  }
+
+  var ICON = {
+    restart: '<path d="M4 12a8 8 0 1 0 2.3-5.7M4 4v4h4"/>',
+    prev: '<path d="M15 5l-7 7 7 7"/>',
+    next: '<path d="M9 5l7 7-7 7"/>',
+    play: '<path class="i-play" d="M8 5v14l11-7z"/><path class="i-pause" d="M8 5v14M16 5v14"/>'
+  };
+  function btn(act, label, extra) {
+    return '<button type="button" class="sc-btn sc-' + act + '" data-sc="' + act + '" aria-label="' + label + '" title="' + label + '"' + (extra || "") + '><svg viewBox="0 0 24 24" aria-hidden="true">' + ICON[act] + "</svg></button>";
+  }
+
+  function html(s, headingTag) {
+    var id = "sc-" + s.id, n = s.steps.length, tag = headingTag || "h2";
+    var h = '<figure class="scheme" id="shema" data-scheme="' + s.id + '" data-step="0" data-n="' + n + '" aria-labelledby="' + id + '-h">';
+    h += '<div class="sc-head"><span class="sc-kicker">Интерактивная схема · ' + n + " " + (n < 5 ? "стадии" : "стадий") + "</span><" + tag + ' class="sc-title" id="' + id + '-h">' + esc(s.title) + "</" + tag + "></div>";
+    h += '<div class="sc-body"><div class="sc-stage">';
+    h += '<svg class="sc-svg" viewBox="0 0 520 320" role="img" aria-label="Схема: ' + esc(s.title) + '" aria-labelledby="' + id + "-t " + id + '-d"><title id="' + id + '-t">' + esc(s.title) + '</title><desc id="' + id + '-d">' + esc(s.desc) + " Стадии: " + esc(s.steps.map(function (x, i) { return (i + 1) + ". " + x.t; }).join("; ")) + ".</desc>";
+    h += staticize(s.svg(id), 0) + "</svg>";
+    h += '<div class="sc-ui" role="group" aria-label="Управление схемой"><div class="sc-status"><span class="sc-count num">Обзор</span><b class="sc-label" aria-live="polite">' + esc(s.title) + '</b></div>';
+    h += '<div class="sc-btns">' + btn("restart", "Заново") + btn("prev", "Шаг назад", " disabled") + btn("play", "Пуск", ' aria-pressed="false"') + btn("next", "Шаг вперёд") + "</div>";
+    h += '<div class="sc-prog" aria-hidden="true"><i></i></div></div></div>';
+    h += '<figcaption class="sc-cap"><p class="sc-desc">' + esc(s.desc) + '</p><ol class="sc-steps">';
+    s.steps.forEach(function (st, i) {
+      h += '<li data-i="' + (i + 1) + '"><button type="button" class="sc-go" data-sc="go" data-i="' + (i + 1) + '"><span class="sc-n num">' + (i + 1) + "</span><span>" + esc(st.t) + "</span></button>";
+      h += '<div class="sc-more"><p><span class="sc-k">Что происходит и зачем</span>' + esc(st.w) + '</p><p class="sc-err"><span class="sc-k">Типичная ошибка</span>' + esc(st.e) + "</p></div></li>";
+    });
+    return h + "</ol></figcaption></div></figure>";
+  }
+
+  var API = { forLesson: function (id) { return BY_LESSON[id] || null; }, html: html, list: SCHEMES };
+
+  if (!IS_NODE) {
+    var RM = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
+    var STEP_MS = 6500;
+    var io = "IntersectionObserver" in window ? new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (!e.isIntersecting && e.target._sc && e.target._sc.playing) pause(e.target); });
+    }, { threshold: 0.15 }) : null;
+
+    var has = function (list, i) { return (" " + list + " ").indexOf(" " + i + " ") !== -1; };
+    var go = function (fig, i) {
+      var st = fig._sc, s = BY_ID[fig.getAttribute("data-scheme")];
+      i = Math.max(0, Math.min(st.n, i));
+      st.i = i;
+      fig.setAttribute("data-step", i);
+      fig.querySelectorAll("[data-s]").forEach(function (el) { el.toggleAttribute("data-on", has(el.getAttribute("data-s"), i)); });
+      fig.querySelectorAll("[data-h]").forEach(function (el) { el.toggleAttribute("data-hon", has(el.getAttribute("data-h"), i)); });
+      fig.querySelectorAll("[data-m]").forEach(function (el) { el.toggleAttribute("data-mon", has(el.getAttribute("data-m"), i)); });
+      fig.querySelectorAll("[data-tf]").forEach(function (el) { var a = el.getAttribute("data-tf").split("|"); el.style.transform = a[Math.min(i, a.length - 1)]; });
+      fig.querySelectorAll(".sc-steps li").forEach(function (li) {
+        var on = +li.getAttribute("data-i") === i;
+        li.classList.toggle("cur", on);
+        li.classList.toggle("past", +li.getAttribute("data-i") < i);
+        var b = li.querySelector(".sc-go");
+        if (on) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+      });
+      fig.querySelector(".sc-count").textContent = i ? "Шаг " + i + " из " + st.n : "Обзор";
+      fig.querySelector(".sc-label").textContent = i ? s.steps[i - 1].t : s.title;
+      fig.querySelector(".sc-prog i").style.transform = "scaleX(" + (i / st.n) + ")";
+      fig.querySelector('[data-sc="prev"]').disabled = i === 0;
+      fig.querySelector('[data-sc="next"]').disabled = i === st.n;
+    };
+    var schedule = function (fig) {
+      var st = fig._sc;
+      clearTimeout(st.timer);
+      if (!st.playing) return;
+      st.timer = setTimeout(function () {
+        if (!fig.isConnected) return;
+        if (st.i < st.n) { go(fig, st.i + 1); schedule(fig); } else pause(fig);
+      }, st.i === 0 ? 700 : STEP_MS);
+    };
+    var play = function (fig) {
+      var st = fig._sc;
+      if (st.i >= st.n) go(fig, 0);
+      st.playing = true;
+      fig.classList.add("is-playing");
+      var b = fig.querySelector('[data-sc="play"]');
+      b.setAttribute("aria-pressed", "true"); b.setAttribute("aria-label", "Пауза"); b.title = "Пауза";
+      schedule(fig);
+    };
+    var pause = function (fig) {
+      var st = fig._sc;
+      st.playing = false; clearTimeout(st.timer);
+      fig.classList.remove("is-playing");
+      var b = fig.querySelector('[data-sc="play"]');
+      b.setAttribute("aria-pressed", "false"); b.setAttribute("aria-label", "Пуск"); b.title = "Пуск";
+    };
+    var onClick = function (e) {
+      var b = e.target.closest("[data-sc]"); if (!b) return;
+      var fig = b.closest(".scheme"), st = fig._sc, a = b.getAttribute("data-sc");
+      if (a === "play") { if (st.playing) pause(fig); else play(fig); return; }
+      if (a === "restart") { go(fig, 1); if (!st.playing) play(fig); else schedule(fig); return; }
+      if (a === "prev") go(fig, st.i - 1);
+      if (a === "next") go(fig, st.i + 1);
+      if (a === "go") go(fig, +b.getAttribute("data-i") === st.i ? 0 : +b.getAttribute("data-i"));
+      if (st.playing) schedule(fig);
+    };
+    var onKey = function (e) {
+      if (e.target.closest("input, textarea")) return;
+      var fig = e.currentTarget, st = fig._sc;
+      if (e.key === "ArrowRight") { go(fig, st.i + 1); if (st.playing) schedule(fig); e.preventDefault(); }
+      else if (e.key === "ArrowLeft") { go(fig, st.i - 1); if (st.playing) schedule(fig); e.preventDefault(); }
+    };
+    API.init = function (rootEl) {
+      (rootEl || document).querySelectorAll(".scheme").forEach(function (fig) {
+        if (fig._sc) return;
+        fig._sc = { i: 0, n: +fig.getAttribute("data-n"), playing: false, timer: null };
+        fig.classList.add("is-live");
+        fig.addEventListener("click", onClick);
+        fig.addEventListener("keydown", onKey);
+        if (io) io.observe(fig);
+        go(fig, 0);
+      });
+    };
+    API.reducedMotion = function () { return RM.matches; };
+  }
+
+  root.TLF_SCHEMES = API;
+})(typeof window !== "undefined" ? window : globalThis);
+</script>
+<script>
 /* Оператор ТЛФ — общий код страниц.
    Работает в трёх режимах:
    - spa:  один файл (all-in-one.html), навигация через #маршрут;
@@ -2279,29 +3388,32 @@ window.TLF_GRAN = {
   };
   var NAV = [["home", "Главная"], ["lessons", "Уроки"], ["gran", "Грануляция"], ["tests", "Тесты"], ["cards", "Карточки"], ["glossary", "Глоссарий"], ["sheet", "Шпаргалка"]];
 
+  var BRAND_SVG = '<svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" class="bm-a"/><path d="M8.5 27.5 27.5 8.5" class="bm-b"/><circle cx="20" cy="20" r="17" class="bm-c"/></svg>';
   function headerHTML() {
     return '<a class="skip" href="#view">К содержанию</a><header class="top">' +
-      '<a class="brand" href="' + link("home") + '" aria-label="Оператор ТЛФ, на главную"><span class="brand-mark" aria-hidden="true"></span>' +
+      '<a class="brand" href="' + link("home") + '" aria-label="Оператор ТЛФ, на главную">' + BRAND_SVG +
       '<span class="brand-text"><b>Оператор ТЛФ</b><small>таблетки · капсулы · гранулы · порошки</small></span></a>' +
       '<div class="top-actions"><button class="icon-btn" type="button" data-act="share" aria-label="Поделиться ссылкой" title="Поделиться">' +
       '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7 8l5-5 5 5M5 13v6h14v-6"/></svg></button>' +
-      '<button class="icon-btn" type="button" data-act="theme" aria-label="Переключить тему" title="Светлая / тёмная тема">' +
-      '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg></button></div></header>';
+      '<button class="icon-btn theme-btn" type="button" data-act="theme" aria-label="Переключить тему" title="Светлая / тёмная тема">' +
+      '<svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>' +
+      '<svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></svg></button></div>' +
+      '<div class="read-progress" aria-hidden="true"><i></i></div></header>';
   }
   function navHTML(section) {
     var h = '<nav class="nav" aria-label="Разделы">';
     NAV.forEach(function (n) {
       var on = n[0] === section;
       h += '<a href="' + link(n[0]) + '" data-nav="' + n[0] + '"' + (n[0] === "sheet" ? ' class="nav-extra' + (on ? " active" : "") + '"' : (on ? ' class="active"' : "")) + (on ? ' aria-current="page"' : "") +
-        '><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS[n[0]] + "</svg><span>" + n[1] + "</span></a>";
+        '><span class="nav-ico"><svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS[n[0]] + "</svg></span><span class=\"nav-t\">" + n[1] + "</span></a>";
     });
     return h + "</nav>";
   }
   function footerHTML() {
     return '<footer class="foot"><div class="foot-in">' +
-      "<p><strong>" + DISCLAIMER + "</strong></p>" +
+      '<div class="foot-brand">' + BRAND_SVG + "<div><p><strong>" + DISCLAIMER + "</strong></p>" +
       "<p>" + MEDICAL + "</p>" +
-      '<p>Автор: ' + AUTHOR_NAME + ", " + AUTHOR_JOB + ".</p>" +
+      '<p>Автор: ' + AUTHOR_NAME + ", " + AUTHOR_JOB + ".</p></div></div>" +
       '<nav class="foot-links" aria-label="Служебные страницы"><a href="' + link("author") + '">Об авторе</a><a href="' + link("privacy") + '">Конфиденциальность</a><a href="' + link("glossary") + '">Глоссарий</a><a href="' + link("sheet") + '">Шпаргалка</a>' +
       (MODE === "spa" ? "" : '<a href="' + ROOT + 'all-in-one.html">Офлайн-версия одним файлом</a>') + "</nav>" +
       '<p class="foot-src">Источники: Решение Совета ЕЭК от 03.11.2016 № 77 (Правила надлежащей производственной практики ЕАЭС); Федеральный закон от 12.04.2010 № 61-ФЗ «Об обращении лекарственных средств»; Государственная фармакопея Российской Федерации. Текст изложен своими словами и не является официальным изданием этих документов.</p>' +
@@ -2318,81 +3430,120 @@ window.TLF_GRAN = {
   /* ---------- Экраны ---------- */
   function progressBlock(title, list, route) {
     var dc = doneIn(list), pct = Math.round(dc / list.length * 100);
-    return '<div class="pmini"><div class="row" style="justify-content:space-between"><a href="' + link(route) + '"><b>' + title + '</b></a><span class="muted num">' + dc + " / " + list.length + "</span></div>" +
+    return '<div class="pmini"><div class="pmini-top"><a href="' + link(route) + '"><b>' + title + '</b></a><span class="muted num">' + dc + " / " + list.length + "</span></div>" +
       '<div class="bar" role="progressbar" aria-label="' + esc(title) + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><i style="width:' + pct + '%"></i></div></div>';
+  }
+  function ringSVG(pct, label) {
+    var C = 2 * Math.PI * 42;
+    return '<svg class="ring" viewBox="0 0 100 100" role="img" aria-label="' + esc(label) + '"><circle class="bg" cx="50" cy="50" r="42"/><circle class="fg" cx="50" cy="50" r="42" style="--c:' + C.toFixed(1) + '" stroke-dasharray="' + (C * pct / 100).toFixed(1) + " " + C.toFixed(1) + '"/></svg>';
+  }
+  function icon(name) { return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + ICONS[name] + "</svg>"; }
+  var ARROW = '<svg class="arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>';
+
+  function heroArt() {
+    return '<svg class="hero-art" viewBox="0 0 400 320" aria-hidden="true" focusable="false">' +
+      '<circle class="ha-halo" cx="232" cy="160" r="132"/><circle class="ha-orbit" cx="232" cy="160" r="152"/>' +
+      '<g class="ha-in ha-d1"><ellipse class="ha-shadow" cx="252" cy="222" rx="74" ry="14"/><circle class="ha-tab-side" cx="250" cy="150" r="72"/><circle class="ha-tab" cx="250" cy="142" r="72"/><circle class="ha-tab-in" cx="250" cy="142" r="58"/><path class="ha-score" d="M250 88v108"/></g>' +
+      '<g class="ha-in ha-d2"><g transform="rotate(-32 120 236)"><rect class="ha-cap-a" x="62" y="214" width="62" height="44" rx="22"/><rect class="ha-cap-b" x="112" y="214" width="66" height="44" rx="22"/><path class="ha-cap-l" d="M118 214v44"/></g></g>' +
+      '<g class="ha-in ha-d3"><circle class="ha-g1" cx="338" cy="250" r="16"/><circle class="ha-g2" cx="362" cy="226" r="10"/><circle class="ha-g1" cx="356" cy="270" r="9"/><circle class="ha-g2" cx="318" cy="276" r="7"/></g>' +
+      '<g class="ha-in ha-d3"><circle class="ha-g2" cx="104" cy="82" r="12"/><circle class="ha-g1" cx="84" cy="104" r="8"/><circle class="ha-g1" cx="126" cy="104" r="6"/></g>' +
+      '<g class="ha-in ha-d4"><rect class="ha-pill" x="20" y="146" width="64" height="28" rx="14"/><text class="ha-pill-t" x="52" y="165" text-anchor="middle">GMP</text>' +
+      '<rect class="ha-pill" x="300" y="44" width="84" height="28" rx="14"/><text class="ha-pill-t" x="342" y="63" text-anchor="middle">ALCOA+</text></g>' +
+      "</svg>";
   }
 
   function viewHome() {
     var dc = doneIn(LESSONS), total = LESSONS.length, pct = Math.round(dc / total * 100);
     var nl = nextLesson();
     var exam = S.tests.exam;
-    var h = '<div class="view-inner">';
-    h += '<section class="hero"><span class="eyebrow">Информационно-справочный материал для самоподготовки</span>';
+    var h = '<div class="view-inner wide">';
+    h += '<section class="hero hero-home"><div class="hero-copy"><span class="eyebrow">Информационно-справочный материал для самоподготовки</span>';
     h += "<h1>Производство твёрдых лекарственных форм</h1>";
-    h += '<p class="lead">Уроки по GMP и технологическим операциям для операторов участков взвешивания, грануляции, таблетирования, покрытия, инкапсулирования и упаковки. ' + BASE.length + " основных уроков и углублённый модуль «" + G.title + "» из " + GRAN.length + " уроков.</p></section>";
+    h += '<p class="lead">Уроки по GMP и технологическим операциям для операторов участков взвешивания, грануляции, таблетирования, покрытия, инкапсулирования и упаковки. ' + BASE.length + " основных уроков и углублённый модуль «" + G.title + "» из " + GRAN.length + " уроков.</p>";
+    h += '<div class="row hero-cta">' + (nl ? '<a class="btn primary lg" href="' + link("lesson-" + nl.id) + '">Продолжить' + ARROW + "</a>" : '<a class="btn primary lg" href="' + link("test-exam") + '">Итоговый тест' + ARROW + "</a>") +
+      '<a class="btn lg" href="' + link("lessons") + '">Все основные уроки</a></div></div>' + heroArt() + "</section>";
 
-    h += '<section class="panel lifted progress-card" aria-label="Ваш прогресс">';
-    h += '<div class="progress-top"><div><span class="eyebrow">Ваш прогресс</span><div class="big num">' + pct + "<small>%</small></div></div>";
-    h += '<p class="muted num">' + dc + " из " + total + " уроков отмечено</p></div>";
+    h += '<div class="bento">';
+    h += '<section class="tile tile-progress" aria-label="Ваш прогресс">';
+    h += '<div class="progress-top">' + ringSVG(pct, "Пройдено " + pct + "%") + '<div><span class="eyebrow">Ваш прогресс</span><div class="big num">' + pct + "<small>%</small></div>";
+    h += '<p class="muted num">' + dc + " из " + total + " уроков отмечено</p></div></div>";
     h += progressBlock("Основные уроки", BASE, "lessons") + progressBlock("Грануляция ТЛФ", GRAN, "gran");
-    h += '<div class="cta">';
-    if (nl) h += '<a class="btn primary" href="' + link("lesson-" + nl.id) + '">Продолжить</a>';
-    else h += '<a class="btn primary" href="' + link("test-exam") + '">Итоговый тест</a>';
-    h += '<a class="btn" href="' + link("tests") + '">Тест</a><a class="btn" href="' + link("cards") + '">Карточки</a></div>';
-    if (nl) h += '<p class="muted">Следующий: ' + moduleLabel(nl) + " — " + esc(nl.title) + "</p>";
-    h += "</section>";
-
-    h += '<section class="stats" aria-label="Статистика">';
+    if (nl) h += '<a class="next-up" href="' + link("lesson-" + nl.id) + '"><span class="eyebrow">Следующий</span><span>' + moduleLabel(nl) + " — " + esc(nl.title) + "</span>" + ARROW + "</a>";
+    h += '<div class="stats" aria-label="Статистика">';
     h += '<div class="stat"><b>' + (exam ? exam.best + "%" : "—") + "</b><span>лучший результат итогового теста</span></div>";
     h += '<div class="stat"><b>' + knownCount() + "/" + GLOSSARY.length + "</b><span>терминов отмечено «знаю»</span></div>";
     var w = wrongIds().length;
     h += '<div class="stat"><b>' + w + "</b><span>" + plural(w, "вопрос", "вопроса", "вопросов") + " в работе над ошибками</span></div>";
-    h += "</section>";
+    h += "</div></section>";
 
-    h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Углублённый модуль</span><b>' + G.title + ": влажная и сухая грануляция</b><span>" + esc(G.short) + "</span></a>";
+    h += '<a class="tile tile-gran" href="' + link("gran") + '"><span class="eyebrow">Углублённый модуль</span><b class="tile-h">' + G.title + ": влажная и сухая грануляция</b><span class=\"tile-p\">" + esc(G.short) + '</span><span class="tile-meta num">' + GRAN.length + " уроков · итоговый тест" + ARROW + "</span>" + granArt() + "</a>";
+    h += tile("tests", "Тесты", BANK.length + " вопросов с объяснением ответов");
+    h += tile("cards", "Карточки", GLOSSARY.length + " терминов: «знаю / не знаю»");
+    h += tile("glossary", "Глоссарий", "Термины GMP и ТЛФ с поиском");
+    h += tile("sheet", "Шпаргалка", "Чек-лист на смену для печати");
+    h += "</div>";
 
-    h += '<section class="stack"><div class="row" style="justify-content:space-between"><h2>Основные уроки</h2><a href="' + link("lessons") + '">Все основные уроки</a></div>';
+    h += '<section class="stack"><div class="sec-head"><h2>Основные уроки</h2><a class="link-arrow" href="' + link("lessons") + '">Все основные уроки' + ARROW + "</a></div>";
     h += modulesHTML(BASE) + "</section>";
     h += '<p class="note">' + DISCLAIMER + "</p>";
     h += '<p class="note med">' + MEDICAL + "</p>";
     return h + "</div>";
   }
+  function tile(route, title, sub) {
+    return '<a class="tile tile-sm" href="' + link(route) + '"><span class="tile-ico">' + icon(route) + '</span><b class="tile-h">' + title + '</b><span class="tile-p">' + sub + "</span>" + ARROW + "</a>";
+  }
+  function granArt() {
+    return '<svg class="gran-art" viewBox="0 0 200 140" aria-hidden="true" focusable="false"><circle class="ga-1" cx="120" cy="70" r="34"/><circle class="ga-2" cx="168" cy="40" r="18"/><circle class="ga-2" cx="164" cy="104" r="22"/><circle class="ga-1" cx="70" cy="110" r="14"/><circle class="ga-3" cx="78" cy="44" r="10"/><circle class="ga-3" cx="196" cy="76" r="9"/><circle class="ga-dot" cx="110" cy="62" r="5"/><circle class="ga-dot" cx="130" cy="80" r="4"/><circle class="ga-dot" cx="160" cy="100" r="4"/></svg>';
+  }
 
   function modulesHTML(list) {
-    var h = '<div class="modules">';
+    var h = '<ol class="lesson-grid">';
     list.forEach(function (l) {
-      h += '<a class="module" href="' + link("lesson-" + l.id) + '"><span class="idx">' + pad(l.num) + '</span><span class="t"><b>' + esc(l.title) + "</b><span>" + esc(l.short) + "</span></span>" + lessonChip(l) + "</a>";
+      var sc = W.TLF_SCHEMES && W.TLF_SCHEMES.forLesson(l.id);
+      h += '<li><a class="lcard' + (S.done[l.id] ? " is-done" : "") + '" href="' + link("lesson-" + l.id) + '"><span class="lc-num num">' + pad(l.num) + '</span><span class="lc-body"><b>' + esc(l.title) + "</b><span>" + esc(l.short) + '</span></span><span class="lc-foot">' + lessonChip(l) + (sc ? '<span class="chip scheme-chip">Схема</span>' : "") + ARROW + "</span></a></li>";
     });
-    return h + "</div>";
+    return h + "</ol>";
   }
 
   function viewLessons() {
-    var h = '<div class="view-inner">' + crumbs([["home", "Главная"], ["lessons", "Уроки"]]);
+    var h = '<div class="view-inner wide">' + crumbs([["home", "Главная"], ["lessons", "Уроки"]]);
     h += '<section class="hero"><span class="eyebrow">Уроки</span><h1>Основные уроки</h1>';
     h += '<p class="lead">Уроки идут в порядке технологического процесса: от правил и допуска в зону до упаковки, контроля и действий при отклонениях. Отмечено ' + doneIn(BASE) + " из " + BASE.length + ".</p></section>";
     h += modulesHTML(BASE);
-    h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Дальше</span><b>Углублённый модуль «' + G.title + "»</b><span>" + GRAN.length + " уроков и итоговый тест модуля.</span></a>";
+    h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Дальше</span><b>Углублённый модуль «' + G.title + "»</b><span>" + GRAN.length + " уроков и итоговый тест модуля.</span>" + granArt() + "</a>";
     return h + "</div>";
   }
 
   function viewGran() {
-    var h = '<div class="view-inner">' + crumbs([["home", "Главная"], ["gran", G.title]]);
-    h += '<section class="hero"><span class="eyebrow">Углублённый модуль · ' + GRAN.length + " уроков</span><h1>" + esc(G.h1) + "</h1>";
-    h += '<div class="prose intro">' + G.intro.map(function (p) { return '<p class="lead">' + esc(p) + "</p>"; }).join("") + "</div></section>";
-    h += '<section class="stack" aria-labelledby="granLessons"><div class="row" style="justify-content:space-between"><h2 id="granLessons">Уроки модуля</h2><span class="muted num">Отмечено ' + doneIn(GRAN) + " из " + GRAN.length + "</span></div>";
+    var h = '<div class="view-inner wide">' + crumbs([["home", "Главная"], ["gran", G.title]]);
+    h += '<section class="hero hero-gran"><div class="hero-copy"><span class="eyebrow">Углублённый модуль · ' + GRAN.length + " уроков</span><h1>" + esc(G.h1) + "</h1>";
+    h += '<div class="prose intro">' + G.intro.map(function (p) { return '<p class="lead">' + esc(p) + "</p>"; }).join("") + "</div></div>" + granArt() + "</section>";
+    h += '<section class="stack" aria-labelledby="granLessons"><div class="sec-head"><h2 id="granLessons">Уроки модуля</h2><span class="muted num">Отмечено ' + doneIn(GRAN) + " из " + GRAN.length + "</span></div>";
     h += modulesHTML(GRAN) + "</section>";
     var r = S.tests["gran-final"];
-    h += '<section class="panel stack"><div class="row" style="justify-content:space-between"><div class="stack" style="gap:4px"><h2>Итоговый тест по грануляции ТЛФ</h2><p class="muted">' + G.finalSize + " случайных вопросов из " + BANK_GRAN.length + " по всем урокам модуля.</p></div>" + scoreChip("gran-final") + "</div>";
+    h += '<section class="panel final-card"><div class="final-top"><div class="stack" style="gap:6px"><span class="eyebrow">Итог модуля</span><h2>Итоговый тест по грануляции ТЛФ</h2><p class="muted">' + G.finalSize + " случайных вопросов из " + BANK_GRAN.length + " по всем урокам модуля.</p></div>" + scoreChip("gran-final") + "</div>";
     h += '<div class="row"><a class="btn primary" href="' + link("test-gran-final") + '">' + (r ? "Пройти итоговый тест ещё раз" : "Начать итоговый тест") + '</a><a class="btn" href="' + link("glossary") + '">Глоссарий терминов грануляции</a></div></section>';
-    h += '<section class="panel faq" aria-labelledby="granFaq"><h2 id="granFaq">Частые вопросы о грануляции ТЛФ</h2>';
-    G.faq.forEach(function (f) { h += "<h3>" + esc(f.q) + "</h3><p>" + esc(f.a) + "</p>"; });
-    h += "</section>";
+    h += '<section class="faq" aria-labelledby="granFaq"><h2 id="granFaq">Частые вопросы о грануляции ТЛФ</h2><div class="acc">';
+    G.faq.forEach(function (f) { h += '<details class="acc-item"><summary><h3>' + esc(f.q) + '</h3><span class="acc-ico" aria-hidden="true"></span></summary><div class="acc-body"><p>' + esc(f.a) + "</p></div></details>"; });
+    h += "</div></section>";
     h += '<p class="note">' + DISCLAIMER + "</p>";
     return h + "</div>";
   }
 
-  function listBlock(tag, cls, title, items, ordered) {
-    var h = '<section class="panel"><div class="section-title"><span class="tag ' + tag + '">' + title + "</span></div><" + (ordered ? "ol" : "ul") + ' class="' + cls + '">';
+  var TAG_ICON = {
+    goals: '<path d="M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>',
+    theory: '<path d="M4 5h6a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v13a2 2 0 0 1 2-2h6z"/>',
+    rules: '<path d="M5 12l5 5L20 7"/>',
+    errs: '<path d="M6 6l12 12M18 6L6 18"/>',
+    check: '<path d="M9 9a3 3 0 1 1 4 2.8c-.7.3-1 .9-1 1.6V15M12 18.5v.5"/>',
+    safety: '<path d="M12 3l9 16H3zM12 10v4M12 17v.5"/>',
+    table: '<path d="M4 5h16v14H4zM4 10h16M10 10v9"/>'
+  };
+  function tagHTML(tag, title) {
+    return '<span class="tag ' + tag + '"><svg viewBox="0 0 24 24" aria-hidden="true">' + (TAG_ICON[tag] || TAG_ICON.theory) + "</svg>" + title + "</span>";
+  }
+  function listBlock(tag, cls, title, items, ordered, anchor) {
+    var h = '<section class="panel blk-' + tag + '"' + (anchor ? ' id="' + anchor + '"' : "") + '><div class="section-title">' + tagHTML(tag, title) + "</div><" + (ordered ? "ol" : "ul") + ' class="' + cls + '">';
     items.forEach(function (r) { h += "<li>" + esc(r) + "</li>"; });
     return h + "</" + (ordered ? "ol" : "ul") + "></section>";
   }
@@ -2403,14 +3554,19 @@ window.TLF_GRAN = {
     if (!IS_NODE && (!S.opened[id] || S.last !== id)) { S.opened[id] = 1; S.last = id; save(); }
     var list = l.module === "gran" ? GRAN : BASE;
     var prev = list[l.num - 2], next = list[l.num];
-    var h = '<article class="view-inner">';
+    var sc = W.TLF_SCHEMES && W.TLF_SCHEMES.forLesson(id);
+    var safety = id === "safety" || id === "g-safety";
+    var toc = [];
+    var h = '<article class="view-inner lesson" data-morph="deep"><div class="lesson-main" data-morph="deep">';
     h += crumbs(l.module === "gran" ? [["home", "Главная"], ["gran", G.title], ["lesson-" + id, l.title]] : [["home", "Главная"], ["lessons", "Уроки"], ["lesson-" + id, l.title]]);
     h += '<header class="lesson-head"><div class="row">' + lessonChip(l) + '<span class="eyebrow">' + moduleLabel(l) + " из " + list.length + "</span></div>";
-    h += "<h1>" + esc(l.title) + '</h1><p class="lead">' + esc(l.short) + "</p></header>";
+    h += "<h1>" + esc(l.title) + '</h1><p class="lead">' + esc(l.short) + "</p>";
+    h += '<div class="lesson-meta num"><span>' + qWord(l.qs.length) + "</span>" + (sc ? "<span>интерактивная схема</span>" : "") + (l.table ? "<span>таблица</span>" : "") + "</div></header>";
 
-    if (l.goals) h += listBlock("goals", "goallist", "Цели урока", l.goals);
+    if (l.goals) { h += listBlock("goals", "goallist", "Цели урока", l.goals, false, "celi"); toc.push(["celi", "Цели урока"]); }
 
-    h += '<section class="panel"><div class="section-title"><span class="tag theory">Теория</span></div><div class="prose">';
+    h += '<section class="panel" id="teoriya"><div class="section-title">' + tagHTML("theory", "Теория") + '</div><div class="prose">';
+    toc.push(["teoriya", "Теория"]);
     l.theory.forEach(function (p) { h += "<p>" + esc(p) + "</p>"; });
     h += "</div>";
     if (l.stages) {
@@ -2421,46 +3577,55 @@ window.TLF_GRAN = {
     if (l.theory2) { h += '<div class="prose">'; l.theory2.forEach(function (p) { h += "<p>" + esc(p) + "</p>"; }); h += "</div>"; }
     h += "</section>";
 
+    if (sc) { h += W.TLF_SCHEMES.html(sc); toc.push(["shema", "Схема: " + sc.title]); }
+
     if (l.table) {
-      h += '<section class="panel"><div class="section-title"><span class="tag theory">' + esc(l.table.caption) + '</span></div><div class="tbl-wrap"><table class="tbl"><thead><tr>';
+      h += '<section class="panel" id="tablica"><div class="section-title">' + tagHTML("table", esc(l.table.caption)) + '</div><div class="tbl-wrap"><table class="tbl"><thead><tr>';
+      toc.push(["tablica", l.table.caption]);
       l.table.head.forEach(function (c) { h += '<th scope="col">' + esc(c) + "</th>"; });
       h += "</tr></thead><tbody>";
       l.table.rows.forEach(function (r) { h += "<tr>" + r.map(function (c, i) { return (i === 0 ? '<th scope="row">' : '<td data-label="' + esc(l.table.head[i]) + '">') + esc(c) + (i === 0 ? "</th>" : "</td>"); }).join("") + "</tr>"; });
       h += "</tbody></table></div></section>";
     }
     if (l.examples) {
-      h += '<section class="panel"><div class="section-title"><span class="tag theory">Учебные примеры</span><span class="muted">числа условные</span></div><div class="examples">';
+      h += '<section class="panel" id="primery"><div class="section-title">' + tagHTML("table", "Учебные примеры") + '<span class="muted">числа условные</span></div><div class="examples">';
+      toc.push(["primery", "Учебные примеры"]);
       l.examples.forEach(function (ex) {
         h += '<div class="example"><h3>' + esc(ex.title) + "</h3><ul>" + ex.lines.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>";
       });
       h += "</div></section>";
     }
 
-    h += '<div class="two">' + listBlock("rules", "checklist", l.theses ? "Ключевые тезисы" : "Ключевые правила", l.theses || l.rules) +
-      listBlock("errs", "errlist", "Типичные ошибки", l.errors) + "</div>";
+    var rulesTitle = l.theses ? "Ключевые тезисы" : "Ключевые правила";
+    h += '<div class="two">' + listBlock(safety ? "safety" : "rules", "checklist", rulesTitle, l.theses || l.rules, false, "tezisy") +
+      listBlock("errs", "errlist", "Типичные ошибки", l.errors, false, "oshibki") + "</div>";
+    toc.push(["tezisy", rulesTitle], ["oshibki", "Типичные ошибки"]);
 
     if (id === "granulation") {
-      h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Подробнее</span><b>Углублённый модуль «' + G.title + '»</b><span>' + GRAN.length + " отдельных уроков: стадии, оборудование, контроль, дефекты, расчёты, безопасность.</span></a>";
+      h += '<a class="feature-link" href="' + link("gran") + '"><span class="eyebrow">Подробнее</span><b>Углублённый модуль «' + G.title + '»</b><span>' + GRAN.length + " отдельных уроков: стадии, оборудование, контроль, дефекты, расчёты, безопасность.</span>" + granArt() + "</a>";
     }
 
-    h += '<section class="panel"><div class="section-title"><span class="tag check">Самопроверка</span><span class="muted">' + qWord(l.qs.length) + "</span></div>";
+    h += '<section class="panel" id="samoproverka"><div class="section-title">' + tagHTML("check", "Самопроверка") + '<span class="muted">' + qWord(l.qs.length) + "</span></div>";
+    toc.push(["samoproverka", "Самопроверка"]);
     l.qs.forEach(function (q) {
       var key = "l-" + q.id;
       h += questionHTML(QS[key] || makeQState(key, q, IS_NODE));
     });
     h += "</section>";
 
-    h += '<section class="panel stack"><div class="row" style="justify-content:space-between">';
+    h += '<section class="panel done-card' + (S.done[id] ? " is-done" : "") + '"><div class="done-row">';
     h += "<p>" + (S.done[id] ? "Урок отмечен как пройденный." : "Прочитали теорию и ответили на вопросы? Отметьте урок.") + "</p>";
     h += '<button type="button" class="btn ' + (S.done[id] ? "" : "primary") + '" data-act="toggle-done" data-id="' + id + '">' + (S.done[id] ? "Снять отметку" : "Отметить урок пройденным") + "</button></div>";
     h += '<div class="row"><a class="btn small" href="' + link("test-" + id) + '">Тест по уроку (' + qWord(l.qs.length) + ")</a></div></section>";
 
     h += relatedHTML(l, prev, next);
     h += '<nav class="lesson-nav" aria-label="Соседние уроки">';
-    h += prev ? '<a class="btn ghost" rel="prev" href="' + link("lesson-" + prev.id) + '">← ' + esc(prev.title) + "</a>" : "<span></span>";
-    if (next) h += '<a class="btn ghost" rel="next" href="' + link("lesson-" + next.id) + '">' + esc(next.title) + " →</a>";
-    else h += l.module === "gran" ? '<a class="btn ghost" href="' + link("test-gran-final") + '">Итоговый тест модуля →</a>' : '<a class="btn ghost" href="' + link("gran") + '">Модуль «' + G.title + '» →</a>';
-    return h + "</nav></article>";
+    h += prev ? '<a class="pn prev" rel="prev" href="' + link("lesson-" + prev.id) + '"><span class="eyebrow">← Предыдущий</span><b>' + esc(prev.title) + "</b></a>" : "<span></span>";
+    if (next) h += '<a class="pn next" rel="next" href="' + link("lesson-" + next.id) + '"><span class="eyebrow">Следующий →</span><b>' + esc(next.title) + "</b></a>";
+    else h += l.module === "gran" ? '<a class="pn next" href="' + link("test-gran-final") + '"><span class="eyebrow">Дальше →</span><b>Итоговый тест модуля</b></a>' : '<a class="pn next" href="' + link("gran") + '"><span class="eyebrow">Дальше →</span><b>Модуль «' + G.title + "»</b></a>";
+    h += "</nav></div>";
+    h += '<aside class="toc" aria-label="Содержание урока"><nav><p class="eyebrow">Содержание</p><ol>' + toc.map(function (t) { return '<li><a href="#' + t[0] + '">' + esc(t[1]) + "</a></li>"; }).join("") + "</ol></nav></aside>";
+    return h + "</article>";
   }
 
   function relatedHTML(l, prev, next) {
@@ -2492,7 +3657,7 @@ window.TLF_GRAN = {
     var h = '<div class="view-inner">' + crumbs([["home", "Главная"], ["tests", "Тесты"]]);
     h += '<section class="hero"><span class="eyebrow">Тесты</span><h1>Проверка знаний</h1>';
     h += '<p class="lead">' + BANK.length + " вопросов: один ответ, несколько ответов, верно или неверно. Вопросы и варианты перемешиваются, после каждого ответа показывается объяснение. Ориентир для самопроверки — " + PASS + "% (это не норматив и не оценка).</p></section>";
-    h += '<div class="test-grid">';
+    h += '<h2>Итоговые тесты</h2><div class="test-grid">';
     h += testCard("exam", "Итоговый тест", EXAM_SIZE + " случайных вопросов из основных уроков.", true);
     h += testCard("gran-final", "Итоговый тест: грануляция", G.finalSize + " случайных вопросов из модуля «" + G.title + "».", true);
     h += testCard("all", "Все вопросы основных уроков", BANK_BASE.length + " вопросов подряд.");
@@ -2654,19 +3819,32 @@ window.TLF_GRAN = {
     var qe = esc(q).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     try { return t.replace(new RegExp("(" + qe + ")", "gi"), "<mark>$1</mark>"); } catch (e) { return t; }
   }
+  function glossarySorted() { return GLOSSARY.slice().sort(function (a, b) { return a.term.localeCompare(b.term, "ru"); }); }
+  function letterOf(t) { var c = t.charAt(0).toUpperCase(); return /[A-Z]/.test(c) ? "A–Z" : /[0-9]/.test(c) ? "0–9" : c; }
   function glossaryListHTML() {
     var q = GQ.trim().toLowerCase();
-    var items = GLOSSARY.slice().sort(function (a, b) { return a.term.localeCompare(b.term, "ru"); })
+    var items = glossarySorted()
       .filter(function (g) { return !q || g.term.toLowerCase().indexOf(q) !== -1 || g.def.toLowerCase().indexOf(q) !== -1; });
     if (!items.length) return '<div class="gl"><p class="empty">Ничего не найдено по запросу «' + esc(GQ) + "». Попробуйте часть слова.</p></div>";
-    var h = '<dl class="gl">';
-    items.forEach(function (g) { h += '<div class="gl-item"><dt>' + hl(g.term, q) + "</dt>" + starBtn(g.term, false) + "<dd>" + hl(g.def, q) + "</dd></div>"; });
-    return h + "</dl>";
+    var h = "", cur = null;
+    items.forEach(function (g) {
+      var L = letterOf(g.term);
+      if (L !== cur) {
+        if (cur !== null) h += "</dl></section>";
+        cur = L;
+        h += '<section class="gl-group" id="gl-' + esc(L) + '"><h2 class="gl-letter">' + esc(L) + '</h2><dl class="gl">';
+      }
+      h += '<div class="gl-item"><dt>' + hl(g.term, q) + "</dt>" + starBtn(g.term, false) + "<dd>" + hl(g.def, q) + "</dd></div>";
+    });
+    return h + "</dl></section>";
   }
   function viewGlossary() {
     var h = '<div class="view-inner">' + crumbs([["home", "Главная"], ["glossary", "Глоссарий"]]);
     h += '<section class="hero"><span class="eyebrow">Глоссарий</span><h1>Термины производства</h1><p class="lead">' + GLOSSARY.length + " терминов GMP и технологии твёрдых лекарственных форм, включая термины модуля «" + G.title + "». Звёздочка добавляет термин в избранную колоду карточек.</p></section>";
-    h += '<div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14zM16 16l4 4"/></svg><input id="glSearch" type="search" placeholder="Поиск: CAPA, карантин, чоппер…" autocomplete="off" aria-label="Поиск по глоссарию" value="' + esc(GQ) + '"></div>';
+    var letters = [];
+    glossarySorted().forEach(function (g) { var L = letterOf(g.term); if (letters.indexOf(L) === -1) letters.push(L); });
+    h += '<div class="gl-tools"><div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14zM16 16l4 4"/></svg><input id="glSearch" type="search" placeholder="Поиск: CAPA, карантин, чоппер…" autocomplete="off" aria-label="Поиск по глоссарию" value="' + esc(GQ) + '"></div>';
+    h += '<nav class="abc" aria-label="Алфавитный указатель">' + letters.map(function (L) { return '<a href="#gl-' + esc(L) + '">' + esc(L) + "</a>"; }).join("") + "</nav></div>";
     return h + '<div id="glList">' + glossaryListHTML() + "</div></div>";
   }
 
@@ -2781,6 +3959,7 @@ window.TLF_GRAN = {
 
   /* ===================== Браузер ===================== */
   var $view = document.getElementById("view");
+  document.documentElement.classList.add("js");
 
   function applyTheme() {
     if (S.theme === "dark" || S.theme === "light") document.documentElement.setAttribute("data-theme", S.theme);
@@ -2816,7 +3995,9 @@ window.TLF_GRAN = {
       if (T) T.keep = false;
     }
     if (r !== "privacy") CLEAR_ASK = false;
-    $view.innerHTML = render(r);
+    var html = render(r);
+    if (r === lastRoute || lastRoute === "") morph($view, html); // та же страница: обновляем только изменившееся
+    else { $view.innerHTML = html; markSrc($view); }
     if (MODE === "spa") {
       var navBox = document.getElementById("shellNav");
       navBox.innerHTML = navHTML(sectionOf(r));
@@ -2828,7 +4009,70 @@ window.TLF_GRAN = {
       try { $view.focus({ preventScroll: true }); } catch (e) { /* старые браузеры */ }
     }
     lastRoute = r;
+    enhance(r);
   }
+
+  /* Бережное обновление: меняем только те блоки, которые изменились.
+     Так заголовок и текст урока не перерисовываются (стабильная отрисовка),
+     а схема сохраняет свой шаг при ответах на вопросы. */
+  function morph(box, html) {
+    var tpl = document.createElement("template");
+    tpl.innerHTML = html;
+    syncChildren(box, tpl.content);
+  }
+  function markSrc(el) {
+    Array.prototype.forEach.call(el.children, function (c) { c.__src = c.outerHTML; if (c.getAttribute("data-morph") === "deep") markSrc(c); });
+  }
+  function syncChildren(live, fresh) {
+    var nk = Array.prototype.slice.call(fresh.childNodes), lk = Array.prototype.slice.call(live.childNodes);
+    nk.forEach(function (n, i) {
+      var l = lk[i];
+      if (!l) { live.appendChild(n); if (n.nodeType === 1) n.__src = n.outerHTML; return; }
+      if (l.nodeType !== 1 || n.nodeType !== 1 || l.tagName !== n.tagName) {
+        if (l.nodeType === 3 && n.nodeType === 3 && l.data === n.data) return;
+        live.replaceChild(n, l); if (n.nodeType === 1) n.__src = n.outerHTML; return;
+      }
+      if (n.getAttribute("data-morph") === "deep" && l.getAttribute("data-morph") === "deep" && l.className === n.className) { syncChildren(l, n); return; }
+      var src = n.outerHTML, was = l.__src !== undefined ? l.__src : l.outerHTML;
+      if (src !== was) { live.replaceChild(n, l); n.__src = src; } else l.__src = src;
+    });
+    for (var j = nk.length; j < lk.length; j++) live.removeChild(lk[j]);
+  }
+
+  /* Улучшения после отрисовки: схемы, оглавление, прогресс чтения */
+  var tocObs = null;
+  function enhance(r) {
+    document.documentElement.classList.toggle("is-lesson", r.indexOf("lesson-") === 0);
+    if (W.TLF_SCHEMES && W.TLF_SCHEMES.init) W.TLF_SCHEMES.init($view);
+    var links = $view.querySelectorAll(".toc a");
+    if (tocObs) { tocObs.disconnect(); tocObs = null; }
+    if (links.length && "IntersectionObserver" in window) {
+      var map = {};
+      links.forEach(function (a) { map[a.getAttribute("href").slice(1)] = a; });
+      tocObs = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          links.forEach(function (a) { a.removeAttribute("aria-current"); });
+          var a = map[e.target.id]; if (a) a.setAttribute("aria-current", "location");
+        });
+      }, { rootMargin: "-20% 0px -70% 0px" });
+      Object.keys(map).forEach(function (k) { var el = document.getElementById(k); if (el) tocObs.observe(el); });
+    }
+  }
+  // запасной вариант индикатора чтения для браузеров без scroll-driven анимаций
+  (function () {
+    var bar = document.querySelector(".read-progress i");
+    if (!bar || (window.CSS && CSS.supports && CSS.supports("animation-timeline: scroll()"))) return;
+    var ticking = false;
+    function upd() {
+      ticking = false;
+      var d = document.documentElement, max = d.scrollHeight - d.clientHeight;
+      bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, d.scrollTop / max) : 0) + ")";
+    }
+    window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+    upd();
+  })();
+
   function rerender() { var y = window.scrollY; route(); window.scrollTo(0, y); }
 
   function replaceQ(st) {
@@ -2890,7 +4134,13 @@ window.TLF_GRAN = {
     var st;
     switch (act) {
       case "theme":
-        S.theme = currentTheme() === "dark" ? "light" : "dark"; applyTheme(); save(); break;
+        S.theme = currentTheme() === "dark" ? "light" : "dark"; save();
+        if (document.startViewTransition && !(W.matchMedia && W.matchMedia("(prefers-reduced-motion: reduce)").matches)) {
+          document.documentElement.classList.add("vt-theme");
+          var vt = document.startViewTransition(applyTheme);
+          vt.finished.then(function () { document.documentElement.classList.remove("vt-theme"); }, function () { document.documentElement.classList.remove("vt-theme"); });
+        } else applyTheme();
+        break;
       case "share": share(); break;
       case "opt":
         st = QS[b.getAttribute("data-qkey")]; if (!st) return;

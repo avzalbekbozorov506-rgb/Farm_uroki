@@ -31,7 +31,7 @@ const vm = require("vm");
 const ctx = { console };
 ctx.globalThis = ctx;
 vm.createContext(ctx);
-for (const f of ["data.js", "data-gran.js", "app.js"]) {
+for (const f of ["data.js", "data-gran.js", "schemes.js", "app.js"]) {
   const code = fs.readFileSync(path.join(SRC, f), "utf8").replace(/\bwindow\.TLF_/g, "globalThis.TLF_");
   vm.runInContext(code, ctx, { filename: f });
 }
@@ -50,7 +50,7 @@ const css = read("style.css");
 const fontFiles = fs.readdirSync(path.join(SRC, "fonts")).filter(f => f.endsWith(".woff2"));
 
 function themeInit() {
-  return '<script>try{var t=JSON.parse(localStorage.getItem("tlf-trainer-v1")||"{}").theme;if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>';
+  return '<script>document.documentElement.className+=" js";try{var t=JSON.parse(localStorage.getItem("tlf-trainer-v1")||"{}").theme;if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>';
 }
 
 function person() { return { "@type": "Person", name: APP.AUTHOR_NAME, jobTitle: APP.AUTHOR_JOB }; }
@@ -69,6 +69,11 @@ function jsonLd(route, m, url) {
   return '<script type="application/ld+json">' + JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c") + "</script>";
 }
 
+// схемы нужны только там, где они рисуются: уроки со схемой и списки уроков (метка «Схема»)
+function needsSchemes(route) {
+  if (route === "home" || route === "lessons" || route === "gran") return true;
+  return route.indexOf("lesson-") === 0 && !!ctx.TLF_SCHEMES.forLesson(route.slice(7));
+}
 function pageHtml(route) {
   const p = APP.pathFor(route);
   const depth = p.split("/").length - 1;
@@ -94,7 +99,8 @@ function pageHtml(route) {
 <link rel="canonical" href="${url}">
 <meta name="robots" content="index, follow">
 <meta name="author" content="${esc(APP.AUTHOR_NAME)}">
-<meta name="theme-color" content="#0e6a5d">
+<meta name="theme-color" content="#f4f7f6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a1113" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="${m.article ? "article" : "website"}">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:site_name" content="Оператор ТЛФ">
@@ -110,6 +116,7 @@ function pageHtml(route) {
 <meta name="twitter:description" content="${esc(m.description)}">
 <meta name="twitter:image" content="${SITE}assets/og.png">
 <link rel="icon" href="${rootRel}assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="${rootRel}assets/fonts/golos-text-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${rootRel}assets/style.css">
 ${themeInit()}
 ${jsonLd(route, m, url)}${verify}${verifyTags}
@@ -123,7 +130,7 @@ ${parts.nav}
 ${parts.footer}
 <script src="${rootRel}assets/data.js" defer></script>
 <script src="${rootRel}assets/data-gran.js" defer></script>
-<script src="${rootRel}assets/app.js" defer></script>
+${needsSchemes(route) ? `<script src="${rootRel}assets/schemes.js" defer></script>\n` : ""}<script src="${rootRel}assets/app.js" defer></script>
 </body>
 </html>
 `;
@@ -139,28 +146,35 @@ function page404() {
 <meta name="description" content="Такой страницы на сайте «Оператор ТЛФ» нет.">
 <meta name="robots" content="noindex">
 <style>
-:root{--bg:#edf1f0;--fg:#142220;--muted:#55625f;--accent:#0e6a5d;--surface:#fff;--line:#c9d3d1}
-@media (prefers-color-scheme:dark){:root{--bg:#0e1514;--fg:#e3ebe9;--muted:#98a7a4;--accent:#5cc4b1;--surface:#162120;--line:#2b3a38;color-scheme:dark}}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-main{max-width:620px;margin:0 auto;padding:64px 16px;display:grid;gap:16px}
-.mark{width:56px;height:56px;border-radius:50%;background:var(--accent);position:relative}
-.mark:after{content:"";position:absolute;left:25px;top:0;width:6px;height:56px;background:var(--bg)}
-h1{margin:0;font-size:1.8rem;line-height:1.2}
-p{margin:0;color:var(--muted)}
-nav{display:flex;flex-wrap:wrap;gap:10px}
+:root{--bg:#f4f7f6;--fg:#0f1f1c;--muted:#566562;--accent:#0a6b5c;--ink:#fff;--surface:#fff;--line:#dbe3e1;--soft:#dff0eb;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0a1113;--fg:#e4ecea;--muted:#93a6a2;--accent:#4fd1b5;--ink:#04201a;--surface:#101a1c;--line:#213235;--soft:#0f2e29;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(900px 420px at 80% -10%,var(--soft),transparent 70%),var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:640px;margin:0 auto;padding:48px 16px;display:grid;gap:18px;justify-items:start}
+svg{width:132px;height:auto}
+.t1{fill:var(--accent)}.t2{fill:var(--surface);stroke:var(--line);stroke-width:2}.cr{stroke:var(--bg);stroke-width:5;stroke-linecap:round}
+.code{font:600 .78rem/1 ui-monospace,Consolas,monospace;letter-spacing:.12em;color:var(--muted)}
+h1{margin:0;font-size:clamp(1.7rem,1.3rem + 2vw,2.4rem);line-height:1.15;letter-spacing:-.02em}
+p{margin:0;color:var(--muted);max-width:60ch}
+nav{display:flex;flex-wrap:wrap;gap:8px}
 a{color:var(--accent);font-weight:600}
-nav a{display:inline-block;padding:10px 16px;border:1px solid var(--line);border-radius:8px;background:var(--surface);text-decoration:none}
+nav a{display:inline-flex;align-items:center;min-height:44px;padding:10px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);text-decoration:none;transition:border-color .2s}
+nav a:first-child{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+nav a:hover{border-color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.small{font-size:.85rem}
 </style>
 </head>
 <body>
 <main>
-<div class="mark" aria-hidden="true"></div>
+<svg viewBox="0 0 140 100" aria-hidden="true"><g transform="rotate(-8 50 50)"><path class="t1" d="M50 8a42 42 0 0 0 0 84z"/></g><g transform="translate(14 6) rotate(10 76 50)"><path class="t2" d="M76 8a42 42 0 0 1 0 84z"/></g></svg>
+<span class="code">ОШИБКА 404</span>
 <h1>Страница не найдена</h1>
 <p>Возможно, адрес набран с ошибкой или страница была перемещена. Ссылки ниже ведут на основные разделы.</p>
 <nav aria-label="Разделы">
 <a href="${SITE}">Главная</a><a href="${SITE}uroki/">Уроки</a><a href="${SITE}granulyaciya/">Грануляция ТЛФ</a><a href="${SITE}testy.html">Тесты</a><a href="${SITE}glossarij.html">Глоссарий</a>
 </nav>
-<p>${esc(APP.DISCLAIMER)}</p>
+<p class="small">${esc(APP.DISCLAIMER)}</p>
 </main>
 </body>
 </html>
@@ -172,7 +186,7 @@ function allInOne() {
   let fcss = fontsCss.replace(/url\(([^)]+\.woff2)\)/g, (_, f) =>
     "url(data:font/woff2;base64," + fs.readFileSync(path.join(SRC, "fonts", f)).toString("base64") + ")");
   let html = read("index.html");
-  const js = ["data.js", "data-gran.js", "app.js"].map(f => {
+  const js = ["data.js", "data-gran.js", "schemes.js", "app.js"].map(f => {
     const c = read(f);
     if (/<\/script/i.test(c)) throw new Error(f + " содержит </script>");
     return c;
@@ -183,7 +197,8 @@ function allInOne() {
       () => '<link rel="canonical" href="' + SITE + '">\n<link rel="icon" href="data:image/svg+xml;base64,' + Buffer.from(read("favicon.svg")).toString("base64") + '">\n<style>\n' + fcss + "\n" + css + "</style>")
     .replace('<script src="data.js"></script>', () => "<script>\n" + js[0] + "</script>")
     .replace('<script src="data-gran.js"></script>', () => "<script>\n" + js[1] + "</script>")
-    .replace('<script src="app.js"></script>', () => "<script>\n" + js[2] + "</script>");
+    .replace('<script src="schemes.js"></script>', () => "<script>\n" + js[2] + "</script>")
+    .replace('<script src="app.js"></script>', () => "<script>\n" + js[3] + "</script>");
   if (/(href|src)="(?!https?:|#|data:)[^"]+"/.test(html.replace(/<script>[\s\S]*?<\/script>/g, ""))) throw new Error("all-in-one: остались ссылки на внешние файлы");
   return html;
 }
@@ -206,7 +221,7 @@ write(path.join(OUT, "404.html"), page404());
 
 // ассеты
 write(path.join(OUT, "assets/style.css"), fontsCss.replace(/url\(([^)]+\.woff2)\)/g, "url(fonts/$1)") + "\n" + css);
-for (const f of ["data.js", "data-gran.js", "app.js", "favicon.svg"]) fs.copyFileSync(path.join(SRC, f), path.join(OUT, "assets", f));
+for (const f of ["data.js", "data-gran.js", "schemes.js", "app.js", "favicon.svg"]) fs.copyFileSync(path.join(SRC, f), path.join(OUT, "assets", f));
 fs.copyFileSync(path.join(SRC, "og.png"), path.join(OUT, "assets/og.png"));
 fs.mkdirSync(path.join(OUT, "assets/fonts"), { recursive: true });
 for (const f of fs.readdirSync(path.join(SRC, "fonts"))) if (/\.(woff2|txt)$/.test(f)) fs.copyFileSync(path.join(SRC, "fonts", f), path.join(OUT, "assets/fonts", f));
