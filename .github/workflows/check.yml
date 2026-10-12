@@ -1,0 +1,56 @@
+# Проверка сайта на каждый pull request и push в main. Бесплатно, секреты не нужны.
+# 1) синтаксис JS; 2) сборка node build.js совпадает с тем, что лежит в репозитории;
+# 3) внутренние ссылки, якоря, мета-теги, JSON-LD, sitemap; 4) браузерный тест всех страниц.
+name: Проверка сайта
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Синтаксис JS
+        run: for f in build.js site/*.js tests/*.js; do node --check "$f"; done
+
+      - name: Сборка совпадает с исходниками
+        run: |
+          node build.js
+          # Дата сборки (dateModified, lastmod) меняется каждый день — её не сравниваем.
+          if ! git diff --exit-code -I 'dateModified|<lastmod>' --stat; then
+            echo "::error::Сгенерированные файлы не совпадают с site/. Выполните node build.js и закоммитьте результат."
+            exit 1
+          fi
+          if [ -n "$(git status --porcelain --untracked-files=all -- . ':!dist' ':!node_modules')" ]; then
+            git status --short
+            echo "::error::Сборка создала новые файлы, которых нет в репозитории. Выполните node build.js и закоммитьте результат."
+            exit 1
+          fi
+
+      - name: Ссылки, мета-теги, JSON-LD, sitemap
+        run: node tests/links.js
+
+      - name: Установить браузер для теста
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+
+      - name: Браузерный тест всех страниц
+        run: node tests/smoke.js
